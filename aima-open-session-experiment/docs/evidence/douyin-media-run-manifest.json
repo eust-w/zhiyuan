@@ -1,10 +1,13 @@
 {
   "artifacts": {
-    "article/抖音-智元布道师图文稿.md": "af326002c0ded1e04c411978f69dab027f752a5bc3124ff1d21c46125bb9c379",
+    "article/抖音-智元布道师图文稿.md": "9fff15dc64d5dc4b74e118aa623b35176e97ddb09d86d74a531ba10c7d075f71",
     "assets/ai-diagrams/ai-01-perception-action.png": "326a7c31547dbd7b561c63679e192f63128db964101f2dab7c32eeb642c8619c",
     "assets/ai-diagrams/ai-02-data-pipeline.png": "a76e8b0a2fb409acf8e72d7318bc8338969a92323910e36eb8289591bfcb9760",
     "assets/ai-diagrams/ai-03-closed-loop.png": "780a94d8ab39de6e6a4c7524da3357e55d172e38f884bd6a1d5d64d1da4c6580",
     "assets/ai-diagrams/ai-04-failure-roadmap.png": "ec3a07a5215860e0a8e632a8ba38da0fc9af2f7c50ebd0d0225d6e883252cd8b",
+    "assets/audio/douyin-voiceover-yunyang.mp3": "ca304540e86362f4b461e5d15c41a73fbee0a780072090d3290461ca199b4c89",
+    "assets/audio/douyin-voiceover-yunyang.srt": "bc58995d61bd3f302109fee98a409b003dfbd31a35cba4ee86da9978541219bc",
+    "assets/audio/douyin-voiceover-yunyang.txt": "545613e15630c950fdc2c0e587cf7cc4067e2bc45cb50d3418722167da39593a",
     "assets/carousel/carousel-01.jpg": "46b38c8accf5a92a6ab167f3116be98eaa453302796496464d2d4e6bb0ada7c1",
     "assets/carousel/carousel-02.jpg": "cc23126648d09d26d5006e4ff5f63ebd9af370475767392a431e4d8fadb2c0a4",
     "assets/carousel/carousel-03.jpg": "762e9513a4034e7015203903dd90f38c5808846833caf9162e6d6dab0d1abac7",
@@ -39,6 +42,7 @@
     "assets/screenshots/P1-smoke-0024.jpg": "c49b0e5950af973b056b36c8712f910dcb216b85b71e962544f86ef1d7f23a20",
     "assets/screenshots/P1-smoke-0026.jpg": "ec35b49e7e25bf62ed1ea4ac81d236ba8d718c1156d64d08da80a1a9b7e28d50",
     "assets/videos/stage1-smoke-controller.gif": "cb2346d7c7603c31d620861cab80fd483876fb88e281ed49931d274fcae17a01",
+    "assets/videos/stage1-smoke-retrospective-vertical-90s-voiceover.mp4": "594d92fa539b103aab21b9ed50e439404a62c54986d4aa52aa2affa72ec1f65c",
     "assets/videos/stage1-smoke-retrospective-vertical-90s.mp4": "33b61ff6b1efca8625b17e53758471da65980e836200b2073d89ac526a037261"
   },
   "config": {
@@ -47,10 +51,10 @@
     "service": "127.0.0.1:5802",
     "target_id": "red-target-marker"
   },
-  "created_at_utc": "2026-07-13T14:52:00+00:00",
+  "created_at_utc": "2026-07-13T15:40:37+00:00",
   "disclaimer": "Reference implementation inspired by the AIMA workflow; not an official course integration.",
   "official": false,
-  "run_id": "douyin-media-20260713-2315",
+  "run_id": "douyin-media-20260713-voiceover",
   "sources": {
     "geniesim_preinstalled_commit": "a04fe4f7fda0ec6e01ab652fa19094008312bf97",
     "geniesim_public_reference": "v3.0.3",
