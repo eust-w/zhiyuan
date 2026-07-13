@@ -1,5 +1,6 @@
 {
   "artifacts": {
+    "article/抖音-智元布道师图文稿.md": "c0de9bc6841809015e598c8b3a5f86c9b7ec6cd09153bccfcf2999be39b65e23",
     "assets/carousel/carousel-01.jpg": "9ab446c3fadfd8b472ca39f9ccaffa88855e31c8ff6e1fe4251103dc359b8270",
     "assets/carousel/carousel-02.jpg": "d60540380a94d144807c94b77c695f471d87ec854edd370d09f135f21eeb15b9",
     "assets/carousel/carousel-03.jpg": "19b4f045844c70588bca166fce6708d476ff070183b0ec4bb0fa9caee27460f3",
@@ -23,7 +24,7 @@
     "service": "127.0.0.1:5802",
     "target_id": "red-target-marker"
   },
-  "created_at_utc": "2026-07-13T11:32:31+00:00",
+  "created_at_utc": "2026-07-13T11:42:07+00:00",
   "disclaimer": "Reference implementation inspired by the AIMA workflow; not an official course integration.",
   "official": false,
   "run_id": "20260713-aima-vln-final2",
