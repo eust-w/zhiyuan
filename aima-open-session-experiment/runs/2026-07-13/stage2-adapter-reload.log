@@ -1,0 +1,13 @@
+Stage 2 adapter reload gate (fresh Python 3.9 process)
+========================================================
+status: passed
+peft_type: LORA
+lora_r: 8
+trainable_parameters: 0 (inference mode)
+base model: StreamVLN-real-world-qwen-compat (persistent disk; not copied into Git)
+adapter sha256: bfc0bd29368ef0dd0c6900118f719f8b7aca233636975a23c383ab2317768798
+
+The process loaded StreamVLNForCausalLM with the pinned LlavaConfig overrides
+and attached the saved adapter via PeftModel.from_pretrained. The full loader
+log remains on the persistent disk; model weights are intentionally excluded
+from this repository.

@@ -254,10 +254,10 @@
   },
   "base_model": {
     "status": "not_run",
-    "reason": "StreamVLN LoRA training failed at the first batch logits-shape check; base-model inference was not run. Recorded trajectories are adapter-controller validation only."
+    "reason": "The public StreamVLN evaluator expects Habitat/R2R/RxR episodes, while this experiment records GenieSim market_00_g2 sidecars. No comparable base-model navigation run was claimed; recorded trajectories are adapter-controller validation only."
   },
   "lora_model": {
     "status": "not_run",
-    "reason": "No LoRA adapter was written because the first training batch failed with a logits-shape mismatch; inference was not run."
+    "reason": "LoRA training and fresh-process adapter reload passed, but the public evaluator is not compatible with the GenieSim sidecar contract. No incomparable lora-model score was fabricated."
   }
 }

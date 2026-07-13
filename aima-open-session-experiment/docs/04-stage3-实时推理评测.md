@@ -1,6 +1,6 @@
 # 04｜Stage 3：实时推理与仿真评测
 
-状态：模型基础/LoRA 配对评测 `not_run`；LoRA 训练首 batch 失败且没有 adapter。控制器闭环验证已写入唯一指标源 `experiments/exp01-baseline/eval_result.json`。
+状态：模型基础/LoRA 配对导航评测 `not_run`；LoRA 训练和 adapter 重载已通过，但公开 Habitat evaluator 不能直接消费本实验的 GenieSim sidecar。控制器闭环验证已写入唯一指标源 `experiments/exp01-baseline/eval_result.json`。
 
 ## 评测协议
 
@@ -14,7 +14,7 @@
 `adapter/evaluate_sidecars.py` 生成的 `eval_result.json` 当前包含两个层次：
 
 1. `controller_validation`：真实采集控制器的接口/数据闭环核验。
-2. `base_model` / `lora_model`：明确为 `not_run`，原因是 LoRA 训练 gate 在首 batch 的 logits shape 校验处失败，没有可重载 adapter。
+2. `base_model` / `lora_model`：明确为 `not_run`，原因是公开 StreamVLN evaluator 依赖 Habitat/R2R/RxR 场景，而本实验只有 `market_00_g2` 的 GenieSim RGB/depth/pose sidecar；没有把两种环境的指标混写。
 
 控制器核验（不是 StreamVLN 模型成绩）为：10/10 在 0.5m 内 STOP，10/10 oracle success，平均最终距离 `0.4800000259m`，平均路径 `3.5m`，平均 27 步，碰撞 0，平均 SPL 1.0。
 
@@ -26,4 +26,4 @@
 
 ## 结论
 
-在模型基础/LoRA 评测完成前，不能把控制器结果宣传为“StreamVLN 成功案例”；若后续模型 gate 仍阻塞，公开内容应保持透明的“非官方适配失败复盘”。
+在模型基础/LoRA 配对评测完成前，不能把控制器结果宣传为“StreamVLN 成功案例”；公开内容保持透明的“非官方适配复盘”，并明确 Stage 3 尚未形成可比模型成绩。

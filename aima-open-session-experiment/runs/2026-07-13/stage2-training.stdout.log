@@ -1,0 +1,17 @@
+StreamVLN LoRA training evidence (remote stdout excerpt)
+=========================================================
+dataset_only: 50/50 valid
+checkpoint: StreamVLN-real-world (4 shards loaded)
+compatibility: vocab alignment lm_head.out_features
+config: r=8 alpha=16 dropout=0.05 epochs=1 batch=1 lr=2e-5 bf16=True gradient_checkpointing=True mm_tunable_parts=mm_lora_layer
+
+step 42/50: {'loss': 0.0, 'grad_norm': 0.0, 'learning_rate': 3.2e-06, 'epoch': 0.84}
+step 48/50: {'loss': 0.0, 'grad_norm': 0.0, 'learning_rate': 8.0e-07, 'epoch': 0.96}
+step 50/50: {'loss': 0.0, 'grad_norm': 0.0, 'learning_rate': 0.0, 'epoch': 1.0}
+{'train_runtime': 54.1791, 'train_samples_per_second': 0.923, 'train_steps_per_second': 0.923, 'train_loss': 0.0, 'epoch': 1.0}
+Model saved to experiments/exp01-baseline/checkpoints/exp01-lora
+exit_code: 0
+
+Note: the upstream loader emitted tokenization-mismatch warnings for some
+synthetic annotations; they were ignored by that public implementation. The
+zero loss is recorded as observed and is not presented as a quality claim.

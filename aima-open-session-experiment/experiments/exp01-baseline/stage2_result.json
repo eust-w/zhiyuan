@@ -1,6 +1,6 @@
 {
   "schema_version": "geniesim-streamvln/v1",
-  "created_at_utc": "2026-07-13T07:38:36+00:00",
+  "created_at_utc": "2026-07-13T11:19:19+00:00",
   "official": false,
   "config": {
     "lora_r": 8,
@@ -16,8 +16,9 @@
   "gates": {
     "streamvln_compat": {
       "status": "applied",
-      "note": "Copied public StreamVLN checkout uses a Qwen-named checkpoint symlink, slow tokenizer, and getattr fallback for Transformers 4.45.1.",
-      "source_revision": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc"
+      "source_revision": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc",
+      "vocab_alignment": "lm_head.out_features",
+      "note": "The copied public checkout uses a Qwen-named checkpoint symlink, slow tokenizer, legacy fallback, and post-vision-tokenizer vocabulary alignment for Transformers 4.45.1."
     },
     "dataset_only": {
       "episodes": 50,
@@ -27,24 +28,44 @@
     },
     "checkpoint_files": {"status": "ready"},
     "single_batch_forward_backward": {
-      "status": "failed",
-      "observed_in": "full_training_first_batch",
-      "error": "RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560"
+      "status": "passed",
+      "observed_in": "full_training_first_batch"
     },
     "full_training": {
-      "status": "failed",
-      "exit_code": 1,
-      "error": "RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560"
+      "status": "passed",
+      "exit_code": 0,
+      "steps": 50,
+      "train_runtime_s": 54.1791,
+      "train_loss": 0.0,
+      "oom": false
     },
     "adapter_reload": {
-      "status": "not_run",
-      "reason": "full training failed before an adapter was written"
+      "status": "passed",
+      "exit_code": 0,
+      "command": [
+        "streamvln-py39/bin/python",
+        "adapter/reload_adapter.py",
+        "--repo",
+        "StreamVLN",
+        "--adapter",
+        "experiments/exp01-baseline/checkpoints/exp01-lora"
+      ],
+      "reloaded_model": {
+        "status": "passed",
+        "trainable_parameters": 0,
+        "peft_type": "LORA",
+        "lora_r": 8
+      },
+      "adapter_sha256": {
+        "adapter_model.bin": "bfc0bd29368ef0dd0c6900118f719f8b7aca233636975a23c383ab2317768798"
+      },
+      "log": "runs/2026-07-13/stage2-adapter-reload.log"
     }
   },
-  "command_file": "train-command.txt",
+  "command_file": "experiments/exp01-baseline/train-command.txt",
   "evidence": {
-    "stdout": "train.stdout.log",
-    "stderr": "train.stderr.log",
-    "oom": false
+    "stdout": "runs/2026-07-13/stage2-training.stdout.log",
+    "stderr": "runs/2026-07-13/stage2-training.stderr.log",
+    "adapter_reload": "runs/2026-07-13/stage2-adapter-reload.log"
   }
 }

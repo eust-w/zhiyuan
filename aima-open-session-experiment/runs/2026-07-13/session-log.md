@@ -25,11 +25,17 @@
 - 代码、real-world checkpoint、SigLIP 的 pinned revision 已核验。
 - GPUFree 直连 Hugging Face 超时，切换 `hf-mirror.com` 成功下载 checkpoint 与 SigLIP 到持久盘。
 - Python 3.9 环境、Transformers 4.45.1 和 StreamVLN 依赖已验证；4 个 checkpoint 分片加载成功。
-- LoRA 训练首 batch 失败：`RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560`；无 OOM、无 adapter，adapter reload 与 base/LoRA 推理均 `not_run`。
-- `eval_result.json` 将模型 base/LoRA 明确标为 `not_run`，控制器数字不作为模型成绩；详见 `stage2_result.json` 和 `stage2-failure.log`。
+- 首次兼容尝试观察到 `RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560`；在视觉 token resize 后对齐 `lm_head.out_features`，随后 50 步 LoRA 训练退出码 0。
+- adapter 在独立 Python 3.9 进程中用 `PeftModel.from_pretrained` 重载通过，哈希写入 `stage2_result.json`；日志摘录见 `stage2-training.stdout.log` 和 `stage2-adapter-reload.log`。
+- `eval_result.json` 仍将 base/LoRA 导航评测标为 `not_run`，因为公开 Habitat evaluator 与 GenieSim sidecar 不兼容；控制器数字不作为模型成绩。
 
 ## 媒体
 
 - 真实 RGB 帧已脱离运行目录保存为截图。
 - 5 帧 GIF：960×540、5 帧、10fps 播放节奏。
 - 竖屏 MP4：1080×1920、30fps、H.264、无音轨、54 秒；烧录非官方与 fallback 限制字幕。
+
+## 收尾
+
+- 远端无 `streamvln_train`、适配器重载或 Isaac/GenieSim 残留进程；GPU compute-apps 为空。
+- GPUFree 控制台最终状态为“已关机”；持久盘仍保留代码、日志和模型（模型/adapter 不进入 Git）。

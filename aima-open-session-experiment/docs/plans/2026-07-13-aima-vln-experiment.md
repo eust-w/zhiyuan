@@ -56,7 +56,7 @@
 2. 按课程配置启动 `scripts/vln_app.py`，保存完整日志。
 3. 另开终端启动 `scripts/keyboard_control.py`。
 4. 录制前进、后退、左右转、停止和碰撞阻挡；截取第一/第三视角关键帧。
-5. 停止进程并验证无残留监听器占用 UDP 12346/12347。
+5. 停止进程并验证本实验没有创建课程未知的 UDP 监听器；适配器只绑定 loopback HTTP `127.0.0.1:5802`。
 
 **Acceptance:** 仿真场景与机器人真实加载，五种键盘动作可验证，视频/GIF 与日志相互对应。
 
@@ -103,7 +103,7 @@
 
 **Steps:**
 
-1. 重新启动 VLN 仿真端并确认 12347 API 可用。
+1. 重新启动 VLN 仿真端并确认 loopback HTTP `/health`、`/v1/episodes/*` 可用；不宣称课程 UDP API 兼容。
 2. 加载基础模型、LoRA adapter、视觉塔和 `target.json`。
 3. 使用包含真实目标名称的指令运行闭环推理并保存每步图像。
 4. 保存完整导航视频、动作标注 GIF、轨迹图和 `eval_result.json`。

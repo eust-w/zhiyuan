@@ -1,0 +1,5 @@
+StreamVLN LoRA training evidence (remote stderr excerpt)
+=========================================================
+Warnings included the pinned Transformers/vision compatibility messages and
+tokenization mismatch notices. No CUDA OOM, NaN, or non-zero exit was observed.
+exit_code: 0

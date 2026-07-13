@@ -9,9 +9,9 @@
 - GPUFree L40 48GB、100GB 持久盘、SSH 公钥登录与 Isaac Sim 5.1/Genie Sim 3.0 已验证。
 - Stage 0 loopback 服务已真实启动并验证 reset/step/重复 request_id/close；USD AABB 投影触发引擎安全退出，因此运行配置显式使用安全 fallback 栅格。
 - Stage 1 已采集 3 条冒烟、50 条训练和 10 条固定种子评测轨迹；公开 annotation 通过严格校验，完整 STOP/depth/轨迹保存在 sidecar。
-- StreamVLN 代码、real-world checkpoint 和 SigLIP pinned revision 已核验并下载到持久盘；Python 3.9 依赖与模型分片加载成功，但 LoRA 在首个训练 batch 的 logits shape 校验失败，因此没有 adapter，base/LoRA 推理保持 `not_run`。
-- 失败 gate 详见 [`stage2_result.json`](experiments/exp01-baseline/stage2_result.json) 与 [`stage2-failure.log`](runs/2026-07-13/stage2-failure.log)；这是透明的非官方适配失败复盘，不是模型成功案例。
-- 所有结论都由真实日志、媒体和 `eval_result.json` 支撑；未完成环节保留 `blocked/not_run` 状态，不用占位内容替代。
+- StreamVLN 代码、real-world checkpoint 和 SigLIP pinned revision 已核验并下载到持久盘；Python 3.9 依赖与模型分片加载成功，LoRA 50 步训练退出码为 0，adapter 已在新 Python 进程中通过 `PeftModel.from_pretrained` 重载。
+- Stage 3 的 base/LoRA 配对导航没有运行：公开 Habitat evaluator 与本实验的 GenieSim sidecar/刚体适配接口不兼容，不能把控制器结果冒充模型成绩；该边界和日志均保留在 [`eval_result.json`](experiments/exp01-baseline/eval_result.json) 与 [`docs/04-stage3-实时推理评测.md`](docs/04-stage3-实时推理评测.md)。
+- Stage 2 机器可读结果见 [`stage2_result.json`](experiments/exp01-baseline/stage2_result.json)，真实证据摘录见 [`stage2-training.stdout.log`](runs/2026-07-13/stage2-training.stdout.log) 和 [`stage2-adapter-reload.log`](runs/2026-07-13/stage2-adapter-reload.log)。控制器素材仍按透明的非官方适配复盘交付，不是模型成功案例。
 
 ## 导航
 
@@ -42,4 +42,4 @@
 
 ## 安全边界
 
-账号密码、身份证信息、SSH 私钥、实例密码、Cookie、Token、UUID、Tunnel Endpoint、IP、实例 ID 和连接命令不得进入本目录或 Git 历史。所有公开截图和视频在引用前必须完成裁剪或打码。StreamVLN 仓库与 checkpoint 未明确声明适用于本实验的许可证；本目录只作个人非商业研究演示，不传播权重。
+账号密码、身份证信息、SSH 私钥、实例密码、Cookie、Token、UUID、Tunnel Endpoint、IP、实例 ID 和连接命令不得进入本目录或 Git 历史。所有公开截图和视频在引用前必须完成裁剪或打码。StreamVLN 代码仓库 README 标注 CC BY-NC-SA 4.0；checkpoint 的独立授权/再分发条款未在本实验中确认，因此基础权重与 adapter 只留在持久盘。本目录只作个人非商业研究演示。

@@ -118,6 +118,23 @@ def _patch_qwen_tokenizer(repo: Path) -> dict[str, str]:
         source = source.replace(original, patched, 1)
         changed = True
 
+    vocab_original = "    return model\n\n\ndef train(attn_implementation=None):"
+    vocab_patched = (
+        "    # Keep the loss reshape aligned with the checkpoint's loaded lm_head.\n"
+        "    # The pinned real-world checkpoint loads 151648 output rows while its\n"
+        "    # legacy config advertises 152064; Transformers otherwise raises a\n"
+        "    # non-divisible view error on the first training batch.\n"
+        "    if hasattr(model, \"lm_head\") and hasattr(model.lm_head, \"out_features\"):\n"
+        "        model.config.vocab_size = int(model.lm_head.out_features)\n"
+        "        model.vocab_size = int(model.lm_head.out_features)\n"
+        "    return model\n\n\ndef train(attn_implementation=None):"
+    )
+    if vocab_patched not in source:
+        if vocab_original not in source:
+            return {"status": "blocked", "path": str(path), "reason": "expected model return marker not found"}
+        source = source.replace(vocab_original, vocab_patched, 1)
+        changed = True
+
     dataset_path = repo / "streamvln" / "dataset" / "vln_action_dataset.py"
     dataset_source = dataset_path.read_text(encoding="utf-8")
     dataset_original = "if i != 0 and not tokenizer.legacy and IS_TOKENIZER_GREATER_THAN_0_14:"
@@ -127,9 +144,22 @@ def _patch_qwen_tokenizer(repo: Path) -> dict[str, str]:
             return {"status": "blocked", "path": str(dataset_path), "reason": "expected tokenizer legacy check not found"}
         dataset_path.write_text(dataset_source.replace(dataset_original, dataset_patched, 1), encoding="utf-8")
         changed = True
+    vision_marker = "        model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)\n"
+    vision_patch = (
+        "        model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)\n"
+        "        # initialize_vision_tokenizer may resize lm_head for the image token.\n"
+        "        if hasattr(model, \"lm_head\") and hasattr(model.lm_head, \"out_features\"):\n"
+        "            model.config.vocab_size = int(model.lm_head.out_features)\n"
+        "            model.vocab_size = int(model.lm_head.out_features)\n"
+    )
+    if vision_patch not in source:
+        if vision_marker not in source:
+            return {"status": "blocked", "path": str(path), "reason": "vision tokenizer marker not found"}
+        source = source.replace(vision_marker, vision_patch, 1)
+        changed = True
     if changed:
         path.write_text(source, encoding="utf-8")
-    return {"status": "applied" if changed else "already_applied", "path": str(path), "dataset_path": str(dataset_path)}
+    return {"status": "applied" if changed else "already_applied", "path": str(path), "dataset_path": str(dataset_path), "vocab_alignment": "lm_head.out_features"}
 
 
 def main() -> None:
@@ -209,7 +239,32 @@ def main() -> None:
                 }
         adapter_files = sorted(output.glob("adapter_model*"))
         if process.returncode == 0 and adapter_files:
-            gates["adapter_reload"] = {"status": "pending_new_process", "adapter_sha256": {str(path): _sha256(path) for path in adapter_files}}
+            reload_command = [
+                args.python,
+                str(Path(__file__).with_name("reload_adapter.py")),
+                "--repo", str(repo),
+                "--adapter", str(output),
+            ]
+            reload_env = dict(environment)
+            reload_process = subprocess.run(
+                reload_command,
+                cwd=repo,
+                env=reload_env,
+                text=True,
+                capture_output=True,
+            )
+            reload_log = result_path.with_name("adapter-reload.log")
+            reload_log.write_text(reload_process.stdout + reload_process.stderr, encoding="utf-8")
+            gates["adapter_reload"] = {
+                "status": "passed" if reload_process.returncode == 0 else "failed",
+                "exit_code": reload_process.returncode,
+                "command": reload_command,
+                "log": str(reload_log),
+                "adapter_sha256": {str(path): _sha256(path) for path in adapter_files},
+            }
+            reload_error = _last_error(reload_process.stderr)
+            if reload_error:
+                gates["adapter_reload"]["error"] = reload_error
     else:
         gates["full_training"] = {
             "status": "blocked",
