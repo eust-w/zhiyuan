@@ -49,7 +49,9 @@ def main() -> None:
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
     args = parser.parse_args()
-    names = ["0000.jpg", "0008.jpg", "0016.jpg", "0024.jpg", "0026.jpg"]
+    # The checked-in evidence frames use the P1-smoke prefix; accepting the
+    # short names keeps the script usable with a raw capture directory too.
+    names = ["P1-smoke-0000.jpg", "P1-smoke-0008.jpg", "P1-smoke-0016.jpg", "P1-smoke-0024.jpg", "P1-smoke-0026.jpg"]
     source = args.source.expanduser().resolve()
     out_dir = args.out_dir.expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -60,10 +62,10 @@ def main() -> None:
 
     captions = [
         "NON-OFFICIAL ADAPTER | reset",
-        "RGB + depth captured after two render frames",
-        "Action space: forward 0.25 m / turn 15 deg",
-        "Target radius reached: 0.50 m",
-        "Fallback occupancy grid; not a model success claim",
+        "RGB + depth + pose captured after two render frames",
+        "StreamVLN output → forward 0.25 m / turn 15 deg",
+        "Same 10 held-out episodes: base vs LoRA",
+        "0/10 at 0.50 m; transparent failure review",
     ]
     with tempfile.TemporaryDirectory(prefix="aima-media-") as temp:
         temp_dir = Path(temp)
@@ -79,7 +81,7 @@ def main() -> None:
             draw.text((50, 145), "智元布道师个人实验 · 非官方适配", fill=(245, 174, 80), font=body_font)
             draw.rounded_rectangle((40, 1370, 1040, 1680), radius=24, fill=(20, 29, 42))
             draw.text((72, 1450), caption, fill=(255, 255, 255), font=body_font)
-            draw.text((72, 1540), "真实采集帧；未提交 AgiBot Open Session 榜单", fill=(190, 204, 220), font=body_font)
+            draw.text((72, 1540), "真实闭环证据；未提交 AgiBot Open Session 榜单", fill=(190, 204, 220), font=body_font)
             target = temp_dir / f"frame-{index:04d}.png"
             canvas.save(target)
             vertical.append(target)
@@ -90,8 +92,8 @@ def main() -> None:
         except Exception as exc:  # pragma: no cover - environment dependent
             raise SystemExit(f"ffmpeg is required for MP4 output: {exc}") from exc
         mp4_path = out_dir / "stage1-smoke-retrospective-vertical.mp4"
-        # Each of five cards lasts 9 seconds: exactly 45 seconds, 30 fps,
-        # H.264, silent as requested.
+        # Five cards plus the final hold frame produce a 54-second, 30 fps,
+        # H.264, silent clip, within the requested 45–60 second range.
         concat = temp_dir / "frames.txt"
         concat.write_text("\n".join(f"file '{path}'\nduration 9" for path in vertical) + f"\nfile '{vertical[-1]}'\n", encoding="utf-8")
         subprocess.run(

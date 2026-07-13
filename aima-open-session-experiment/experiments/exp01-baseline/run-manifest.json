@@ -1,22 +1,34 @@
 {
   "artifacts": {
-    "article/抖音-智元布道师图文稿.md": "c0de9bc6841809015e598c8b3a5f86c9b7ec6cd09153bccfcf2999be39b65e23",
-    "assets/carousel/carousel-01.jpg": "9ab446c3fadfd8b472ca39f9ccaffa88855e31c8ff6e1fe4251103dc359b8270",
-    "assets/carousel/carousel-02.jpg": "d60540380a94d144807c94b77c695f471d87ec854edd370d09f135f21eeb15b9",
-    "assets/carousel/carousel-03.jpg": "19b4f045844c70588bca166fce6708d476ff070183b0ec4bb0fa9caee27460f3",
-    "assets/carousel/carousel-04.jpg": "f0c883a8e62e7cf828dcf43e97ca263ff610be816ed56c76397fe51ba59cdbd2",
-    "assets/carousel/carousel-05.jpg": "6c945a0ae4c921b697e32f145e1cd7b4ed8371cb323b5b397a4053964669c29c",
-    "assets/carousel/carousel-06.jpg": "9dd08c6082447eeb04ef4d48a2105ad2e2098b67e5255a14a49f97ad3e180c13",
-    "assets/carousel/carousel-07.jpg": "e6c4b3f494bad9f68216a7c96367c4f28835c3212e00647bcff3d304ba4da6c6",
-    "assets/carousel/carousel-08.jpg": "fad2173a056dbd477b04a044d134966392ec4892ffa76f91d80323b4cc08b266",
+    "README.md": "293337e15f877ecbad685b2220a74bfedd64656e0588831c987e085475ea694f",
+    "adapter/isaac_backend.py": "a04a17cfba73b3fe027e739f9f957b7e7d1b1ea49bf71d663e6f5f27608efd6c",
+    "adapter/model_closed_loop_eval.py": "0f70b09add28765dec4e2953805f7fc069bdad6b84a378e200337b4f2aba8f22",
+    "adapter/service.py": "1d45180df7b145ed82bbbe567335136e342d71201b0c025e750f549ff3af71c0",
+    "article/抖音-智元布道师图文稿.md": "e5bf158d97420b4f68958fba5281a5ca40cc0639235a8b704e5ae64fff34d3c0",
+    "assets/carousel/carousel-01.jpg": "4f32fd548adb1e7bfa3bbfc3282c7ff56a8b0e3c45dfbb4a070d71a27740275a",
+    "assets/carousel/carousel-02.jpg": "d7e60ddaa4dccbfbd8ea6e22f093e08ac26764962e32b9cd12e72bb3c3285af4",
+    "assets/carousel/carousel-03.jpg": "92782151af0fbfe69283eda57732dd6229e065a8164184a01b41d09c3cb8cb6a",
+    "assets/carousel/carousel-04.jpg": "16bdb736b8c2b9246148de6d483c9721e8f641a2370d3198351a1740090c37cd",
+    "assets/carousel/carousel-05.jpg": "4bd2ad1d26691be511a9e4d4ec836ff08a620bfe6a9623922e7899b5109e8680",
+    "assets/carousel/carousel-06.jpg": "a1878c684a96cfebb7f3f06a34c71a6ef78810fdfa2fc2b7996a47bcc1f63703",
+    "assets/carousel/carousel-07.jpg": "e21f66226c4e0edef31e8b75b6c519b87fbcffce5438afcf172b7b1c38b84d22",
+    "assets/carousel/carousel-08.jpg": "ed87417b07d7be9fc737e1afd0c9aae7409940fcc303354a6c3577a8ac8c70a9",
     "assets/gifs/stage1-smoke-controller.gif": "cb2346d7c7603c31d620861cab80fd483876fb88e281ed49931d274fcae17a01",
-    "assets/videos/stage1-smoke-retrospective-vertical.mp4": "02f760496f9b265f066d31e3fb49de92eddf9d4f04d7d460a46e8152d378e8fe",
-    "experiments/exp01-baseline/eval_result.json": "6f25276f0f8a651da91e5d3175036e326ed355575bb15e5519becf3b2075039f",
-    "experiments/exp01-baseline/stage2_result.json": "8f050f0c7d649c3fb45029c27db39a74990be81a37dfe6c2b3561a923d348896",
-    "runs/2026-07-13/session-log.md": "1ff08271728300f5bf8fa71a2beca7adfa0d0679e6004574c3eb724d8eea507f",
-    "runs/2026-07-13/stage2-adapter-reload.log": "0bb7099393423055f3529495061e345f6f9cf65b52ef57dd6dd4fb485126d3cc",
-    "runs/2026-07-13/stage2-training.stderr.log": "f314e8be4add1be45a8c71a5c914a6dd000303605140a4a60e84f783b361253a",
-    "runs/2026-07-13/stage2-training.stdout.log": "d30e3c63ca82bc2e9062c95226db0ccff81713504893b98991f765469eaddeb9"
+    "assets/videos/stage1-smoke-retrospective-vertical.mp4": "01f011242b40e369be37eba74755d0a2b7f5ad167106aa200d6538dd4d815f35",
+    "docs/03-stage2-lora微调.md": "ca2187eafd198fa1ecc2be9c6d1a6a69033a2b889944c6d0dc5b7cfd37b4727f",
+    "docs/04-stage3-实时推理评测.md": "0677356066ed6a15450909acf029615a04fe61055202476cf489d543b507d133",
+    "docs/05-结果分析与排障.md": "4727d5f3c59fa7220a2435920ed2a37aa73754be48aaec5a8bef53ef903de92a",
+    "docs/06-课程资产检索与阻塞记录.md": "c1d46e7499a98ea4f6049a4f72095de10bc7af6c323809f8ce2b2c2b3ed459b3",
+    "docs/plans/2026-07-13-douyin-article-design.md": "213caa4caf0dc9f848193f4d7e57f53dc157f7089a66c674872a37f50158e4a1",
+    "docs/plans/2026-07-13-douyin-article.md": "38e8029e7269c0b6749076bb4c21e5450d4c79edc7160bb505b4c14acf77b6f6",
+    "experiments/exp01-baseline/base-model-eval.json": "1732feac722bae49066223178a890fab808d9677ace81b8437b6151fe4b890df",
+    "experiments/exp01-baseline/eval_result.json": "982fd89cadf01d8b1b67211ac6d61219e799f0606fd732ae97b28474012a2007",
+    "experiments/exp01-baseline/lora-model-eval.json": "f0de92a099c3877f2007d6d2bf2f5b9f4d58425126ac9da7ed38bde8d834780d",
+    "experiments/exp01-baseline/model-logs/base-model-eval.log": "260a5be88ac2e24c097c5e6cfd83391cbf0d1185b0242bbf23c023f12af91070",
+    "experiments/exp01-baseline/model-logs/lora-model-eval.log": "6e0f612fc03faeb89b0ffc9c6ad431e839de53945016b2b1368e16daabf48e23",
+    "scripts/make_carousel.py": "d433cd73118d16bf2c886cbd70f69aabdb7c124552879d78d150f70ba3ae5a49",
+    "scripts/make_media.py": "a844da7ef7ed42a39d427a23ed65937f0de65ec0f605f72d28516b89238a1f21",
+    "tests/test_model_closed_loop_eval.py": "f95ec0992ad580b44c7cae834300a43b0fed93401350bec2887a8b9190145a98"
   },
   "config": {
     "official": false,
@@ -24,10 +36,10 @@
     "service": "127.0.0.1:5802",
     "target_id": "red-target-marker"
   },
-  "created_at_utc": "2026-07-13T11:42:07+00:00",
+  "created_at_utc": "2026-07-13T13:29:25+00:00",
   "disclaimer": "Reference implementation inspired by the AIMA workflow; not an official course integration.",
   "official": false,
-  "run_id": "20260713-aima-vln-final2",
+  "run_id": "20260713-aima-vln-stage3-model",
   "sources": {
     "geniesim_preinstalled_commit": "a04fe4f7fda0ec6e01ab652fa19094008312bf97",
     "geniesim_public_reference": "v3.0.3",
@@ -35,5 +47,5 @@
     "streamvln_checkpoint": "7b0269ad28e7039a32627b950766c09b5a646f8e",
     "streamvln_commit": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc"
   },
-  "stage": "stage0-stage1-stage2"
+  "stage": "stage0-stage1-stage2-stage3"
 }

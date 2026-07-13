@@ -476,8 +476,13 @@ class IsaacBackend:
             raise RuntimeError(f"depth annotator returned unexpected shape {depth.shape}")
         if rgb.shape[-1] >= 4:
             rgb = rgb[..., :3]
-        if not np.isfinite(depth).any():
-            raise RuntimeError("depth annotator returned no finite values")
+        depth_fallback = not np.isfinite(depth).any()
+        if depth_fallback:
+            # Isaac can return an all-infinite depth frame when the camera is
+            # pointed into empty space.  Preserve the frame and use the
+            # sensor max range instead of dropping the episode; the sidecar
+            # explicitly records this conservative input fallback.
+            depth = np.full((self.height, self.width), 10.0, dtype=np.float32)
         step_name = f"{self.step_id:04d}"
         episode_dir = self.media_root / self.episode_id
         episode_dir.mkdir(parents=True, exist_ok=True)
@@ -499,6 +504,8 @@ class IsaacBackend:
             truncated=base["truncated"],
         )
         response.update({"target_id": self.target_id, "target_xy": list(self.goal_world)})
+        if depth_fallback:
+            response["depth_fallback"] = "sensor_max_range"
         return response
 
     @staticmethod

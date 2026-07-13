@@ -29,4 +29,4 @@ StreamVLN 代码仓库 README 标注 CC BY-NC-SA 4.0；checkpoint 的独立授�
 
 ## 当前结论
 
-首次重跑曾观察到 `RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560`；根因是视觉 token resize 后 `lm_head.out_features=151648` 而旧 config 仍为 `152064`。兼容层在 `initialize_vision_tokenizer` 后对齐词表后，训练和重载均通过。`eval_result.json` 仍不写入模型成功率，因为公开 Habitat evaluator 与 GenieSim sidecar 尚未完成可比的闭环适配。
+首次重跑曾观察到 `RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560`；根因是视觉 token resize 后 `lm_head.out_features=151648` 而旧 config 仍为 `152064`。兼容层在 `initialize_vision_tokenizer` 后对齐词表后，训练和重载均通过。后续已补齐独立 GenieSim sidecar evaluator；模型评测结果不写入本页训练结论，统一以 Stage 3 和 `eval_result.json` 为准。

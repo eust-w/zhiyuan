@@ -107,6 +107,7 @@ class AdapterService:
         except ProtocolError as exc:
             self._write(handler, 400, {"error": str(exc)})
         except Exception as exc:  # pragma: no cover - defensive boundary
+            print(json.dumps({"event": "http_backend_error", "error_type": type(exc).__name__, "error": str(exc)}), flush=True)
             self._write(handler, 500, {"error": f"internal adapter error: {type(exc).__name__}"})
 
     @staticmethod
