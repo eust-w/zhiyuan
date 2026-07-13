@@ -1,0 +1,35 @@
+{
+  "artifacts": {
+    "assets/carousel/carousel-01.jpg": "9ab446c3fadfd8b472ca39f9ccaffa88855e31c8ff6e1fe4251103dc359b8270",
+    "assets/carousel/carousel-02.jpg": "d60540380a94d144807c94b77c695f471d87ec854edd370d09f135f21eeb15b9",
+    "assets/carousel/carousel-03.jpg": "19b4f045844c70588bca166fce6708d476ff070183b0ec4bb0fa9caee27460f3",
+    "assets/carousel/carousel-04.jpg": "f0c883a8e62e7cf828dcf43e97ca263ff610be816ed56c76397fe51ba59cdbd2",
+    "assets/carousel/carousel-05.jpg": "6c945a0ae4c921b697e32f145e1cd7b4ed8371cb323b5b397a4053964669c29c",
+    "assets/carousel/carousel-06.jpg": "9dd08c6082447eeb04ef4d48a2105ad2e2098b67e5255a14a49f97ad3e180c13",
+    "assets/carousel/carousel-07.jpg": "e6c4b3f494bad9f68216a7c96367c4f28835c3212e00647bcff3d304ba4da6c6",
+    "assets/carousel/carousel-08.jpg": "fad2173a056dbd477b04a044d134966392ec4892ffa76f91d80323b4cc08b266",
+    "assets/gifs/stage1-smoke-controller.gif": "cb2346d7c7603c31d620861cab80fd483876fb88e281ed49931d274fcae17a01",
+    "assets/videos/stage1-smoke-retrospective-vertical.mp4": "02f760496f9b265f066d31e3fb49de92eddf9d4f04d7d460a46e8152d378e8fe",
+    "experiments/exp01-baseline/eval_result.json": "ab4d7a03709cc061f49a26111382f193352c4def1522f6bd544716ac2b81cc9d",
+    "experiments/exp01-baseline/stage2_result.json": "1bb930a987b498923f2371b83d6f127fc63bfcef6fa9d8fb345f5f8c1c54c877",
+    "runs/2026-07-13/stage2-failure.log": "295fc715d7c04f5d5f6f10fc5f692e934b2b3c90bb3602260e481afa585d5ad6"
+  },
+  "config": {
+    "official": false,
+    "scene": "market_00_g2",
+    "service": "127.0.0.1:5802",
+    "target_id": "red-target-marker"
+  },
+  "created_at_utc": "2026-07-13T07:42:29+00:00",
+  "disclaimer": "Reference implementation inspired by the AIMA workflow; not an official course integration.",
+  "official": false,
+  "run_id": "20260713-aima-vln-final",
+  "sources": {
+    "geniesim_preinstalled_commit": "a04fe4f7fda0ec6e01ab652fa19094008312bf97",
+    "geniesim_public_reference": "v3.0.3",
+    "siglip": "9fdffc58afc957d1a03a25b10dba0329ab15c2a3",
+    "streamvln_checkpoint": "7b0269ad28e7039a32627b950766c09b5a646f8e",
+    "streamvln_commit": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc"
+  },
+  "stage": "stage0-stage1-stage2"
+}

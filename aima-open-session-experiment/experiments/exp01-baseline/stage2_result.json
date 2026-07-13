@@ -1,0 +1,50 @@
+{
+  "schema_version": "geniesim-streamvln/v1",
+  "created_at_utc": "2026-07-13T07:38:36+00:00",
+  "official": false,
+  "config": {
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "epochs": 1,
+    "batch": 1,
+    "learning_rate": 0.00002,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "mm_tunable_parts": "mm_lora_layer"
+  },
+  "gates": {
+    "streamvln_compat": {
+      "status": "applied",
+      "note": "Copied public StreamVLN checkout uses a Qwen-named checkpoint symlink, slow tokenizer, and getattr fallback for Transformers 4.45.1.",
+      "source_revision": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc"
+    },
+    "dataset_only": {
+      "episodes": 50,
+      "valid": 50,
+      "invalid": 0,
+      "errors": []
+    },
+    "checkpoint_files": {"status": "ready"},
+    "single_batch_forward_backward": {
+      "status": "failed",
+      "observed_in": "full_training_first_batch",
+      "error": "RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560"
+    },
+    "full_training": {
+      "status": "failed",
+      "exit_code": 1,
+      "error": "RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560"
+    },
+    "adapter_reload": {
+      "status": "not_run",
+      "reason": "full training failed before an adapter was written"
+    }
+  },
+  "command_file": "train-command.txt",
+  "evidence": {
+    "stdout": "train.stdout.log",
+    "stderr": "train.stderr.log",
+    "oom": false
+  }
+}

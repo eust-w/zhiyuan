@@ -1,0 +1,12 @@
+Stage 2 StreamVLN LoRA gate evidence
+====================================
+Dataset-only: 50/50 valid.
+Checkpoint shards: 4/4 loaded; no CUDA OOM observed.
+Compatibility patches: Qwen tokenizer path + slow tokenizer + safe legacy attribute fallback.
+Full training: failed at the first Trainer batch; exit code 1.
+Single batch: failed while the full-training first batch was executing.
+Exact final error:
+RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560
+Adapter reload: not_run; no adapter was written.
+The full raw stdout/stderr remain on the private persistent experiment disk;
+this short evidence file contains no account, IP, instance ID, or connection data.

@@ -1,0 +1,263 @@
+{
+  "schema_version": "geniesim-streamvln/v1",
+  "metric_source": "eval_result.json",
+  "official": false,
+  "disclaimer": "Reference implementation inspired by the AIMA workflow; not an official course integration.",
+  "split": "eval",
+  "heldout_episode_ids": [
+    "eval-2001",
+    "eval-2002",
+    "eval-2003",
+    "eval-2004",
+    "eval-2005",
+    "eval-2006",
+    "eval-2007",
+    "eval-2008",
+    "eval-2009",
+    "eval-2010"
+  ],
+  "controller_validation": {
+    "episodes": 10,
+    "success_0_5": 10,
+    "success_3": 10,
+    "oracle_success_0_5": 10,
+    "oracle_success_3": 10,
+    "collisions": 0,
+    "mean_final_distance_to_goal": 0.4800000259125313,
+    "mean_min_distance_to_goal": 0.4800000259125313,
+    "mean_path_length": 3.5,
+    "mean_spl_0_5": 1.0,
+    "mean_spl_3": 1.0,
+    "mean_steps": 27.0,
+    "episodes_detail": [
+      {
+        "episode_id": "eval-2001",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2002",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2003",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2004",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2005",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2006",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2007",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2008",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2009",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      },
+      {
+        "episode_id": "eval-2010",
+        "success_0_5": true,
+        "success_3": true,
+        "oracle_success_0_5": true,
+        "oracle_success_3": true,
+        "final_distance_to_goal": 0.48000002591253144,
+        "min_distance_to_goal": 0.48000002591253144,
+        "path_length": 3.5,
+        "shortest_path_length": 3.98000000312513,
+        "spl_0_5": 1.0,
+        "spl_3": 1.0,
+        "steps": 27,
+        "collisions": 0,
+        "truncated": false,
+        "action_counts": {
+          "stop": 1,
+          "forward": 14,
+          "left": 12,
+          "right": 0
+        }
+      }
+    ]
+  },
+  "base_model": {
+    "status": "not_run",
+    "reason": "StreamVLN LoRA training failed at the first batch logits-shape check; base-model inference was not run. Recorded trajectories are adapter-controller validation only."
+  },
+  "lora_model": {
+    "status": "not_run",
+    "reason": "No LoRA adapter was written because the first training batch failed with a logits-shape mismatch; inference was not run."
+  }
+}
