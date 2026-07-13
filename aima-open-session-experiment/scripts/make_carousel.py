@@ -336,7 +336,7 @@ def main() -> None:
     lora = summary(metrics, "lora_model")
     cards = [
         ("一句话，能不能变成动作？", "我给机器人一句中文指令：走向红色目标，然后停下。真正要验证的，不是画面好不好看，而是模型输出能不能一路到达仿真。", photo("P1-smoke-0000.jpg"), False),
-        ("先说清楚：这是非官方个人实验", "流程参考课程指南，但没有课程私有适配包；这里展示的是等价兼容流程，不是课程原样复现，也不提交课程榜单。", photo("P1-smoke-0008.jpg"), False),
+        ("先说清楚：这是非官方实验", "流程参考课程指南，但没有课程私有适配包；这里展示的是等价兼容流程，不是课程原样复现，也不提交课程榜单。", photo("P1-smoke-0008.jpg"), False),
         ("场景、机器人、相机", "实验使用室内市场场景、机器人刚体代理和头部相机。它用于验证视觉语言导航闭环，不宣称真实人形步态。", photo("P1-smoke-0016.jpg"), False),
         ("感知 → 模型 → 动作", "这张是人工智能生成的结构示意图；真实证据仍来自实验截图和日志。彩色图、深度图、位姿进入模型，再输出离散动作。", diagram("ai-01-perception-action.png"), True),
         ("动作空间被固定为四个", "停止、前进 0.25 米、左转 15 度、右转 15 度。固定动作含义，才能把模型输出和仿真结果一一对上。", photo("P1-smoke-0024.jpg"), False),
@@ -365,7 +365,7 @@ def main() -> None:
         y = 180 + (700 - image.height) // 2
         canvas.paste(image, (x, y))
         d = ImageDraw.Draw(canvas)
-        d.text((50, 45), f"{index:02d}/20  智元布道师个人实验", fill=ORANGE, font=small_font)
+        d.text((50, 45), f"{index:02d}/20  视觉语言导航实验", fill=ORANGE, font=small_font)
         d.text((50, 975), title, fill=WHITE, font=title_font)
         d.rounded_rectangle((42, 1065, 1038, 1295), radius=20, fill=PANEL)
         draw_wrapped(d, (75, 1115), body, body_font, WHITE, 930, spacing=8)

@@ -54,7 +54,7 @@ def make_intro() -> Image.Image:
     d.text((120, 690), "20 张图看懂一次", fill=WHITE, font=font(48))
     d.text((120, 785), "非官方视觉语言导航实验", fill=ORANGE, font=font(48))
     d.text((70, 1580), "真实截图 · 真实模型动作 · 真实失败指标", fill=MUTED, font=font(32))
-    d.text((70, 1670), "智元布道师个人实验", fill=MUTED, font=font(32))
+    d.text((70, 1670), "非官方实验记录", fill=MUTED, font=font(32))
     return canvas
 
 
@@ -81,6 +81,23 @@ def card_to_vertical(card_path: Path) -> Image.Image:
     return canvas
 
 
+def screenshot_to_vertical(image_path: Path, title: str, detail: str) -> Image.Image:
+    """Show an original capture frame directly, with a Chinese evidence label."""
+    canvas = Image.new("RGB", (1080, 1920), BG)
+    d = ImageDraw.Draw(canvas)
+    d.text((70, 105), title, fill=ORANGE, font=font(46))
+    d.rounded_rectangle((55, 235, 1025, 1410), radius=26, fill=PANEL)
+    with Image.open(image_path).convert("RGB") as source:
+        image = ImageOps.contain(source, (920, 1050), method=Image.Resampling.LANCZOS)
+    x = (1080 - image.width) // 2
+    y = 300 + (1050 - image.height) // 2
+    canvas.paste(image, (x, y))
+    d.text((70, 1500), "真实采集截图", fill=WHITE, font=font(40))
+    d.text((70, 1590), detail, fill=MUTED, font=font(30))
+    d.text((70, 1730), "不是人工智能生成图，来自仿真运行现场", fill=MUTED, font=font(28))
+    return canvas
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, required=True)
@@ -101,9 +118,31 @@ def main() -> None:
     missing = [str(p) for p in card_paths if not p.is_file()]
     if missing:
         raise FileNotFoundError("缺少轮播卡片: " + ", ".join(missing))
-    vertical = [make_intro()] + [card_to_vertical(path) for path in card_paths] + [make_outro()]
-    durations = [5.0] + [4.0] * 20 + [5.0]
-    assert sum(durations) == 90.0
+    real_screenshots = [
+        (source / "P1-smoke-0000.jpg", "真实观测一：起始画面", "机器人从可达区域开始读取场景"),
+        (source / "P1-smoke-0008.jpg", "真实观测二：场景变化", "动作执行后重新保存彩色观测"),
+        (source / "P1-smoke-0016.jpg", "真实观测三：视角变化", "每一步都记录位姿和目标距离"),
+        (source / "P1-smoke-0024.jpg", "真实观测四：动作之后", "碰撞状态与新帧一起写入记录"),
+        (source / "P1-smoke-0026.jpg", "真实观测五：证据留存", "这张原始截图会进入实验清单"),
+    ]
+    missing_real = [str(path) for path, _, _ in real_screenshots if not path.is_file()]
+    if missing_real:
+        raise FileNotFoundError("缺少真实采集截图: " + ", ".join(missing_real))
+    vertical: list[Image.Image] = [make_intro()]
+    durations: list[float] = [5.0]
+    real_index = 0
+    for index, card_path in enumerate(card_paths, start=1):
+        vertical.append(card_to_vertical(card_path))
+        durations.append(3.25)
+        if index % 4 == 0:
+            path, title, detail = real_screenshots[real_index]
+            vertical.append(screenshot_to_vertical(path, title, detail))
+            durations.append(3.0)
+            real_index += 1
+    vertical.append(make_outro())
+    durations.append(5.0)
+    assert len(vertical) == len(durations) == 27
+    assert abs(sum(durations) - 90.0) < 1e-6
 
     try:
         import imageio_ffmpeg
