@@ -1,0 +1,122 @@
+{
+  "schema_version": "aima-vln-run-manifest/v2",
+  "run_id": "exp02-equivalent-v3-final",
+  "created_at_utc": "2026-07-13T21:15:40+00:00",
+  "classification": "non-official equivalent experiment; transparent failed model evaluation",
+  "disclaimer": "Workflow references the AIMA guide but does not use the private course adapter or protocol.",
+  "sources": {
+    "geniesim_preinstalled_commit": "a04fe4f7fda0ec6e01ab652fa19094008312bf97",
+    "geniesim_public_reference": "v3.0.3",
+    "streamvln_commit": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc",
+    "streamvln_checkpoint_revision": "7b0269ad28e7039a32627b950766c09b5a646f8e",
+    "siglip_revision": "9fdffc58afc957d1a03a25b10dba0329ab15c2a3"
+  },
+  "configuration": {
+    "scene": "market_00_g2",
+    "robot": "G2 rigid navigation proxy",
+    "service": "loopback-only",
+    "actions": {
+      "stop": 0,
+      "forward_0_25m": 1,
+      "left_15deg": 2,
+      "right_15deg": 3
+    },
+    "train_seeds": "1001-1050",
+    "heldout_seeds": "2001-2010",
+    "lora": {
+      "r": 8,
+      "alpha": 16,
+      "dropout": 0.05,
+      "epochs": 1,
+      "batch": 1,
+      "learning_rate": 2e-05,
+      "precision": "bf16"
+    }
+  },
+  "commands": [
+    {
+      "name": "unit_tests",
+      "command": "python3 -m unittest discover -s tests -v",
+      "exit_code": 0
+    },
+    {
+      "name": "compile",
+      "command": "python3 -m compileall adapter scripts tests",
+      "exit_code": 0
+    },
+    {
+      "name": "carousel",
+      "command": "python3 scripts/make_carousel.py --source assets/screenshots/v3 --out-dir assets/carousel --metrics experiments/exp02-equivalent-v3/eval_result.json",
+      "exit_code": 0
+    },
+    {
+      "name": "video",
+      "command": "python3 scripts/make_media.py --source assets/screenshots/v3 --out-dir assets/videos --cards-dir assets/carousel --metrics experiments/exp02-equivalent-v3/eval_result.json",
+      "exit_code": 0
+    },
+    {
+      "name": "media_decode",
+      "command": "ffmpeg decode checks for all final GIF/MP4 files",
+      "exit_code": 0
+    },
+    {
+      "name": "sensitive_scan",
+      "command": "repository public-artifact sensitive-pattern scan",
+      "exit_code": 0
+    }
+  ],
+  "acceptance": {
+    "stage0": "passed with head-depth safety fallback",
+    "stage1": "3 smoke + 50 train + 10 heldout passed",
+    "stage2": "59 finite non-zero updates; adapter fresh-process reload passed",
+    "stage3": "paired base/LoRA evaluation complete; success@0.5m is 0/10 for both",
+    "media": "20 images and 55-second H.264 + AAC Chinese voiceover video verified; voice zh-CN-YunyangNeural",
+    "shutdown_evidence": "verified-2026-07-14-gpufree-off"
+  },
+  "artifacts_sha256": {
+    "experiments/exp02-equivalent-v3/eval_result.json": "50c851126c1aa1e3d80983bb98fb2deacd7f3f0b58eb8f115954b1bb438c008c",
+    "experiments/exp02-equivalent-v3/dataset-validation.json": "d770c11553ea5b40637cc304a1e3ae1b43b2911461c570bbe9867103041f4945",
+    "experiments/exp02-equivalent-v3/stage0-keyboard.json": "5b19061e319448cce84ebaa150b872d09b0410cdc7b0adb5cabfaa70f0c0c5e5",
+    "experiments/exp02-equivalent-v3/stage0-forward-check.json": "4c8a6c9d8966aad57f7d1c963b5632be40abc813c999b4696e7cf7bc0c8b899c",
+    "experiments/exp02-equivalent-v3/stage2_result_v2.json": "f1fe68f1c61990d5bb336c2315d8ded4f2d66ab036ad0159e5fe7ad4934e6234",
+    "artifacts/equivalent-scene/sample.ply": "1243ced110010306c042305cccd603ff9d56330ac8bb56c036ff3f955ac02d38",
+    "artifacts/equivalent-scene/sample.usda": "51166dc850c96f94ba55e206b2751f1d3f9eb584401aa6dc1bcf305f6b5b6c4e",
+    "artifacts/equivalent-scene/sample.usdz": "14c58f903c0ad014703896662d6627a8881eba1d0bf64e492096bcf1fcc0379b",
+    "article/抖音-智元布道师图文稿.md": "98d6578425d74f3673bc3a129677824e84d8eed3bf1839456ababaab0d56975d",
+    "docs/07-PDF逐项验收与等价说明.md": "7f4f59fd9ad37d483f87b2c6061438a1f6535f0b7f889671b3a74d3e7b2a8760",
+    "assets/videos/douyin-vln-retrospective-55s.mp4": "8b027814f032f5bfed4ff2ac5e5749075a59b452d50cadeb0199c97d0a3ef1cb",
+    "assets/videos/douyin-vln-retrospective-55s-voiceover.mp4": "01f9da890d90deec2f14eb05238c4fc091d1b690885d7e2c2d012fa8972fe76a",
+    "assets/audio/douyin-vln-voiceover-55s.txt": "5ecf12548cc0d3862fa2ecd411066926f40f5fb9b96f6339b12b4d4d620b0742",
+    "assets/audio/douyin-vln-voiceover-55s.mp3": "ca0a9caa316b714d6404ad6058980dfdbe0f3d7ca884144fc83f4ad73a048112",
+    "assets/audio/douyin-vln-voiceover-55s.srt": "228a1e75b07e4dfe26b22f922fde34f610cdfffbf37d9f2b4534cc103b6904b4",
+    "assets/screenshots/v3/final-instance-powered-off.jpg": "cdd39ae5713f53651853d26508322650ad4be51c9da725056062f455fc33c11a",
+    "assets/carousel/carousel-01.jpg": "1d3b95cd290e0ca03dcb2f36c9541f549666037c87708781b1d8d09ad552dce2",
+    "assets/carousel/carousel-02.jpg": "f122f83147361147e1f98a9a0b45c895f9643f02c49619a02483b6dd4eebed83",
+    "assets/carousel/carousel-03.jpg": "dd0402d34b04f58a4284a481301916c0a9d2782a8aa4176911bd6d1872caa3e4",
+    "assets/carousel/carousel-04.jpg": "3ad119d5c615ccaaa5ecd41866193d1d84b2e1472099d2cbcd508e332c559d4f",
+    "assets/carousel/carousel-05.jpg": "cba13bc9070c9143e8d6efa5dafc02de3e1b129567274d38586fedd1cd6a5f84",
+    "assets/carousel/carousel-06.jpg": "d1bcf28d7da24accb46c4d1b7ce3e26d102fd3d07bccf51385476bd603f79f10",
+    "assets/carousel/carousel-07.jpg": "fdd4e498a3c5943b7cda271e78ce18bf601d797a2ea91484d6aff8e5e921728c",
+    "assets/carousel/carousel-08.jpg": "6cf8b17077a43e3478780464b4604728156586aa00e1543eb6f395569dc1b9fa",
+    "assets/carousel/carousel-09.jpg": "34626cb4427fe2865caa69bd7c529df13724a869741b5681d9936e092d6a6497",
+    "assets/carousel/carousel-10.jpg": "03e1aa79765809e95f19d403a2b8b88afbc5a5d0c3fe0a60af3e9c5105bd7452",
+    "assets/carousel/carousel-11.jpg": "661613ab2c40d41857afd9b278b9b403ef1e731aa23b7a90ee89674abfb6b6c9",
+    "assets/carousel/carousel-12.jpg": "79d7e270c68f77ab7a014c86ae11730767be7f90b72a98059f9da0b2ed15932e",
+    "assets/carousel/carousel-13.jpg": "914b540f93d391b37c2918fb109740a867df148db99f699b8171b0b431471eb9",
+    "assets/carousel/carousel-14.jpg": "4472dc4819b8b3f13ac2040c06ab8a1e8ab0d29d6754b4c0bddb3bdb85652530",
+    "assets/carousel/carousel-15.jpg": "eb474538ac807b0ca074c0da9aa20d4006fdcad59bbec2026d75a88b3ec5b4c9",
+    "assets/carousel/carousel-16.jpg": "a560cc38bb710cea6ce1766f8fc83c09ef9ef141e93cab871c20f1b8bbbf8de7",
+    "assets/carousel/carousel-17.jpg": "63290e943517a5c1ef267ba5628e23756540b8f4f17afdb985ccb4833c8d7ab2",
+    "assets/carousel/carousel-18.jpg": "8aa87273a9acb473c9dbb37f9ce30bdeab3ce4138f8cb55f457fcc6096aee5bb",
+    "assets/carousel/carousel-19.jpg": "44416e3bad84ef37c137b37cdf57c7957ff0cde2bc42933b1962b91f92b9ac29",
+    "assets/carousel/carousel-20.jpg": "bcb482e45ecf75d106722bf37d8bf2ba74c250224f2d6aa63a3f157cb0c21a82",
+    "assets/media/v3/stage0-keyboard-and-guard.gif": "c2c611b38b4453955c6f7cee9061ddafa9c674a80b81f85ec0e258fff17ea5c4",
+    "assets/media/v3/stage0-keyboard-and-guard.mp4": "1687fc30958c8edcad0b2b0dee24f7491fe5f90ece31d23e7e2b80e83d75bea3",
+    "assets/media/v3/stage1-train-1001.gif": "1c062adebc0f65e76e104ff40f0359498e77acf56358e17c7fcff3681e0ab4fb",
+    "assets/media/v3/stage1-train-1001.mp4": "02178a2a91e05de976b82cf81d897a119bdd56b9913e0dec9889c91d51fd4931",
+    "assets/media/v3/stage2-training-evidence.gif": "b6cdcbdda31fccc3d300d61c5b8536768193fac577c1ee96970a2b38878788ce",
+    "assets/media/v3/stage2-training-evidence.mp4": "dd79a6eafcb233dfe9bee7518e157bc7e04061e518bb4003f03900ba5849f9c6",
+    "assets/media/v3/stage3-base-2004.gif": "738da62fd8ec7b2b0bc3c65962d17c05e87cfd74281c4bd34e02ab20afb5a243",
+    "assets/media/v3/stage3-base-2004.mp4": "1950dea7e8eb88e6cd8789ebb537f0ed97416aabf03d81d69af7f3863e021169"
+  }
+}

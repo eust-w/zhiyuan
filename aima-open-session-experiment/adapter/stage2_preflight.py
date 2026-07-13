@@ -10,9 +10,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
+import re
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -44,7 +47,9 @@ def build_command(*, python: str, repo: Path, checkpoint: Path, vision: Path, da
         "--model_name_or_path", str(checkpoint),
         "--vision_tower", str(vision),
         "--video_folder", str(data),
-        "--version", "qwen",
+        # `qwen` is not a key in StreamVLN's bundled conv_templates. Passing it
+        # silently falls back to vicuna_v1 and masks every navigation label.
+        "--version", "qwen_2",
         "--mm_tunable_parts", "mm_lora_layer",
         "--lora_enable", "True",
         "--lora_r", "8",
@@ -137,13 +142,69 @@ def _patch_qwen_tokenizer(repo: Path) -> dict[str, str]:
 
     dataset_path = repo / "streamvln" / "dataset" / "vln_action_dataset.py"
     dataset_source = dataset_path.read_text(encoding="utf-8")
+    special_ids_original = "    im_start, im_end = tokenizer.additional_special_tokens_ids"
+    special_ids_patched = (
+        '    im_start = tokenizer.convert_tokens_to_ids("<|im_start|>")\n'
+        '    im_end = tokenizer.convert_tokens_to_ids("<|im_end|>")'
+    )
+    for source_name, current_source in (("training", source), ("dataset", dataset_source)):
+        if special_ids_patched not in current_source:
+            if special_ids_original not in current_source:
+                target_path = path if source_name == "training" else dataset_path
+                return {"status": "blocked", "path": str(target_path), "reason": "expected Qwen special-token unpack not found"}
+            current_source = current_source.replace(special_ids_original, special_ids_patched, 1)
+            changed = True
+        if source_name == "training":
+            source = current_source
+        else:
+            dataset_source = current_source
     dataset_original = "if i != 0 and not tokenizer.legacy and IS_TOKENIZER_GREATER_THAN_0_14:"
     dataset_patched = "if i != 0 and not getattr(tokenizer, \"legacy\", False) and IS_TOKENIZER_GREATER_THAN_0_14:"
     if dataset_patched not in dataset_source:
         if dataset_original not in dataset_source:
             return {"status": "blocked", "path": str(dataset_path), "reason": "expected tokenizer legacy check not found"}
-        dataset_path.write_text(dataset_source.replace(dataset_original, dataset_patched, 1), encoding="utf-8")
+        dataset_source = dataset_source.replace(dataset_original, dataset_patched, 1)
         changed = True
+    dispatch_original = (
+        "    if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.PLAIN:\n"
+        "        return preprocess_plain(sources, tokenizer)\n"
+        "    if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:\n"
+        "        return preprocess_llama_2(sources, tokenizer, has_image=has_image)"
+    )
+    qwen_dispatch_guard = (
+        "    if conversation_lib.default_conversation.version == \"qwen\":\n"
+        "        return preprocess_qwen(sources, tokenizer, has_image=has_image)\n"
+    )
+    plain_dispatch = "    if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.PLAIN:\n"
+    search_from = 0
+    found_dispatch = False
+    while True:
+        position = dataset_source.find(plain_dispatch, search_from)
+        if position < 0:
+            break
+        found_dispatch = True
+        if dataset_source[max(0, position - len(qwen_dispatch_guard)) : position] != qwen_dispatch_guard:
+            dataset_source = dataset_source[:position] + qwen_dispatch_guard + dataset_source[position:]
+            position += len(qwen_dispatch_guard)
+            changed = True
+        search_from = position + len(plain_dispatch)
+    if not found_dispatch or dispatch_original not in dataset_source:
+        return {"status": "blocked", "path": str(dataset_path), "reason": "expected preprocess dispatcher not found"}
+    dataset_path.write_text(dataset_source, encoding="utf-8")
+    source_search_from = 0
+    source_found_dispatch = False
+    while True:
+        position = source.find(plain_dispatch, source_search_from)
+        if position < 0:
+            break
+        source_found_dispatch = True
+        if source[max(0, position - len(qwen_dispatch_guard)) : position] != qwen_dispatch_guard:
+            source = source[:position] + qwen_dispatch_guard + source[position:]
+            position += len(qwen_dispatch_guard)
+            changed = True
+        source_search_from = position + len(plain_dispatch)
+    if not source_found_dispatch:
+        return {"status": "blocked", "path": str(path), "reason": "expected training preprocess dispatcher not found"}
     vision_marker = "        model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)\n"
     vision_patch = (
         "        model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)\n"
@@ -172,6 +233,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--result", type=Path, required=True)
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument("--max-steps", type=int, default=None, help="set to 1 for the isolated single-batch gate")
     args = parser.parse_args()
     repo = args.repo.expanduser().resolve()
     # Do not call Path.resolve() here: the compatibility symlink intentionally
@@ -207,6 +269,7 @@ def main() -> None:
         vision=vision,
         data=dataset,
         output=output,
+        max_steps=args.max_steps,
     )
     command_path = result_path.with_name("train-command.txt")
     command_path.parent.mkdir(parents=True, exist_ok=True)
@@ -224,21 +287,58 @@ def main() -> None:
         environment = dict(__import__("os").environ)
         environment["PYTHONPATH"] = f"{repo}:{repo / 'streamvln'}"
         environment.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
-        process = subprocess.run(command, cwd=repo, env=environment, text=True, capture_output=True)
-        (result_path.with_name("train.stdout.log")).write_text(process.stdout, encoding="utf-8")
-        (result_path.with_name("train.stderr.log")).write_text(process.stderr, encoding="utf-8")
-        error = _last_error(process.stderr)
-        gates["full_training"] = {"status": "passed" if process.returncode == 0 else "failed", "exit_code": process.returncode}
+        stdout_path = result_path.with_name("train.stdout.log")
+        stderr_path = result_path.with_name("train.stderr.log")
+        peak_gpu_memory_mib = 0
+        with stdout_path.open("w", encoding="utf-8") as stdout_handle, stderr_path.open("w", encoding="utf-8") as stderr_handle:
+            process = subprocess.Popen(command, cwd=repo, env=environment, text=True, stdout=stdout_handle, stderr=stderr_handle)
+            while process.poll() is None:
+                memory = subprocess.run(
+                    ["nvidia-smi", "--query-compute-apps=used_memory", "--format=csv,noheader,nounits"],
+                    text=True,
+                    capture_output=True,
+                )
+                if memory.returncode == 0:
+                    values = [int(value.strip()) for value in memory.stdout.splitlines() if value.strip().isdigit()]
+                    peak_gpu_memory_mib = max(peak_gpu_memory_mib, sum(values))
+                time.sleep(0.5)
+            return_code = process.wait()
+        stdout_text = stdout_path.read_text(encoding="utf-8")
+        stderr_text = stderr_path.read_text(encoding="utf-8")
+        losses = [float(value) for value in re.findall(r"'loss':\s*([0-9.eE+-]+)", stdout_text)]
+        grad_norms = [float(value) for value in re.findall(r"'grad_norm':\s*([0-9.eE+-]+)", stdout_text)]
+        finite_nonzero_update = any(math.isfinite(value) and value > 0 for value in losses) and any(
+            math.isfinite(value) and value > 0 for value in grad_norms
+        )
+        training_status = "passed" if return_code == 0 and finite_nonzero_update else "failed"
+        training_record = {
+            "status": training_status,
+            "exit_code": return_code,
+            "observed_steps": len(losses),
+            "loss_first": losses[0] if losses else None,
+            "loss_last": losses[-1] if losses else None,
+            "grad_norm_max": max(grad_norms) if grad_norms else None,
+            "peak_gpu_memory_mib": peak_gpu_memory_mib,
+            "nan_or_inf": any(not math.isfinite(value) for value in losses + grad_norms),
+        }
+        if return_code == 0 and not finite_nonzero_update:
+            training_record["error"] = "no finite non-zero loss/gradient update; labels may be fully masked"
+        error = _last_error(stderr_text)
         if error:
-            gates["full_training"]["error"] = error
-            if process.returncode != 0 and ("trainer.train" in process.stderr or "0%|" in process.stderr):
-                gates["single_batch_forward_backward"] = {
-                    "status": "failed",
-                    "observed_in": "full_training_first_batch",
-                    "error": error,
-                }
+            training_record["error"] = error
+        if args.max_steps == 1:
+            gates["single_batch_forward_backward"] = training_record
+            gates["full_training"] = {"status": "not_run", "reason": "single-batch gate invocation"}
+        else:
+            gates["single_batch_forward_backward"] = {
+                "status": "passed" if training_status == "passed" else "failed",
+                "observed_in": "full_training_first_batch",
+                "loss": losses[0] if losses else None,
+                "grad_norm": grad_norms[0] if grad_norms else None,
+            }
+            gates["full_training"] = training_record
         adapter_files = sorted(output.glob("adapter_model*"))
-        if process.returncode == 0 and adapter_files:
+        if args.max_steps is None and training_status == "passed" and adapter_files:
             reload_command = [
                 args.python,
                 str(Path(__file__).with_name("reload_adapter.py")),

@@ -1,41 +1,55 @@
-# 2026-07-13 实验日志
+# GenieSim × StreamVLN 非官方等价实验运行日志
 
-## 环境与安全
+> 教学提示：这份日志区分“控制器能走”“训练真的更新”“模型自己闭环”三件事。流程参考 AIMA 指南，但未使用课程私有适配包，也不提交课程榜单。
 
-- GPUFree L40 48GB、100GB 持久盘、SSH 公钥认证、Isaac Sim 5.1 与 Genie Sim 3.0 已验证。
-- 公开课程私有 adapter/`course_tools` 未找到；本实验全程标注为非官方个人适配，不提交 AgiBot Open Session 榜单。
-- 运行根目录、模型、数据和媒体均在持久盘；公开仓库不保存 IP、实例 ID、连接信息或凭据。
+## 环境与边界
 
-## Stage 0
+- GPUFree L40 48GB、100GB 持久盘、SSH 公钥认证、Isaac Sim 5.1 与预装 Genie Sim 3.0 已验证。
+- 场景为 `market_00_g2`，机器人采用 G2 刚体导航代理与头部 RGB/depth；不宣称真实人形步态。
+- 服务只监听本机回环地址，HTTP 线程排队，所有 Isaac 操作回到主线程执行。
+- 课程私有 adapter、`course_tools` 与 UDP 协议不可得；本轮实现独立、可审计的等价接口。
 
-- 启动 `market_00_g2` + G2 Omnipicker + 头部相机。
-- `/health`、`reset`、`step`、重复 request_id 幂等、`close` 均真实验证。
-- RGB 640×400、depth NPY、pose 和目标距离均有效。
-- USD AABB 遍历触发 SimulationApp clean shutdown；配置记录 `runtime_safe_fallback_no_usd_aabb`，没有伪造障碍结果。
+## Stage 0｜先证明动作与安全门可靠
 
-## Stage 1
+- W/S/A/D/Space 五个按键全部留下 debug-only 记录；后退不进入训练动作空间。
+- 一次清晰前进的位移为 0.25m；转向增量为 15°。
+- 头部深度图中央区域第 10 百分位小于 0.45m 时，危险前进被拒绝，位姿保持不变。
+- RGB、depth、4×4 pose、目标距离和 blocked 状态均可写盘。
 
-- 3 条冒烟、50 条训练（1001–1050）、10 条评测（2001–2010）均已采集。
-- train annotation：50/50 通过；eval annotation：10/10 通过。
-- 每条轨迹包含完整 sidecar（STOP、depth、pose、碰撞、目标），公开动作数组不写最终 STOP。
-- 控制器闭环核验：10/10 在 0.5m 内停止，平均最终距离 0.4800000259m，碰撞 0，平均 27 步。
+## Stage 1｜自采等价数据与三维文件
 
-## StreamVLN
+- 3 条冒烟、50 条训练（seeds 1001–1050）、10 条留出评测（2001–2010）完成。
+- train 50/50、eval 10/10 通过 schema、帧数、动作数、路径与图像解码校验。
+- 公开 RGB 共 1699 帧，无全黑帧；50 条训练轨迹有 50 个不同起点。
+- 1762 帧带标定 RGB-D 合成 20 万点点云，并导出同源 PLY、USDA、USDZ；USDA 与 USDZ 均在新 Isaac 进程验证默认 Prim 与点集。
+- 公开标注首动作是 -1、不写最终 STOP；depth、完整动作、位姿、碰撞和目标信息写入 `geniesim-streamvln/v1` sidecar。
 
-- 代码、real-world checkpoint、SigLIP 的 pinned revision 已核验。
-- GPUFree 直连 Hugging Face 超时，切换 `hf-mirror.com` 成功下载 checkpoint 与 SigLIP 到持久盘。
-- Python 3.9 环境、Transformers 4.45.1 和 StreamVLN 依赖已验证；4 个 checkpoint 分片加载成功。
-- 首次兼容尝试观察到 `RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560`；在视觉 token resize 后对齐 `lm_head.out_features`，随后 50 步 LoRA 训练退出码 0。
-- adapter 在独立 Python 3.9 进程中用 `PeftModel.from_pretrained` 重载通过，哈希写入 `stage2_result.json`；日志摘录见 `stage2-training.stdout.log` 和 `stage2-adapter-reload.log`。
-- `eval_result.json` 仍将 base/LoRA 导航评测标为 `not_run`，因为公开 Habitat evaluator 与 GenieSim sidecar 不兼容；控制器数字不作为模型成绩。
+## Stage 2｜确认训练不是“假通过”
 
-## 媒体
+- 发现上游 `--version qwen` 不存在并静默回退到 Vicuna 模板，导致标签全部被 mask、旧训练出现假 0-loss。
+- 改为真实模板键 `qwen_2`，特殊 token 用 tokenizer ID 解析，并将词表与 `lm_head` 输出对齐。
+- 单批前后向：loss 0.4167、grad norm 0.3836、峰值显存 23008MiB。
+- 完整训练：59 个非零更新步，loss 0.4167→0.0823，最大 grad norm 0.8733353，峰值显存 27846MiB，无 NaN/Inf。
+- adapter 在新进程重载通过；最终 SHA-256 为 `7e4a1fbb6b7fa7b23f2a9459db7f02e88c3cb2ae0a23e23d74f1dfdefd8c57c3`。
 
-- 真实 RGB 帧已脱离运行目录保存为截图。
-- 5 帧 GIF：960×540、5 帧、10fps 播放节奏。
-- 竖屏 MP4：1080×1920、30fps、H.264、无音轨、54 秒；烧录非官方与 fallback 限制字幕。
+## Stage 3｜同一批 10 条的真实模型闭环
 
-## 收尾
+- 基础模型与 LoRA 都读取观测并调用模型 `generate`，离散动作再送回 GenieSim；不是 A* 控制器代跑。
+- 两组严格使用 `eval-2001…2010`，每条重置 cache、动作队列和历史记忆，最大 200 步。
+- 基础模型：success@0.5m 0/10，success@3m 2/10，oracle@3m 3/10，SPL@3m 0.07484，平均最终距离 3.989m，平均路径 9.675m，平均 133.9 步，安全门拦截 132 次。
+- LoRA：success@0.5m 0/10，success@3m 1/10，oracle@3m 1/10，SPL@3m 0.06646，平均最终距离 4.686m，平均路径 5.5m，平均 53.2 步，安全门拦截 45 次。
+- 唯一指标源为 `experiments/exp02-equivalent-v3/eval_result.json`；全部成功与失败 episode 都进入汇总。
 
-- 远端无 `streamvln_train`、适配器重载或 Isaac/GenieSim 残留进程；GPU compute-apps 为空。
-- GPUFree 控制台最终状态为“已关机”；持久盘仍保留代码、日志和模型（模型/adapter 不进入 Git）。
+## 内容与定性
+
+- 每阶段至少两张截图和一段 GIF/MP4；最终轮播 20 张，竖屏成片 1080×1920、30fps、H.264、55 秒，配沉稳男声 AAC 音轨。
+- 本轮对学习目标可称“非官方等价实验闭环完成”，对课程私有脚本与协议不能称“原样复现”。
+- 模型在 0.5m 标准下没有成功，因此公开稿统一使用“透明失败复盘”，绝不把控制器轨迹包装成模型成绩。
+
+## 收尾（2026-07-14）
+
+- 本地执行 31 项单元测试，全部通过；`compileall` 与 `git diff --check` 通过。
+- 最终 GIF 全部多于 1 帧，所有 GIF/MP4 完整解码通过；竖屏成片为 1080×1920、30fps、H.264、55 秒，AAC 音轨为 `zh-CN-YunyangNeural` 沉稳男声。
+- Markdown 内部链接无断链；公开交付扫描未发现邮箱、凭据赋值或非回环 IP。
+- 本地与持久盘的唯一指标源、PLY、USDA、USDZ、55 秒有声成片共 5 个 SHA-256 全部一致；旁车音频文案、MP3 与 SRT 也已纳入最终 manifest。
+- 云端训练、评测、适配器和 GPU compute 进程均为 0；GPUFree 控制台显示“已关机”，裁剪后的无敏感信息证据见 `assets/screenshots/v3/final-instance-powered-off.jpg`。

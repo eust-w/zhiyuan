@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from .occupancy import OccupancyGrid, astar, footprint_cells
 from .protocol import EpisodeReset, EpisodeStep, build_observation
 
@@ -24,6 +26,55 @@ from .protocol import EpisodeReset, EpisodeStep, build_observation
 YAW_BINS = 24
 FORWARD_STEP_M = 0.25
 TURN_RAD = 2.0 * math.pi / YAW_BINS
+
+
+def depth_forward_blocked(depth: Any, *, stop_distance_m: float = 0.45, percentile: float = 10.0) -> bool:
+    """Return whether the calibrated head-depth center contains a near obstacle.
+
+    A percentile over a wide center crop ignores isolated broken pixels while
+    still stopping before a shelf or target fills the robot's forward corridor.
+    """
+    values = np.asarray(depth, dtype=np.float32)
+    if values.ndim != 2 or min(values.shape) < 10:
+        return False
+    height, width = values.shape
+    roi = values[int(0.35 * height) : int(0.85 * height), int(0.30 * width) : int(0.70 * width)]
+    valid = roi[np.isfinite(roi) & (roi > 0.0)]
+    if valid.size < 100:
+        return False
+    return float(np.percentile(valid, percentile)) < float(stop_distance_m)
+
+
+def pinhole_intrinsics(
+    width: int,
+    height: int,
+    focal_length_mm: float,
+    horizontal_aperture_mm: float,
+    vertical_aperture_mm: float,
+) -> list[float]:
+    """Return a row-major 3x3 pinhole matrix from USD camera attributes."""
+
+    if min(width, height) <= 0 or min(focal_length_mm, horizontal_aperture_mm, vertical_aperture_mm) <= 0:
+        raise ValueError("camera dimensions and USD optical attributes must be positive")
+    fx = focal_length_mm * width / horizontal_aperture_mm
+    fy = focal_length_mm * height / vertical_aperture_mm
+    return [fx, 0.0, (width - 1) / 2.0, 0.0, fy, (height - 1) / 2.0, 0.0, 0.0, 1.0]
+
+
+def seeded_start_pose(base: tuple[float, float, int], seed: int) -> tuple[float, float, int]:
+    """Return a unique, bounded start pose for consecutive course seeds.
+
+    The small XY envelope stays in the aisle already verified by the smoke
+    run, while all 24 headings exercise the public 15-degree action space.
+    """
+
+    index = int(seed) % (5 * 3 * YAW_BINS)
+    yaw_bin = index % YAW_BINS
+    y_index = (index // YAW_BINS) % 3
+    x_index = (index // (YAW_BINS * 3)) % 5
+    x_offsets = (-0.50, -0.25, 0.0, 0.25, 0.50)
+    y_offsets = (-0.25, 0.0, 0.25)
+    return base[0] + x_offsets[x_index], base[1] + y_offsets[y_index], yaw_bin
 
 
 def quat_wxyz_from_yaw(yaw: float) -> tuple[float, float, float, float]:
@@ -51,6 +102,9 @@ def action_pose(state: tuple[float, float, int], action_id: int) -> tuple[float,
     if action_id == 1:
         yaw = yaw_bin * TURN_RAD
         return x + FORWARD_STEP_M * math.cos(yaw), y + FORWARD_STEP_M * math.sin(yaw), yaw_bin
+    if action_id == 4:
+        yaw = yaw_bin * TURN_RAD
+        return x - FORWARD_STEP_M * math.cos(yaw), y - FORWARD_STEP_M * math.sin(yaw), yaw_bin
     raise ValueError(f"unsupported action_id: {action_id}")
 
 
@@ -59,8 +113,13 @@ class _PendingCapture:
     event: threading.Event
     base: dict[str, Any]
     frames_left: int = 2
+    transient_retries: int = 0
     result: dict[str, Any] | None = None
     error: BaseException | None = None
+
+
+class _TransientFrame(RuntimeError):
+    """A renderer frame that must not be persisted as an observation."""
 
 
 class IsaacBackend:
@@ -92,6 +151,7 @@ class IsaacBackend:
 
         self.grid: OccupancyGrid | None = None
         self.start_pose = (0.0, 0.0, 0)
+        self.base_start_pose = self.start_pose
         self.current_pose = self.start_pose
         self.goal_cell: tuple[int, int] | None = None
         self.goal_world = (0.0, 0.0)
@@ -107,6 +167,8 @@ class IsaacBackend:
         self._rgb_annotator: Any = None
         self._depth_annotator: Any = None
         self._robot_prim: Any = None
+        self._last_valid_rgb: Any = None
+        self._last_valid_depth: Any = None
         self._main_tasks: queue.Queue[tuple[Any, tuple[Any, ...], threading.Event, dict[str, Any]]] = queue.Queue()
         self._main_thread_id: int | None = None
         self._pending: _PendingCapture | None = None
@@ -133,6 +195,7 @@ class IsaacBackend:
         self._load_usd_scene(robot_cfg, scene_usd, init_position, init_rotation)
         print(json.dumps({"event": "init_robot_cfg_done"}), flush=True)
         self.start_pose = (float(init_position[0]), float(init_position[1]), 0)
+        self.base_start_pose = self.start_pose
         self.current_pose = self.start_pose
 
         self._attach_sensors()
@@ -327,6 +390,7 @@ class IsaacBackend:
             "camera": self.camera_path,
             "occupancy_grid": self.grid is not None,
             "occupancy_source": "usd_aabb" if self.project_usd_aabbs else "runtime_safe_fallback_no_usd_aabb",
+            "forward_safety": "head_depth_center_p10_lt_0.45m",
             "write_root": str(self.root),
         }
 
@@ -337,13 +401,19 @@ class IsaacBackend:
             self.episode_id = request.episode_id
             self.instruction = request.instruction
             self.target_id = request.target_id
-            self.current_pose = self.start_pose
+            self.current_pose = seeded_start_pose(self.base_start_pose, request.seed)
+            if math.dist(self.current_pose[:2], self.goal_world) < 2.0 or math.dist(self.current_pose[:2], self.goal_world) > 6.0:
+                raise RuntimeError("seeded start is outside the required 2-6m goal range")
             self.step_id = 0
             self.collisions = 0
             self.terminated = False
             self.truncated = False
+            self._last_valid_rgb = None
+            self._last_valid_depth = None
             self._call_main(self._set_pose_on_main, self.current_pose)
-            return self._wait_for_capture({"collision": False, "blocked": False, "terminated": False, "truncated": False})
+            response = self._wait_for_capture({"collision": False, "blocked": False, "terminated": False, "truncated": False})
+            response.update({"episode_seed": request.seed, "start_pose_source": "seeded_verified_aisle_envelope"})
+            return response
 
     def step(self, request: EpisodeStep) -> dict[str, Any]:
         with self._op_lock:
@@ -355,25 +425,34 @@ class IsaacBackend:
                 )
             blocked = False
             collision = False
+            blocked_source = None
             proposed = action_pose(self.current_pose, request.action_id)
             if proposed is None:
                 self.terminated = True
-            elif request.action_id == 1:
-                if self._pose_is_free(proposed):
+            elif request.action_id in (1, 4):
+                depth_blocked = request.action_id == 1 and self._last_valid_depth is not None and depth_forward_blocked(self._last_valid_depth)
+                if depth_blocked:
+                    blocked = True
+                    collision = True
+                    blocked_source = "head_depth_forward_guard"
+                    self.collisions += 1
+                elif self._pose_is_free(proposed):
                     self.current_pose = proposed
                     self._call_main(self._set_pose_on_main, self.current_pose)
                 else:
                     blocked = True
                     collision = True
+                    blocked_source = "occupancy_grid"
                     self.collisions += 1
             else:
                 self.current_pose = proposed
                 self._call_main(self._set_pose_on_main, self.current_pose)
             self.step_id += 1
             self.truncated = self.step_id >= self.max_steps and not self.terminated
-            return self._wait_for_capture(
-                {"collision": collision, "blocked": blocked, "terminated": self.terminated, "truncated": self.truncated}
-            )
+            base = {"collision": collision, "blocked": blocked, "terminated": self.terminated, "truncated": self.truncated}
+            if blocked_source:
+                base["blocked_source"] = blocked_source
+            return self._wait_for_capture(base)
 
     def close(self, episode_id: str) -> dict[str, Any]:
         return {
@@ -395,9 +474,21 @@ class IsaacBackend:
             return
         try:
             pending.result = self._capture_on_main(pending.base)
+        except _TransientFrame as exc:
+            pending.transient_retries += 1
+            if pending.transient_retries <= 30:
+                pending.frames_left = 1
+                return
+            if self._last_valid_rgb is not None and self._last_valid_depth is not None:
+                pending.base["allow_rgbd_reuse"] = True
+                pending.frames_left = 1
+                return
+            pending.error = RuntimeError(f"renderer did not produce a valid frame after 30 retries: {exc}")
         except BaseException as exc:  # propagate to waiting HTTP request
             pending.error = exc
         finally:
+            if pending.result is None and pending.error is None:
+                return
             self._pending = None
             pending.event.set()
 
@@ -476,6 +567,19 @@ class IsaacBackend:
             raise RuntimeError(f"depth annotator returned unexpected shape {depth.shape}")
         if rgb.shape[-1] >= 4:
             rgb = rgb[..., :3]
+        reused_stop_frame = False
+        reused_after_dropout = False
+        if not np.any(rgb):
+            if base["terminated"] and self._last_valid_rgb is not None and self._last_valid_depth is not None:
+                rgb = self._last_valid_rgb.copy()
+                depth = self._last_valid_depth.copy()
+                reused_stop_frame = True
+            elif base.get("allow_rgbd_reuse") and self._last_valid_rgb is not None and self._last_valid_depth is not None:
+                rgb = self._last_valid_rgb.copy()
+                depth = self._last_valid_depth.copy()
+                reused_after_dropout = True
+            else:
+                raise _TransientFrame("RGB annotator returned an all-zero frame")
         depth_fallback = not np.isfinite(depth).any()
         if depth_fallback:
             # Isaac can return an all-infinite depth frame when the camera is
@@ -483,6 +587,9 @@ class IsaacBackend:
             # sensor max range instead of dropping the episode; the sidecar
             # explicitly records this conservative input fallback.
             depth = np.full((self.height, self.width), 10.0, dtype=np.float32)
+        if not reused_stop_frame and not reused_after_dropout:
+            self._last_valid_rgb = rgb.copy()
+            self._last_valid_depth = depth.copy()
         step_name = f"{self.step_id:04d}"
         episode_dir = self.media_root / self.episode_id
         episode_dir.mkdir(parents=True, exist_ok=True)
@@ -503,10 +610,49 @@ class IsaacBackend:
             terminated=base["terminated"],
             truncated=base["truncated"],
         )
-        response.update({"target_id": self.target_id, "target_xy": list(self.goal_world)})
+        response.update(
+            {
+                "target_id": self.target_id,
+                "target_xy": list(self.goal_world),
+                **self._camera_calibration_on_main(),
+            }
+        )
         if depth_fallback:
             response["depth_fallback"] = "sensor_max_range"
+        if reused_stop_frame:
+            response["rgbd_reused_previous_valid_on_stop"] = True
+        if reused_after_dropout:
+            response["rgbd_reused_previous_valid_after_30_zero_frames"] = True
+        if base.get("blocked_source"):
+            response["blocked_source"] = base["blocked_source"]
         return response
+
+    def _camera_calibration_on_main(self) -> dict[str, Any]:
+        """Record calibration needed to turn captured RGB-D into world points.
+
+        USD matrices use row-vector layout; transposing produces the conventional
+        column-vector camera-to-world matrix used by the offline exporter.
+        """
+
+        from pxr import Usd, UsdGeom
+        import omni.usd
+
+        stage = omni.usd.get_context().get_stage()
+        prim = stage.GetPrimAtPath(self.camera_path)
+        if not prim.IsValid() or not prim.IsA(UsdGeom.Camera):
+            raise RuntimeError(f"camera prim is missing or not UsdGeom.Camera: {self.camera_path}")
+        camera = UsdGeom.Camera(prim)
+        focal = float(camera.GetFocalLengthAttr().Get())
+        horizontal = float(camera.GetHorizontalApertureAttr().Get())
+        vertical_attr = camera.GetVerticalApertureAttr().Get()
+        vertical = float(vertical_attr) if vertical_attr else horizontal * self.height / self.width
+        matrix = UsdGeom.Xformable(prim).ComputeLocalToWorldTransform(Usd.TimeCode.Default())
+        camera_to_world = [float(matrix[column][row]) for row in range(4) for column in range(4)]
+        return {
+            "camera_intrinsics": pinhole_intrinsics(self.width, self.height, focal, horizontal, vertical),
+            "camera_to_world": camera_to_world,
+            "camera_model": "usd_pinhole_opencv_pixels_camera_looks_minus_z",
+        }
 
     @staticmethod
     def _write_rgb(path: Path, rgb: Any) -> None:
@@ -522,4 +668,4 @@ class IsaacBackend:
         return round(x / self.resolution), round(y / self.resolution)
 
 
-__all__ = ["IsaacBackend", "action_pose", "pose_matrix_xy_yaw", "quat_wxyz_from_yaw"]
+__all__ = ["IsaacBackend", "action_pose", "pinhole_intrinsics", "pose_matrix_xy_yaw", "quat_wxyz_from_yaw", "seeded_start_pose"]

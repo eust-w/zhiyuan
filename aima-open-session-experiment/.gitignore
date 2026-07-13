@@ -19,3 +19,7 @@ assets/frames/raw/
 *.ckpt
 *.pth
 *.pt
+# The compact self-captured equivalent USD/PLY assets are deliverables and are
+# intentionally tracked; private/raw capture data remains ignored below.
+dataset-v*/
+experiments/**/checkpoints/

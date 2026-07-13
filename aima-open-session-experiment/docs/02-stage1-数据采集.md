@@ -1,47 +1,54 @@
-# 02｜Stage 1：StreamVLN 数据采集
+# 02｜Stage 1：把仿真变成可训练数据
 
-状态：已完成 3 条冒烟、50 条训练和 10 条评测采集；数据来自明确标注为 fallback 的确定性控制器。
+同学们，Stage 1 不是“多截几张图”，而是把每条导航过程整理成视觉、动作、语言和几何信息严格对齐的监督样本。先采 3 条冒烟轨迹，确认链路没问题，再采 50 条训练和 10 条固定评测。
 
-## 数据配置
+![Stage 1 数据验收卡](../assets/screenshots/v3/stage1-validation.png)
 
-| 字段 | 值 |
-| --- | --- |
-| 场景 | `market_00_g2` |
-| 目标 | 运行时生成的红色目标牌 `red-target-marker` |
-| 训练 seeds | `1001–1050`（50 条） |
-| 评测 seeds | `2001–2010`（10 条） |
-| 指令 | 训练 5 个英文模板；评测 2 个未见英文改写 |
-| 公共动作 | 首项 `-1`，随后 `1/2/3`；不写最终 STOP |
-| sidecar | `geniesim-streamvln/v1`，含完整 STOP、depth、pose、碰撞与目标信息 |
+## 第一步：固定数据划分
 
-## 实际结果
+| 数据 | episode / seed | 用途 |
+| --- | --- | --- |
+| 冒烟 | 3 条，`3001–3003` | 尽早暴露渲染和 schema 问题 |
+| 训练 | 50 条，`1001–1050` | LoRA 微调 |
+| held-out | 10 条，`2001–2010` | base/LoRA 配对评测 |
 
-远端采集日志记录每条轨迹 26 个非 STOP 动作，最终距离 `0.4800000259m`，STOP 后 `terminated=true`。训练和评测 annotation 均严格通过：
+50 条训练轨迹具有 50 个不同起始位姿；起点到目标优先保持在 2–6m，同一连通区域内运行。目标是在场景中运行时生成的红色目标牌。
+
+## 第二步：理解两套数据视图
+
+公开 `annotations.json` 遵循 StreamVLN 格式：第一项动作是 `-1`，RGB 数量与动作数组长度相同，不把最终 STOP 写入公开动作。完整 STOP、depth、4×4 pose、相机内参/外参、碰撞、目标和传感器降级字段保存在 `geniesim-streamvln/v1` sidecar。
+
+![训练轨迹起点](../assets/screenshots/v3/train-1001-start.jpg)
+
+![货架第一视角](../assets/screenshots/v3/train-1025-mid.jpg)
+
+![另一条训练轨迹](../assets/screenshots/v3/train-1050-mid.jpg)
+
+![真实轨迹动图](../assets/media/v3/stage1-train-1001.gif)
+
+原始 1080p/30fps 无声轨迹片段：[stage1-train-1001.mp4](../assets/media/v3/stage1-train-1001.mp4)。
+
+## 第三步：做严格校验
+
+机器可读结果在 [`dataset-validation.json`](../experiments/exp02-equivalent-v3/dataset-validation.json)：
 
 ```text
 train: episodes=50, valid=50, invalid=0
 eval:  episodes=10, valid=10, invalid=0
 ```
 
-每条公开 episode 的 RGB 数量与 `[-1, actions…]` 长度一致；完整轨迹另存 sidecar，避免把 STOP 混入公开动作数组。
+严格模式逐条检查 schema、帧/动作数、路径是否仍在实验根目录、图像是否真正可解码。最终 `dataset-v3` 有 1699 张公开 RGB，**0 张全黑帧**；仅 2 个非 STOP 观测在连续 30 个全黑渲染帧后显式复用了上一有效 RGB-D，并在 sidecar 留痕，没有把降级悄悄藏掉。
 
-![起点帧](../assets/screenshots/P1-smoke-0000.jpg)
+## 第四步：从同一批 RGB-D 自采等价资产
 
-![旋转后帧](../assets/screenshots/P1-smoke-0008.jpg)
+课程给出的 `sample.ply/.usda/.usdz` 私有原件无法从公开渠道取得。我们没有伪造原件，而是用 1762 帧带相机标定的 RGB-D 融合出 20 万彩色点，再从同一批点写出：
 
-![目标附近帧](../assets/screenshots/P1-smoke-0026.jpg)
+- `sample.ply`
+- `sample.usda`
+- `sample.usdz`
 
-![真实采集过程 GIF](../assets/gifs/stage1-smoke-controller.gif)
+三份文件均在新 Isaac 进程中重新打开，默认 prim 与 200,000 个点均通过验证。清单和 SHA-256 在 [`asset-capture-manifest.json`](../artifacts/equivalent-scene/asset-capture-manifest.json)，固定声明为 `geniesim-self-captured-equivalent/v1`，不能冒充课程原件。
 
-## 复核方法
+## 本阶段结论
 
-```bash
-PYTHONPATH=aima-open-session-experiment \
-python3 -m adapter.collect_dataset --split train --start-seed 1001 --count 50
-```
-
-采集器只调用 loopback HTTP，不导入 Isaac；它复制响应中的 RGB/depth 到 `dataset/{split}/{episode}/`，并为每条 episode 写 `dataset/sidecar/{episode}.json`。如果服务返回错误或文件不在实验根目录内，采集立即失败。
-
-## 限制
-
-由于占据栅格为安全 fallback，本批数据只证明接口、帧/动作对齐和可达目标闭环，不证明真实障碍环境下的碰撞感知导航质量；若要发布成绩，必须先恢复兼容的 USD AABB 投影并重新采集。
+3 条冒烟、50 条训练、10 条 held-out、严格校验和等价资产都已完成。这里证明的是“采集链可训练、可复核”；控制器能到目标不等于 StreamVLN 模型也能到，真正模型成绩只看 Stage 3。

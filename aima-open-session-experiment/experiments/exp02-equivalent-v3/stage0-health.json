@@ -1,0 +1,12 @@
+{
+  "ready": true,
+  "scene": "market_00_g2",
+  "robot": "G2_omnipicker",
+  "camera": "/genie/head_link3/head_front_Camera",
+  "occupancy_grid": true,
+  "occupancy_source": "runtime_safe_fallback_no_usd_aabb",
+  "forward_safety": "head_depth_center_p10_lt_0.45m",
+  "service": "geniesim-streamvln",
+  "host": "127.0.0.1",
+  "port": 5802
+}

@@ -92,6 +92,22 @@ class AdapterService:
                     self._request_cache[cache_key] = result
                 self._write(handler, 200, result)
                 return
+            if len(path_parts) == 5 and path_parts[:3] == ["v1", "debug", "episodes"] and path_parts[4] == "step":
+                payload = self._read_json(handler)
+                episode_id = path_parts[3]
+                step = EpisodeStep.from_debug_json(payload)
+                with self._lock:
+                    if episode_id not in self._active:
+                        raise KeyError(f"unknown episode: {episode_id}")
+                    cache_key = (episode_id, f"debug:{step.request_id}")
+                    if cache_key in self._request_cache:
+                        self._write(handler, 200, self._request_cache[cache_key])
+                        return
+                result = self._normalize_response(self.backend.step(step))
+                with self._lock:
+                    self._request_cache[cache_key] = result
+                self._write(handler, 200, result)
+                return
             if len(path_parts) == 4 and path_parts[:2] == ["v1", "episodes"] and path_parts[3] == "close":
                 episode_id = path_parts[2]
                 with self._lock:

@@ -1,32 +1,55 @@
-# 03｜Stage 2：StreamVLN LoRA 微调
+# 03｜Stage 2：让 LoRA 真的发生更新
 
-状态：四道 Stage 2 gate 已完成；数据 gate、首 batch 前向/反向、50 步 LoRA 训练和新进程 adapter 重载均通过。训练 loss 按实际日志记录为 `0.0`，不把它解释为模型质量结论。
+同学们，训练进程“退出码为 0”并不等于训练有效。本轮第一次运行就遇到一个很典型的陷阱：上游脚本收到不存在的 `qwen` 模板键后静默回退到 Vicuna，动作标签全部被 mask，最后 59 步 loss 和梯度都是 0。我们保留失败证据，并把“非零 loss + 非零梯度”设为硬门。
 
-## 固定配置
+![Stage 2 四道门](../assets/screenshots/v3/stage2-gates.png)
 
-| 参数 | 值 |
+## 固定训练配置
+
+| 参数 | 本轮值 |
 | --- | --- |
-| checkpoint | StreamVLN real-world revision `7b0269…` |
-| SigLIP | `9fdffc…` |
+| 基座 | StreamVLN real-world，固定 revision `7b0269…` |
+| 视觉塔 | SigLIP，固定 revision `9fdffc…` |
 | LoRA | `r=8`、`alpha=16`、dropout `0.05` |
-| 训练 | 1 epoch、batch 1、gradient accumulation 1、LR `2e-5` |
-| 精度 | BF16；只有保留 OOM 证据后才允许 4-bit |
-| multimodal | `mm_tunable_parts=mm_lora_layer` |
-| 运行环境 | 独立 Python 3.9；Isaac Sim 保持 Python 3.11 |
+| 训练 | 1 epoch、batch 1、LR `2e-5`、BF16 |
+| 多模态 | `mm_tunable_parts=mm_lora_layer`、gradient checkpointing |
+| 环境 | StreamVLN Python 3.9；Isaac Python 3.11 完全分开 |
 
-## 四道 gate
+## 第一道门：dataset-only
 
-1. dataset-only：`train/annotations.json` 严格校验 50/50 已通过。
-2. 单 batch 前向/反向：随完整训练首 batch 执行，通过。
-3. 完整训练：公开 StreamVLN 入口加载 4 个分片，50/50 步完成，退出码 0；没有 OOM 或 NaN。
-4. adapter 重载：独立 Python 3.9 进程加载同一基座并用 PEFT 挂载 LoRA，通过；adapter SHA-256 已写入 `stage2_result.json`。
+50/50 条训练 episode 在加载模型前先通过严格检查，避免花 GPU 时间训练坏数据。
 
-命令由 `adapter/stage2_preflight.py` 生成并保存为 `train-command.txt`；任何 gate 失败都会写入 `stage2_result.json` 的 `blocked/failed` 状态，不生成伪 adapter。
+## 第二道门：单 batch 前后向
 
-## 许可边界
+正确模板键改为公开代码真实存在的 `qwen_2`；同时用 token 字符串解析 `<|im_start|>` 与 `<|im_end|>`，避免把“额外 special token 数量恰好等于 2”当成前提。独立单批次结果：
 
-StreamVLN 代码仓库 README 标注 CC BY-NC-SA 4.0；checkpoint 的独立授权/再分发条款未在本实验中确认。项目仅作个人非商业研究演示，权重和 adapter 保持在持久盘，不进入 Git 或公开素材。参考：[StreamVLN 官方仓库](https://github.com/InternRobotics/StreamVLN)。
+```text
+loss       = 0.4167
+grad_norm  = 0.3836
+peak VRAM  ≈ 22.47 GiB
+NaN / Inf  = false
+```
 
-## 当前结论
+只有这一步通过，完整训练才会启动。
 
-首次重跑曾观察到 `RuntimeError: shape '[-1, 152064]' is invalid for input of size 241878560`；根因是视觉 token resize 后 `lm_head.out_features=151648` 而旧 config 仍为 `152064`。兼容层在 `initialize_vision_tokenizer` 后对齐词表后，训练和重载均通过。后续已补齐独立 GenieSim sidecar evaluator；模型评测结果不写入本页训练结论，统一以 Stage 3 和 `eval_result.json` 为准。
+## 第三道门：完整训练
+
+![59 步 loss 与 grad_norm](../assets/screenshots/v3/stage2-loss-curve.png)
+
+训练证据动图：[stage2-training-evidence.gif](../assets/media/v3/stage2-training-evidence.gif)；1080p/30fps 无声片段：[MP4](../assets/media/v3/stage2-training-evidence.mp4)。
+
+完整训练实际记录 **59 个更新步**，首步 loss `0.4167`，末步 `0.0823`，最大 grad_norm `0.8733`，峰值显存约 `27.19GiB`，没有 OOM、NaN 或 Inf。训练 loss 下降只说明模型拟合了这批数据，不能替代仿真成功率。
+
+## 第四道门：新进程重载
+
+训练结束后另起 Python 3.9 进程，用 PEFT 将 adapter 挂载到基座，重载通过。adapter 文件 SHA-256 为：
+
+```text
+7e4a1fbb6b7fa7b23f2a9459db7f02e88c3cb2ae0a23e23d74f1dfdefd8c57c3
+```
+
+完整机器结果见 [`stage2_result_v2.json`](../experiments/exp02-equivalent-v3/stage2_result_v2.json)，原始 loss 日志见 [`stage2-train.stdout.log`](../experiments/exp02-equivalent-v3/logs/stage2-train.stdout.log)。权重和 adapter 只保留在持久盘，不提交 Git、不再分发。
+
+## 本阶段结论
+
+Stage 2 的数据门、真实反向传播、完整训练和新进程重载均已完成。真正的质量判断继续交给 Stage 3：同一批 held-out 上 base 与 LoRA 谁更好，由 `eval_result.json` 说话。

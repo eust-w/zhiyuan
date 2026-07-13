@@ -84,6 +84,8 @@ class ServiceTests(unittest.TestCase):
             _, duplicate = self.request(base + "/v1/episodes/e1/step", {"request_id": "r1", "action_id": 1})
             self.assertEqual(first, duplicate)
             self.assertEqual(backend.steps, 1)
+            _, backward = self.request(base + "/v1/debug/episodes/e1/step", {"request_id": "keyboard-s", "action_id": 4})
+            self.assertEqual(backward["step_id"], 2)
             self.assertEqual(self.request(base + "/v1/episodes/e1/close", {"episode_id": "e1"})[1]["closed"], True)
             service.shutdown()
             thread.join(timeout=2)
@@ -112,4 +114,3 @@ class ServiceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

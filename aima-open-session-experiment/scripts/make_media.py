@@ -1,9 +1,11 @@
-"""Build the smoke GIF and the expanded Chinese 90-second Douyin video."""
+"""Build evidence GIFs and a 55-second silent, caption-burned Douyin video."""
 
 from __future__ import annotations
 
 import argparse
 import glob
+import json
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -22,6 +24,8 @@ def font(size: int):
     paths = [
         "/System/Library/Fonts/PingFang.ttc",
         "/System/Library/Fonts/Hiragino Sans GB.ttc",
+        "/System/Library/Fonts/STHeiti Medium.ttc",
+        "/System/Library/Fonts/STHeiti Light.ttc",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
     ]
     paths += glob.glob("/System/Library/AssetsV2/*/*/AssetData/Hei.ttf")
@@ -58,12 +62,12 @@ def make_intro() -> Image.Image:
     return canvas
 
 
-def make_outro() -> Image.Image:
+def make_outro(base_success: int, lora_success: int) -> Image.Image:
     canvas = Image.new("RGB", (1080, 1920), BG)
     d = ImageDraw.Draw(canvas)
     d.text((70, 300), "最后，把结果说清楚", fill=ORANGE, font=font(48))
-    d.text((70, 420), "基础模型：0/10", fill=WHITE, font=font(66))
-    d.text((70, 530), "低秩适配：0/10", fill=WHITE, font=font(66))
+    d.text((70, 420), f"基础模型：{base_success}/10", fill=WHITE, font=font(66))
+    d.text((70, 530), f"低秩适配：{lora_success}/10", fill=WHITE, font=font(66))
     d.rounded_rectangle((70, 720, 1010, 1120), radius=28, fill=PANEL)
     d.text((120, 800), "成功率为零", fill=WHITE, font=font(50))
     d.text((120, 900), "但模型 → 接口 → 仿真 → 指标", fill=ORANGE, font=font(40))
@@ -103,13 +107,17 @@ def main() -> None:
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--cards-dir", type=Path, required=True)
+    parser.add_argument("--metrics", type=Path, required=True)
     args = parser.parse_args()
     source = args.source.expanduser().resolve()
     out_dir = args.out_dir.expanduser().resolve()
     cards_dir = args.cards_dir.expanduser().resolve()
+    metrics = json.loads(args.metrics.expanduser().resolve().read_text(encoding="utf-8"))
+    base_success = int(metrics["base_model"]["model_evaluation"]["summary"]["success_0_5"])
+    lora_success = int(metrics["lora_model"]["model_evaluation"]["summary"]["success_0_5"])
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    names = ["P1-smoke-0000.jpg", "P1-smoke-0008.jpg", "P1-smoke-0016.jpg", "P1-smoke-0024.jpg", "P1-smoke-0026.jpg"]
+    names = ["train-1001-start.jpg", "train-1025-mid.jpg", "stage0-before-block.jpg", "stage3-base-2004-mid.jpg", "stage3-base-2004-end.jpg"]
     gif_frames = load_frames(source, names, (960, 540))
     gif_path = out_dir / "stage1-smoke-controller.gif"
     gif_frames[0].save(gif_path, save_all=True, append_images=gif_frames[1:], duration=600, loop=0, disposal=2)
@@ -119,39 +127,39 @@ def main() -> None:
     if missing:
         raise FileNotFoundError("缺少轮播卡片: " + ", ".join(missing))
     real_screenshots = [
-        (source / "P1-smoke-0000.jpg", "真实观测一：起始画面", "机器人从可达区域开始读取场景"),
-        (source / "P1-smoke-0008.jpg", "真实观测二：场景变化", "动作执行后重新保存彩色观测"),
-        (source / "P1-smoke-0016.jpg", "真实观测三：视角变化", "每一步都记录位姿和目标距离"),
-        (source / "P1-smoke-0024.jpg", "真实观测四：动作之后", "碰撞状态与新帧一起写入记录"),
-        (source / "P1-smoke-0026.jpg", "真实观测五：证据留存", "这张原始截图会进入实验清单"),
+        (source / "train-1001-start.jpg", "真实观测一：训练起点", "第一视角彩色图、深度图与位姿同步保存"),
+        (source / "train-1025-mid.jpg", "真实观测二：货架细节", "50 条轨迹覆盖不同起点和朝向"),
+        (source / "stage0-before-block.jpg", "真实观测三：近障碍", "头部深度安全门会拒绝危险前进"),
+        (source / "stage3-base-2004-mid.jpg", "真实观测四：模型闭环", "动作来自视觉语言模型生成，不是控制器代跑"),
+        (source / "stage3-base-2004-end.jpg", "真实观测五：失败终点", "失败轨迹同样进入十条总体指标"),
     ]
     missing_real = [str(path) for path, _, _ in real_screenshots if not path.is_file()]
     if missing_real:
         raise FileNotFoundError("缺少真实采集截图: " + ", ".join(missing_real))
     vertical: list[Image.Image] = [make_intro()]
-    durations: list[float] = [5.0]
+    durations: list[float] = [3.0]
     real_index = 0
     for index, card_path in enumerate(card_paths, start=1):
         vertical.append(card_to_vertical(card_path))
-        durations.append(3.25)
+        durations.append(1.75)
         if index % 4 == 0:
             path, title, detail = real_screenshots[real_index]
             vertical.append(screenshot_to_vertical(path, title, detail))
-            durations.append(3.0)
+            durations.append(2.5)
             real_index += 1
-    vertical.append(make_outro())
-    durations.append(5.0)
+    vertical.append(make_outro(base_success, lora_success))
+    durations.append(4.5)
     assert len(vertical) == len(durations) == 27
-    assert abs(sum(durations) - 90.0) < 1e-6
+    assert abs(sum(durations) - 55.0) < 1e-6
 
     try:
-        import imageio_ffmpeg
-
-        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+        ffmpeg = shutil.which("ffmpeg")
+        if not ffmpeg:
+            raise RuntimeError("ffmpeg is not installed")
     except Exception as exc:  # pragma: no cover
         raise SystemExit(f"需要 ffmpeg 才能输出视频: {exc}") from exc
 
-    mp4_path = out_dir / "stage1-smoke-retrospective-vertical-90s.mp4"
+    mp4_path = out_dir / "douyin-vln-retrospective-55s.mp4"
     with tempfile.TemporaryDirectory(prefix="aima-media-") as temp:
         temp_dir = Path(temp)
         paths: list[Path] = []
@@ -176,7 +184,7 @@ def main() -> None:
                 "-i",
                 str(concat),
                 "-t",
-                "90",
+                "55",
                 "-vf",
                 "fps=30,format=yuv420p",
                 "-an",

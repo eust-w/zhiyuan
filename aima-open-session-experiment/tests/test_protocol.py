@@ -18,6 +18,11 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(ACTIONS, {0: "stop", 1: "forward", 2: "left", 3: "right"})
         self.assertEqual(EpisodeStep.from_json({"request_id": "r1", "action_id": 1}).action_id, 1)
 
+    def test_backward_is_debug_only(self):
+        with self.assertRaises(ProtocolError):
+            EpisodeStep.from_json({"request_id": "r", "action_id": 4})
+        self.assertEqual(EpisodeStep.from_debug_json({"request_id": "r", "action_id": 4}).action_id, 4)
+
     def test_reset_requires_nonempty_episode_instruction_and_target(self):
         reset = EpisodeReset.from_json(
             {
@@ -65,4 +70,3 @@ class ProtocolTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

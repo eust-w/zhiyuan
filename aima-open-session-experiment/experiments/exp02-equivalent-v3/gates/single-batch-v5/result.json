@@ -1,0 +1,56 @@
+{
+  "schema_version": "geniesim-streamvln/v1",
+  "created_at_utc": "2026-07-13T17:16:39+00:00",
+  "official": false,
+  "config": {
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "epochs": 1,
+    "batch": 1,
+    "learning_rate": 2e-05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "mm_tunable_parts": "mm_lora_layer"
+  },
+  "gates": {
+    "streamvln_compat": {
+      "status": "applied",
+      "path": "/root/gpufree-data/zhiyuan-aima/workspace/StreamVLN/streamvln/streamvln_train.py",
+      "dataset_path": "/root/gpufree-data/zhiyuan-aima/workspace/StreamVLN/streamvln/dataset/vln_action_dataset.py",
+      "vocab_alignment": "lm_head.out_features"
+    },
+    "dataset_only": {
+      "episodes": 50,
+      "valid": 50,
+      "invalid": 0,
+      "errors": []
+    },
+    "checkpoint_files": {
+      "status": "ready",
+      "files": {
+        "/root/gpufree-data/zhiyuan-aima/checkpoints/StreamVLN-real-world/config.json": true,
+        "/root/gpufree-data/zhiyuan-aima/checkpoints/StreamVLN-real-world/model.safetensors.index.json": true,
+        "/root/gpufree-data/zhiyuan-aima/checkpoints/SigLIP/config.json": true
+      }
+    },
+    "single_batch_forward_backward": {
+      "status": "passed",
+      "exit_code": 0,
+      "observed_steps": 1,
+      "loss_first": 0.4167,
+      "loss_last": 0.4167,
+      "grad_norm_max": 0.38360100984573364,
+      "peak_gpu_memory_mib": 23008,
+      "nan_or_inf": false
+    },
+    "full_training": {
+      "status": "not_run",
+      "reason": "single-batch gate invocation"
+    },
+    "adapter_reload": {
+      "status": "not_run"
+    }
+  },
+  "command_file": "/root/gpufree-data/zhiyuan-aima/workspace/aima-open-session-experiment/experiments/exp02-equivalent-v3/gates/single-batch-v5/train-command.txt"
+}

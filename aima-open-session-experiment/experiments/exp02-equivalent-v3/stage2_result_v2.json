@@ -1,0 +1,71 @@
+{
+  "schema_version": "geniesim-streamvln/v1",
+  "created_at_utc": "2026-07-13T17:21:52+00:00",
+  "official": false,
+  "config": {
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "epochs": 1,
+    "batch": 1,
+    "learning_rate": 2e-05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "mm_tunable_parts": "mm_lora_layer"
+  },
+  "gates": {
+    "streamvln_compat": {
+      "status": "already_applied",
+      "path": "/root/gpufree-data/zhiyuan-aima/workspace/StreamVLN/streamvln/streamvln_train.py",
+      "dataset_path": "/root/gpufree-data/zhiyuan-aima/workspace/StreamVLN/streamvln/dataset/vln_action_dataset.py",
+      "vocab_alignment": "lm_head.out_features"
+    },
+    "dataset_only": {
+      "episodes": 50,
+      "valid": 50,
+      "invalid": 0,
+      "errors": []
+    },
+    "checkpoint_files": {
+      "status": "ready",
+      "files": {
+        "/root/gpufree-data/zhiyuan-aima/checkpoints/StreamVLN-real-world/config.json": true,
+        "/root/gpufree-data/zhiyuan-aima/checkpoints/StreamVLN-real-world/model.safetensors.index.json": true,
+        "/root/gpufree-data/zhiyuan-aima/checkpoints/SigLIP/config.json": true
+      }
+    },
+    "single_batch_forward_backward": {
+      "status": "passed",
+      "observed_in": "full_training_first_batch",
+      "loss": 0.4167,
+      "grad_norm": 0.39111199975013733
+    },
+    "full_training": {
+      "status": "passed",
+      "exit_code": 0,
+      "observed_steps": 59,
+      "loss_first": 0.4167,
+      "loss_last": 0.0823,
+      "grad_norm_max": 0.8733353018760681,
+      "peak_gpu_memory_mib": 27846,
+      "nan_or_inf": false
+    },
+    "adapter_reload": {
+      "status": "passed",
+      "exit_code": 0,
+      "command": [
+        "/root/gpufree-data/zhiyuan-aima/cache/conda/streamvln-py39/bin/python",
+        "/root/gpufree-data/zhiyuan-aima/workspace/aima-open-session-experiment/adapter/reload_adapter.py",
+        "--repo",
+        "/root/gpufree-data/zhiyuan-aima/workspace/StreamVLN",
+        "--adapter",
+        "/root/gpufree-data/zhiyuan-aima/workspace/aima-open-session-experiment/experiments/exp02-equivalent-v3/checkpoints/streamvln-lora-v2"
+      ],
+      "log": "/root/gpufree-data/zhiyuan-aima/workspace/aima-open-session-experiment/experiments/exp02-equivalent-v3/adapter-reload.log",
+      "adapter_sha256": {
+        "/root/gpufree-data/zhiyuan-aima/workspace/aima-open-session-experiment/experiments/exp02-equivalent-v3/checkpoints/streamvln-lora-v2/adapter_model.bin": "7e4a1fbb6b7fa7b23f2a9459db7f02e88c3cb2ae0a23e23d74f1dfdefd8c57c3"
+      }
+    }
+  },
+  "command_file": "/root/gpufree-data/zhiyuan-aima/workspace/aima-open-session-experiment/experiments/exp02-equivalent-v3/train-command.txt"
+}

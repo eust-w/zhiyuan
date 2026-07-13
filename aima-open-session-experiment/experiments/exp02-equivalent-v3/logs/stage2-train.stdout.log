@@ -1,0 +1,472 @@
+Please install pyav to use video processing functions.
+Please install petrel_client to Client.
+[2026-07-14 01:17:00,747] [INFO] [real_accelerator.py:203:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[93m [WARNING] [0m async_io: please install the libaio-dev package with apt
+[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[93m [WARNING] [0m Please specify the CUTLASS repo directory as environment variable $CUTLASS_PATH
+[93m [WARNING] [0m sparse_attn requires a torch version >= 1.5 and < 2.0 but detected 2.1
+[93m [WARNING] [0m using untested triton version (2.1.0), only 1.0.0 is known to be compatible
+Please install petrel_client to Client.
+Please install petrel_client to Client.
+Overwriting config with {'use_pos_skipping': False, 'pos_skipping_range': 4096, 'mm_spatial_pool_mode': 'bilinear', 'num_future_steps': 4, 'num_history': 8, 'mm_tunable_parts': 'mm_lora_layer', 'mm_newline_position': 'grid', 'mm_patch_merge_type': 'flat'}
+Adding LoRA adapters...
+Prompt version: qwen_2
+Using mm_tunable_parts: mm_lora_layer
+base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.0.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.0.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.0.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.0.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.0.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.0.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.0.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.0.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.0.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.0.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.1.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.1.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.1.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.1.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.1.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.1.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.1.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.1.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.1.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.1.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.1.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.1.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.1.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.1.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.2.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.2.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.2.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.2.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.2.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.2.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.2.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.2.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.2.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.2.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.2.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.2.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.2.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.2.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.3.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.3.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.3.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.3.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.3.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.3.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.3.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.3.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.3.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.3.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.3.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.3.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.3.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.3.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.4.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.4.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.4.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.4.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.4.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.4.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.4.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.4.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.4.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.4.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.4.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.4.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.4.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.4.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.5.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.5.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.5.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.5.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.5.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.5.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.5.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.5.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.5.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.5.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.5.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.5.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.5.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.5.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.6.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.6.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.6.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.6.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.6.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.6.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.6.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.6.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.6.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.6.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.6.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.6.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.6.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.6.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.7.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.7.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.7.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.7.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.7.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.7.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.7.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.7.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.7.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.7.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.7.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.7.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.7.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.7.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.8.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.8.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.8.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.8.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.8.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.8.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.8.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.8.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.8.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.8.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.8.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.8.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.8.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.8.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.9.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.9.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.9.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.9.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.9.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.9.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.9.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.9.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.9.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.9.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.9.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.9.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.9.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.9.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.10.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.10.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.10.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.10.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.10.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.10.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.10.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.10.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.10.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.10.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.10.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.10.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.10.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.10.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.11.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.11.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.11.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.11.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.11.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.11.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.11.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.11.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.11.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.11.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.11.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.11.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.11.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.11.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.12.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.12.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.12.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.12.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.12.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.12.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.12.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.12.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.12.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.12.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.12.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.12.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.12.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.12.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.13.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.13.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.13.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.13.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.13.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.13.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.13.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.13.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.13.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.13.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.13.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.13.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.13.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.13.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.14.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.14.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.14.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.14.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.14.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.14.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.14.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.14.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.14.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.14.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.14.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.14.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.14.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.14.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.15.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.15.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.15.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.15.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.15.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.15.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.15.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.15.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.15.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.15.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.15.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.15.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.15.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.15.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.16.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.16.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.16.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.16.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.16.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.16.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.16.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.16.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.16.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.16.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.16.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.16.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.16.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.16.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.17.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.17.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.17.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.17.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.17.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.17.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.17.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.17.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.17.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.17.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.17.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.17.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.17.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.17.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.18.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.18.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.18.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.18.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.18.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.18.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.18.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.18.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.18.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.18.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.18.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.18.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.18.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.18.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.19.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.19.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.19.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.19.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.19.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.19.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.19.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.19.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.19.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.19.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.19.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.19.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.19.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.19.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.20.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.20.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.20.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.20.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.20.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.20.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.20.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.20.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.20.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.20.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.20.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.20.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.20.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.20.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.21.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.21.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.21.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.21.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.21.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.21.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.21.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.21.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.21.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.21.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.21.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.21.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.21.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.21.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.22.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.22.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.22.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.22.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.22.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.22.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.22.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.22.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.22.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.22.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.22.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.22.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.22.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.22.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.23.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.23.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.23.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.23.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.23.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.23.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.23.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.23.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.23.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.23.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.23.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.23.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.23.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.23.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.24.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.24.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.24.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.24.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.24.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.24.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.24.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.24.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.24.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.24.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.24.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.24.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.24.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.24.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.25.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.25.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.25.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.25.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.25.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.25.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.25.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.25.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.25.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.25.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.25.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.25.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.25.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.25.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.26.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.26.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.26.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.26.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.26.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.26.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.26.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.26.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.26.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.26.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.26.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.26.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.26.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.26.mlp.down_proj.lora_B.default.weight
+base_model.model.model.layers.27.self_attn.q_proj.lora_A.default.weight
+base_model.model.model.layers.27.self_attn.q_proj.lora_B.default.weight
+base_model.model.model.layers.27.self_attn.k_proj.lora_A.default.weight
+base_model.model.model.layers.27.self_attn.k_proj.lora_B.default.weight
+base_model.model.model.layers.27.self_attn.v_proj.lora_A.default.weight
+base_model.model.model.layers.27.self_attn.v_proj.lora_B.default.weight
+base_model.model.model.layers.27.self_attn.o_proj.lora_A.default.weight
+base_model.model.model.layers.27.self_attn.o_proj.lora_B.default.weight
+base_model.model.model.layers.27.mlp.gate_proj.lora_A.default.weight
+base_model.model.model.layers.27.mlp.gate_proj.lora_B.default.weight
+base_model.model.model.layers.27.mlp.up_proj.lora_A.default.weight
+base_model.model.model.layers.27.mlp.up_proj.lora_B.default.weight
+base_model.model.model.layers.27.mlp.down_proj.lora_A.default.weight
+base_model.model.model.layers.27.mlp.down_proj.lora_B.default.weight
+Total parameters: ~8050.53 MB)
+Trainable parameters: ~20.19 MB)
+len train_dataset  59
+Setting NCCL timeout to INF to avoid running errors.
+{'loss': 0.4167, 'grad_norm': 0.39111199975013733, 'learning_rate': 1.9661016949152545e-05, 'epoch': 0.02}
+{'loss': 0.151, 'grad_norm': 0.3271901607513428, 'learning_rate': 1.9322033898305087e-05, 'epoch': 0.03}
+{'loss': 0.3181, 'grad_norm': 0.46686530113220215, 'learning_rate': 1.898305084745763e-05, 'epoch': 0.05}
+{'loss': 0.3079, 'grad_norm': 0.46440306305885315, 'learning_rate': 1.864406779661017e-05, 'epoch': 0.07}
+{'loss': 0.4072, 'grad_norm': 0.4328949451446533, 'learning_rate': 1.8305084745762713e-05, 'epoch': 0.08}
+{'loss': 0.5352, 'grad_norm': 0.5213313102722168, 'learning_rate': 1.7966101694915256e-05, 'epoch': 0.1}
+{'loss': 0.43, 'grad_norm': 0.5175775289535522, 'learning_rate': 1.76271186440678e-05, 'epoch': 0.12}
+{'loss': 0.4203, 'grad_norm': 0.5373116731643677, 'learning_rate': 1.728813559322034e-05, 'epoch': 0.14}
+{'loss': 0.4357, 'grad_norm': 0.6304399371147156, 'learning_rate': 1.694915254237288e-05, 'epoch': 0.15}
+{'loss': 0.3953, 'grad_norm': 0.40071380138397217, 'learning_rate': 1.6610169491525424e-05, 'epoch': 0.17}
+{'loss': 0.3089, 'grad_norm': 0.49220356345176697, 'learning_rate': 1.6271186440677967e-05, 'epoch': 0.19}
+{'loss': 0.4067, 'grad_norm': 0.5632160902023315, 'learning_rate': 1.593220338983051e-05, 'epoch': 0.2}
+{'loss': 0.2152, 'grad_norm': 0.3704850375652313, 'learning_rate': 1.5593220338983053e-05, 'epoch': 0.22}
+{'loss': 0.3201, 'grad_norm': 0.45787307620048523, 'learning_rate': 1.5254237288135594e-05, 'epoch': 0.24}
+{'loss': 0.3904, 'grad_norm': 0.6786786317825317, 'learning_rate': 1.4915254237288137e-05, 'epoch': 0.25}
+{'loss': 0.3402, 'grad_norm': 0.5576023459434509, 'learning_rate': 1.4576271186440678e-05, 'epoch': 0.27}
+{'loss': 0.2394, 'grad_norm': 0.6972731947898865, 'learning_rate': 1.4237288135593221e-05, 'epoch': 0.29}
+{'loss': 0.3441, 'grad_norm': 0.46925270557403564, 'learning_rate': 1.3898305084745764e-05, 'epoch': 0.31}
+{'loss': 0.307, 'grad_norm': 0.46722516417503357, 'learning_rate': 1.3559322033898305e-05, 'epoch': 0.32}
+{'loss': 0.4185, 'grad_norm': 0.5848356485366821, 'learning_rate': 1.3220338983050848e-05, 'epoch': 0.34}
+{'loss': 0.277, 'grad_norm': 0.8027226328849792, 'learning_rate': 1.288135593220339e-05, 'epoch': 0.36}
+{'loss': 0.3856, 'grad_norm': 0.5451949834823608, 'learning_rate': 1.2542372881355932e-05, 'epoch': 0.37}
+{'loss': 0.3693, 'grad_norm': 0.5590576529502869, 'learning_rate': 1.2203389830508477e-05, 'epoch': 0.39}
+{'loss': 0.3738, 'grad_norm': 0.5773422718048096, 'learning_rate': 1.1864406779661018e-05, 'epoch': 0.41}
+{'loss': 0.3435, 'grad_norm': 0.7143458127975464, 'learning_rate': 1.1525423728813561e-05, 'epoch': 0.42}
+{'loss': 0.2677, 'grad_norm': 0.8733353018760681, 'learning_rate': 1.1186440677966102e-05, 'epoch': 0.44}
+{'loss': 0.3304, 'grad_norm': 0.5087552666664124, 'learning_rate': 1.0847457627118645e-05, 'epoch': 0.46}
+{'loss': 0.2979, 'grad_norm': 0.6465039849281311, 'learning_rate': 1.0508474576271188e-05, 'epoch': 0.47}
+{'loss': 0.0947, 'grad_norm': 0.5460506081581116, 'learning_rate': 1.016949152542373e-05, 'epoch': 0.49}
+{'loss': 0.2461, 'grad_norm': 0.44440528750419617, 'learning_rate': 9.830508474576272e-06, 'epoch': 0.51}
+{'loss': 0.2963, 'grad_norm': 0.4318467974662781, 'learning_rate': 9.491525423728815e-06, 'epoch': 0.53}
+{'loss': 0.3634, 'grad_norm': 0.5471552014350891, 'learning_rate': 9.152542372881356e-06, 'epoch': 0.54}
+{'loss': 0.3072, 'grad_norm': 0.44774308800697327, 'learning_rate': 8.8135593220339e-06, 'epoch': 0.56}
+{'loss': 0.3323, 'grad_norm': 0.5515388250350952, 'learning_rate': 8.47457627118644e-06, 'epoch': 0.58}
+{'loss': 0.3207, 'grad_norm': 0.8372372984886169, 'learning_rate': 8.135593220338983e-06, 'epoch': 0.59}
+{'loss': 0.2692, 'grad_norm': 0.4413973093032837, 'learning_rate': 7.796610169491526e-06, 'epoch': 0.61}
+{'loss': 0.3278, 'grad_norm': 0.7408736944198608, 'learning_rate': 7.4576271186440685e-06, 'epoch': 0.63}
+{'loss': 0.1735, 'grad_norm': 0.4451908767223358, 'learning_rate': 7.1186440677966106e-06, 'epoch': 0.64}
+{'loss': 0.3925, 'grad_norm': 0.7384192943572998, 'learning_rate': 6.779661016949153e-06, 'epoch': 0.66}
+{'loss': 0.2302, 'grad_norm': 0.6248006224632263, 'learning_rate': 6.440677966101695e-06, 'epoch': 0.68}
+{'loss': 0.3222, 'grad_norm': 0.5280551910400391, 'learning_rate': 6.1016949152542385e-06, 'epoch': 0.69}
+{'loss': 0.2137, 'grad_norm': 0.5163565278053284, 'learning_rate': 5.7627118644067805e-06, 'epoch': 0.71}
+{'loss': 0.2867, 'grad_norm': 0.6388146281242371, 'learning_rate': 5.423728813559323e-06, 'epoch': 0.73}
+{'loss': 0.1047, 'grad_norm': 0.49700045585632324, 'learning_rate': 5.084745762711865e-06, 'epoch': 0.75}
+{'loss': 0.0884, 'grad_norm': 0.6052389144897461, 'learning_rate': 4.745762711864408e-06, 'epoch': 0.76}
+{'loss': 0.301, 'grad_norm': 0.4552726149559021, 'learning_rate': 4.40677966101695e-06, 'epoch': 0.78}
+{'loss': 0.237, 'grad_norm': 0.5474366545677185, 'learning_rate': 4.067796610169492e-06, 'epoch': 0.8}
+{'loss': 0.3391, 'grad_norm': 0.4917161464691162, 'learning_rate': 3.7288135593220342e-06, 'epoch': 0.81}
+{'loss': 0.2065, 'grad_norm': 0.3836019039154053, 'learning_rate': 3.3898305084745763e-06, 'epoch': 0.83}
+{'loss': 0.2943, 'grad_norm': 0.4916195273399353, 'learning_rate': 3.0508474576271192e-06, 'epoch': 0.85}
+{'loss': 0.2945, 'grad_norm': 0.42623239755630493, 'learning_rate': 2.7118644067796613e-06, 'epoch': 0.86}
+{'loss': 0.3189, 'grad_norm': 0.5656753778457642, 'learning_rate': 2.372881355932204e-06, 'epoch': 0.88}
+{'loss': 0.305, 'grad_norm': 0.5227752327919006, 'learning_rate': 2.033898305084746e-06, 'epoch': 0.9}
+{'loss': 0.1209, 'grad_norm': 0.5796703100204468, 'learning_rate': 1.6949152542372882e-06, 'epoch': 0.92}
+{'loss': 0.2295, 'grad_norm': 0.4207770824432373, 'learning_rate': 1.3559322033898307e-06, 'epoch': 0.93}
+{'loss': 0.2598, 'grad_norm': 0.5218051671981812, 'learning_rate': 1.016949152542373e-06, 'epoch': 0.95}
+{'loss': 0.2166, 'grad_norm': 0.5340562462806702, 'learning_rate': 6.779661016949153e-07, 'epoch': 0.97}
+{'loss': 0.2026, 'grad_norm': 0.545263946056366, 'learning_rate': 3.3898305084745766e-07, 'epoch': 0.98}
+{'loss': 0.0823, 'grad_norm': 0.4866171181201935, 'learning_rate': 0.0, 'epoch': 1.0}
+{'train_runtime': 96.3024, 'train_samples_per_second': 0.613, 'train_steps_per_second': 0.613, 'train_loss': 0.2971318226497052, 'epoch': 1.0}
+Model saved to /root/gpufree-data/zhiyuan-aima/workspace/aima-open-session-experiment/experiments/exp02-equivalent-v3/checkpoints/streamvln-lora-v2

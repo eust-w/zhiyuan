@@ -13,6 +13,7 @@ class ProtocolError(ValueError):
 
 
 ACTIONS = {0: "stop", 1: "forward", 2: "left", 3: "right"}
+DEBUG_ACTIONS = {**ACTIONS, 4: "backward"}
 SCHEMA_VERSION = "geniesim-streamvln/v1"
 
 
@@ -59,6 +60,19 @@ class EpisodeStep:
         action_id = payload.get("action_id")
         if isinstance(action_id, bool) or not isinstance(action_id, int) or action_id not in ACTIONS:
             raise ProtocolError("action_id must be one of 0, 1, 2, 3")
+        return cls(request_id=request_id, action_id=action_id)
+
+    @classmethod
+    def from_debug_json(cls, payload: Mapping[str, Any]) -> "EpisodeStep":
+        """Parse the Stage 0 keyboard-only action space.
+
+        Backward is intentionally excluded from the public StreamVLN contract
+        and is accepted only by the loopback debug endpoint.
+        """
+        request_id = _required_string(payload, "request_id")
+        action_id = payload.get("action_id")
+        if isinstance(action_id, bool) or not isinstance(action_id, int) or action_id not in DEBUG_ACTIONS:
+            raise ProtocolError("debug action_id must be one of 0, 1, 2, 3, 4")
         return cls(request_id=request_id, action_id=action_id)
 
 
@@ -109,4 +123,3 @@ def build_observation(
         "terminated": bool(terminated),
         "truncated": bool(truncated),
     }
-

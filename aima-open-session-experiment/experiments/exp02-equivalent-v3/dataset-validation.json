@@ -1,0 +1,14 @@
+{
+  "train": {
+    "episodes": 50,
+    "valid": 50,
+    "invalid": 0,
+    "errors": []
+  },
+  "eval": {
+    "episodes": 10,
+    "valid": 10,
+    "invalid": 0,
+    "errors": []
+  }
+}

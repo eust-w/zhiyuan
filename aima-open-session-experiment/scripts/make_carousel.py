@@ -31,6 +31,8 @@ def font(size: int):
     paths = [
         "/System/Library/Fonts/PingFang.ttc",
         "/System/Library/Fonts/Hiragino Sans GB.ttc",
+        "/System/Library/Fonts/STHeiti Medium.ttc",
+        "/System/Library/Fonts/STHeiti Light.ttc",
     ]
     paths += glob.glob("/System/Library/AssetsV2/*/*/AssetData/Hei.ttf")
     paths += glob.glob("/System/Library/AssetsV2/*/*/AssetData/Lantinghei.ttc")
@@ -226,7 +228,7 @@ def chart_gates(out: Path) -> None:
     canvas = Image.new("RGB", (980, 700), PANEL)
     d = ImageDraw.Draw(canvas)
     d.text((36, 26), "训练前后的四道验证门", fill=WHITE, font=font(38))
-    gates = [("数据集检查", "50 条样本通过", CYAN), ("单批前后向", "无数值异常", ORANGE), ("完整训练", "50 步退出码为零", PINK), ("适配器重载", "新进程可加载", (115, 164, 255))]
+    gates = [("数据集检查", "50 条样本通过", CYAN), ("单批前后向", "损失与梯度非零", ORANGE), ("完整训练", "59 步退出码为零", PINK), ("适配器重载", "新进程可加载", (115, 164, 255))]
     for i, (title, body, color) in enumerate(gates):
         x = 45 + i * 235
         d.rounded_rectangle((x, 180, x + 205, 500), radius=20, fill=(15, 24, 38), outline=color, width=5)
@@ -312,7 +314,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
-    parser.add_argument("--metrics", type=Path, default=ROOT / "experiments/exp01-baseline/eval_result.json")
+    parser.add_argument("--metrics", type=Path, default=ROOT / "experiments/exp02-equivalent-v3/eval_result.json")
     parser.add_argument("--ai-dir", type=Path, default=ROOT / "assets/ai-diagrams")
     parser.add_argument("--plots-dir", type=Path, default=ROOT / "assets/plots")
     args = parser.parse_args()
@@ -335,26 +337,26 @@ def main() -> None:
     base = summary(metrics, "base_model")
     lora = summary(metrics, "lora_model")
     cards = [
-        ("一句话，能不能变成动作？", "我给机器人一句中文指令：走向红色目标，然后停下。真正要验证的，不是画面好不好看，而是模型输出能不能一路到达仿真。", photo("P1-smoke-0000.jpg"), False),
-        ("先说清楚：这是非官方实验", "流程参考课程指南，但没有课程私有适配包；这里展示的是等价兼容流程，不是课程原样复现，也不提交课程榜单。", photo("P1-smoke-0008.jpg"), False),
-        ("场景、机器人、相机", "实验使用室内市场场景、机器人刚体代理和头部相机。它用于验证视觉语言导航闭环，不宣称真实人形步态。", photo("P1-smoke-0016.jpg"), False),
+        ("一句话，能不能变成动作？", "我给机器人一句指令：走向红色目标，然后停下。真正要验证的，不是画面好不好看，而是模型输出能不能一路进入真实仿真。", photo("train-1001-start.jpg"), False),
+        ("先说清楚：这是非官方实验", "流程参考课程指南，但没有课程私有适配包；这里展示的是自采等价资产与独立闭环，不是课程原样复现，也不提交课程榜单。", photo("eval-2001-start.jpg"), False),
+        ("场景、机器人、相机", "实验使用室内市场场景、G2 刚体导航代理和头部相机。它用于验证视觉语言导航闭环，不宣称真实人形步态。", photo("train-1025-mid.jpg"), False),
         ("感知 → 模型 → 动作", "这张是人工智能生成的结构示意图；真实证据仍来自实验截图和日志。彩色图、深度图、位姿进入模型，再输出离散动作。", diagram("ai-01-perception-action.png"), True),
-        ("动作空间被固定为四个", "停止、前进 0.25 米、左转 15 度、右转 15 度。固定动作含义，才能把模型输出和仿真结果一一对上。", photo("P1-smoke-0024.jpg"), False),
-        ("每次移动后，等两个渲染帧", "动作提交后先等待至少两个渲染帧，再保存彩色图、深度图、位姿、碰撞和目标距离，避免把上一帧误当成新结果。", photo("P1-smoke-0026.jpg"), False),
+        ("动作空间被固定为四个", "停止、前进 0.25 米、左转 15 度、右转 15 度。后退只在 Stage 0 调试端出现，不进入训练动作。", photo("stage0-forward-after.jpg"), False),
+        ("每次移动后，等两个渲染帧", "动作提交后先等待至少两个渲染帧，再保存彩色图、深度图、位姿、碰撞和目标距离，避免把上一帧误当成新结果。", photo("stage0-after-block.jpg"), False),
         ("数据不是一张图，而是一条流水线", "人工智能生成示意图只解释结构：红色目标、相机采集、轨迹文件、低秩适配、留出评测。关键字段仍由真实采集器写入。", diagram("ai-02-data-pipeline.png"), True),
-        ("数据拆分：3 + 50 + 10", "先用 3 条冒烟轨迹验证接口，再采固定种子 1001–1050 的 50 条训练轨迹和 2001–2010 的 10 条评测轨迹。", photo("P1-smoke-0000.jpg"), False),
+        ("数据拆分：3 + 50 + 10", "先用 3 条冒烟轨迹验证接口，再采固定种子 1001–1050 的 50 条训练轨迹和 2001–2010 的 10 条评测轨迹；严格校验为 50/50 与 10/10。", photo("train-1050-mid.jpg"), False),
         ("公开标注和旁路记录各司其职", "公开标注保持兼容格式：首动作为 -1，不放最终停止；深度、完整停止、轨迹、碰撞和目标信息放入旁路记录。", plot("schema"), False),
         ("真正的闭环：模型自己发动作", "人工智能生成示意图对应真实执行顺序：指令 → 观测 → 模型 → 本机接口 → 仿真环境 → 指标，再把下一帧送回模型。", diagram("ai-03-closed-loop.png"), True),
-        ("服务只监听本机回环地址", "采集线程只提交请求，仿真动作回到主线程执行；服务只在本机回环地址工作，避免把未知课程协议说成兼容。", photo("P1-smoke-0016.jpg"), False),
+        ("服务只监听本机回环地址", "采集线程只提交请求，仿真动作回到主线程执行；近障碍由真实 head depth 安全门拒绝，并记录位姿不变。", photo("stage0-before-block.jpg"), False),
         ("低秩适配到底改了什么？", "配置固定为秩 8、缩放 16、丢弃率 0.05、1 轮、批量 1、学习率 0.00002、脑浮点和梯度检查点。", plot("lora"), False),
-        ("训练通过，不等于模型会导航", "四道验证门全部通过：数据检查、单批前后向、完整训练、适配器新进程重载。但训练日志中的零损失只作观察值，不当作质量结论。", plot("gates"), False),
+        ("训练通过，不等于模型会导航", "四道门全部通过：50/50 数据检查、单批非零 loss/梯度、59 个真实更新步、适配器新进程重载。训练 loss 从 0.4167 到 0.0823，但最终仍要看闭环。", plot("gates"), False),
         ("同一批十条，基础模型没有过半米线", f"基础模型半米成功率 {base['success_0_5']}/10，三米成功率 {base['success_3']}/10，平均最终距离 {base['mean_final_distance_to_goal']:.2f} 米，碰撞 {base['collisions']} 次。", plot("metrics"), False),
         ("低秩适配也没有过半米线", f"低秩适配半米成功率 {lora['success_0_5']}/10，三米成功率 {lora['success_3']}/10，平均最终距离 {lora['mean_final_distance_to_goal']:.2f} 米，碰撞 {lora['collisions']} 次。", plot("distance"), False),
         ("动作统计也要公开", "不是只展示一条轨迹：下面汇总十条留出评测中停止、前进、左转、右转的总次数，基础模型和低秩适配都按同一批样本计算。", plot("actions"), False),
-        ("失败不是一句‘以后再说’", "人工智能生成示意图用于解释缺口：当前三维网格做几何投影会触发仿真退出，深度输入也出现过全非有限帧，因此本轮保留了可审计的安全回退。", diagram("ai-04-failure-roadmap.png"), True),
+        ("失败不是一句‘以后再说’", "人工智能示意图用于解释缺口：课程私有 AABB 工具不可得，公开资产遍历会触发仿真退出；本轮用可审计的 head-depth 安全门完成等价碰撞保护。", diagram("ai-04-failure-roadmap.png"), True),
         ("每个数字都能回到证据链", "运行编号、源码和模型修订、配置、命令、日志、截图、视频、文件哈希和唯一指标源都写入实验清单，便于复核而不是靠口述。", plot("evidence"), False),
-        ("下一轮先补三件事", "第一，换兼容三维资产；第二，提高深度输入有效率；第三，增加目标相关训练覆盖。修复后仍复用同一批十条评测，才能知道改动是否真的有效。", plot("roadmap"), False),
-        ("最终结果：成功率为零，但闭环是真的", f"半米成功率：基础模型 {base['success_0_5']}/10，低秩适配 {lora['success_0_5']}/10。失败不包装成成功；至少已经证明模型→接口→仿真→指标这一条链路可以被完整记录。", photo("P1-smoke-0026.jpg"), False),
+        ("下一轮先补三件事", "第一，换可稳定投影 AABB 的兼容资产；第二，让红色目标在更多训练视角中清晰可见；第三，增加目标相关训练覆盖。仍复用同一批十条回归。", plot("roadmap"), False),
+        ("最终结果：成功率为零，但闭环是真的", f"半米成功率：基础模型 {base['success_0_5']}/10，低秩适配 {lora['success_0_5']}/10。失败不包装成成功；模型→接口→仿真→安全门→指标完整留痕。", photo("stage3-base-2004-end.jpg"), False),
     ]
     assert len(cards) == 20
     title_font, body_font, small_font = font(50), font(28), font(25)
