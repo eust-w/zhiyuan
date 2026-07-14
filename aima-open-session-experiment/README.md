@@ -26,6 +26,8 @@
 - [07：PDF 逐项验收与等价说明](docs/07-PDF逐项验收与等价说明.md)
 - [实验运行日志](runs/2026-07-13/session-log.md)
 - [抖音布道文章](article/抖音-智元布道师图文稿.md)
+- [完整图文经验博客](article/博客-GenieSim-StreamVLN非官方等价闭环经验.md)
+- [知乎 / 小红书 / 抖音发布交接稿](article/平台发布稿-知乎-小红书-抖音.md)
 
 ## 素材目录
 
