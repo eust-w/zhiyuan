@@ -13,11 +13,11 @@ scene:
 
 navigation:
   resolution_m: 0.05
-  # The USD mesh layer in the GPUFree image currently requests a clean
-  # SimulationApp shutdown while computing BBoxCache. Keep this explicit
-  # fallback until a compatible GenieSim asset build is available; no scene
-  # success metrics are claimed from the fallback grid.
-  project_usd_aabbs: false
+  # The captured visual mesh remains untouched.  This stable equivalent layer
+  # contains only valid UsdGeom.Cube prims and is scanned at runtime.
+  project_usd_aabbs: true
+  aabb_proxy_usd: artifacts/equivalent-scene/market-aabb-proxy.usda
+  aabb_proxy_root: /World/Background/AABBProxy
   obstacle_z_min_m: 0.10
   obstacle_z_max_m: 1.80
   footprint_half_length_m: 0.34

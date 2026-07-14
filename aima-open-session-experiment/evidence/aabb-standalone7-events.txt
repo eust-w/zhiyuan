@@ -1,0 +1,22 @@
+2026-07-14 GPUFree L40 / Isaac Python USD AABB probe
+
+{"event":"occupancy_start","usd":".../artifacts/equivalent-scene/market-aabb-proxy.usda"}
+{"event":"occupancy_proxy_direct_stage_scan","prims":10,"raw_cells":8322,"method":"usdgeom_cube_authored_aabb"}
+{"event":"occupancy_built","blocked":30478,"output":".../runtime/aabb-probe/occupancy.json"}
+
+Result summary:
+schema_version=geniesim-streamvln/v1
+resolution_m=0.05
+obstacle_z_range_m=0.10..1.80
+footprint_half_extents_m=0.34,0.28
+obstacle_inflation_m=0.05
+inflation_radius_cells=10
+bounds_cells=-113,112,-117,116
+start_cell=10,-14
+remote_occupancy_sha256_prefix=d33b1002a47fd058
+
+The probe ran with IsaacSim's PXR bindings and the authored Cube USD layer;
+it did not use a depth or empty-grid fallback. This evidence is for the
+navigation-layer projection itself. The full visual G2 HTTP process still
+exits during Kit bootstrap before `occupancy_built` because of the
+preinstalled market mesh, as recorded in aabb-probe10.

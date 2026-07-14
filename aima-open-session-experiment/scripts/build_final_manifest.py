@@ -94,7 +94,7 @@ def main() -> None:
             {"name": "sensitive_scan", "command": "repository public-artifact sensitive-pattern scan", "exit_code": 0},
         ],
         "acceptance": {
-            "stage0": "passed with head-depth safety fallback",
+            "stage0": "passed with head-depth safety fallback; standalone equivalent USD AABB probe verified",
             "stage1": "3 smoke + 50 train + 10 heldout passed",
             "stage2": "59 finite non-zero updates; adapter fresh-process reload passed",
             "stage3": "paired base/LoRA evaluation complete; success@0.5m is 0/10 for both",

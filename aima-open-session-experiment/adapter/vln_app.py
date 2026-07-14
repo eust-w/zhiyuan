@@ -58,6 +58,10 @@ def run(adapter_config_path: Path, root: Path) -> None:
     app_launcher = AppLauncher(config.app)
     simulation_app = app_launcher.app
     print(json.dumps({"event": "simulation_app_ready"}), flush=True)
+    # Prime Kit before importing/authoring the world.  The preinstalled
+    # launcher otherwise considers a headless app idle and may close it while
+    # the runtime USD AABB layer is being projected.
+    simulation_app.update()
 
     # Isaac modules must be imported after SimulationApp is created.
     from isaacsim.core.api import World
@@ -74,14 +78,24 @@ def run(adapter_config_path: Path, root: Path) -> None:
         physics_dt=1.0 / config.app.physics_step,
         rendering_dt=1.0 / config.app.rendering_step,
     )
-    backend = IsaacBackend(root=root, api_core=None, world=world, adapter_config=adapter_config)
+    simulation_app.update()
+    backend = IsaacBackend(
+        root=root,
+        api_core=None,
+        world=world,
+        adapter_config=adapter_config,
+        app_update=simulation_app.update,
+    )
 
     try:
         # This call is intentionally before the render loop: the private API
         # is safe on the owner thread, while the public method would wait for
         # a loop that has not started yet.
         backend.bootstrap_main_thread()
+        simulation_app.update()
         print(json.dumps({"event": "backend_bootstrapped"}), flush=True)
+        world.play()
+        simulation_app.update()
         service = AdapterService(root=root, backend=backend, host="127.0.0.1", port=5802)
         print(json.dumps({"event": "adapter_ready", **backend.health()}, ensure_ascii=False), flush=True)
         server_thread = threading.Thread(target=service.serve_forever, name="aima-http", daemon=True)

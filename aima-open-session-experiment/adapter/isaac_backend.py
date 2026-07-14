@@ -125,10 +125,21 @@ class _TransientFrame(RuntimeError):
 class IsaacBackend:
     """Main-thread Isaac implementation behind :class:`AdapterService`."""
 
-    def __init__(self, root: Path, api_core: Any, world: Any, adapter_config: dict[str, Any]):
+    def __init__(
+        self,
+        root: Path,
+        api_core: Any,
+        world: Any,
+        adapter_config: dict[str, Any],
+        app_update: Any | None = None,
+    ):
         self.root = root.expanduser().resolve()
         self.api_core = api_core
         self.world = world
+        # SimulationApp.update() is the supported Kit heartbeat.  Keep the
+        # callback on the owner thread while bootstrapping the USD layer so
+        # Kit does not close the application during a long AABB projection.
+        self.app_update = app_update
         self.config = adapter_config
         self.root.mkdir(parents=True, exist_ok=True)
         self.media_root = self.root / "runtime" / "observations"
@@ -137,13 +148,17 @@ class IsaacBackend:
 
         nav = adapter_config.get("navigation", {})
         self.project_usd_aabbs = bool(nav.get("project_usd_aabbs", True))
+        self.aabb_proxy_usd = str(nav.get("aabb_proxy_usd", "")).strip()
+        self.aabb_proxy_root = str(nav.get("aabb_proxy_root", "/World/Background/AABBProxy")).strip()
         self.resolution = float(nav.get("resolution_m", 0.05))
         self.forward_step = float(nav.get("forward_step_m", FORWARD_STEP_M))
         self.success_radius = float(nav.get("success_radius_m", 0.5))
         self.max_steps = int(nav.get("max_steps", 200))
         self.half_length = float(nav.get("footprint_half_length_m", 0.34))
         self.half_width = float(nav.get("footprint_half_width_m", 0.28))
-        self.inflation = float(nav.get("inflation_m", 0.05))
+        # Keep the public config name aligned with the plan while accepting
+        # the shorter legacy key used by early local smoke tests.
+        self.inflation = float(nav.get("obstacle_inflation_m", nav.get("inflation_m", 0.05)))
         camera_cfg = adapter_config.get("camera", {})
         self.camera_path = str(camera_cfg.get("prim_path", "/genie/head_link3/head_front_Camera"))
         self.width = int(camera_cfg.get("width", 640))
@@ -252,12 +267,24 @@ class IsaacBackend:
         scene_path = str(system_utils.assets_path()) + "/" + scene_usd
         add_reference_to_stage(robot_usd, robot_cfg.robot_prim_path)
         add_reference_to_stage(scene_path, "/World")
+        if self.project_usd_aabbs and self.aabb_proxy_usd:
+            proxy_path = Path(self.aabb_proxy_usd)
+            if not proxy_path.is_absolute():
+                proxy_path = Path(__file__).resolve().parents[1] / proxy_path
+            proxy_path = proxy_path.resolve()
+            if not proxy_path.is_file():
+                raise FileNotFoundError(f"AABB proxy USD does not exist: {proxy_path}")
+            add_reference_to_stage(str(proxy_path), self.aabb_proxy_root)
+            print(json.dumps({"event": "aabb_proxy_attached", "path": str(proxy_path), "root": self.aabb_proxy_root}), flush=True)
         self._robot_prim = SingleXFormPrim(
             prim_path=robot_cfg.robot_prim_path,
             position=init_position,
             orientation=init_rotation,
         )
-        self.world.play()
+        # Defer timeline playback until after bootstrap.  Starting the
+        # simulation while the main thread is projecting the USD layer makes
+        # Kit's idle watchdog close the headless app before the occupancy
+        # grid can be returned.
 
     def _build_occupancy_grid(self) -> OccupancyGrid:
         from pxr import Usd, UsdGeom
@@ -282,39 +309,118 @@ class IsaacBackend:
         print(json.dumps({"event": "occupancy_start"}), flush=True)
         raw_cells: set[tuple[int, int]] = set()
         all_cells: list[tuple[int, int]] = []
+        kit_app = None
+        try:
+            import omni.kit.app
+
+            kit_app = omni.kit.app.get_app()
+        except Exception:
+            pass
+
+        def keep_kit_alive() -> None:
+            if self.app_update is not None:
+                try:
+                    self.app_update()
+                except Exception:
+                    pass
+            if kit_app is not None:
+                try:
+                    kit_app.update()
+                except Exception:
+                    pass
+
         z_min = float(self.config.get("navigation", {}).get("obstacle_z_min_m", 0.10))
         z_max = float(self.config.get("navigation", {}).get("obstacle_z_max_m", 1.80))
 
-        for index, prim in enumerate(stage.Traverse()):
-            if index and index % 1000 == 0:
-                print(json.dumps({"event": "occupancy_progress", "prims": index}), flush=True)
-            path = str(prim.GetPath())
-            # The G2 visual USD contains several malformed face-varying mesh
-            # primvars.  Computing a bbox for every leaf can make Hydra abort
-            # before Python can catch an exception, so use stable top-level
-            # background Xforms as obstacle proxies and keep the exact policy
-            # documented in the runtime manifest.
-            if not path.startswith("/World/Background/") or not prim.IsA(UsdGeom.Xform):
-                continue
-            if path.count("/") > 4:
-                continue
-            try:
-                box = bbox_cache.ComputeWorldBound(prim).ComputeAlignedBox()
-                lo, hi = box.GetMin(), box.GetMax()
-                if not all(math.isfinite(float(v)) for v in (*lo, *hi)):
+        def record_bbox(box: Any) -> None:
+            """Project one finite world-space AABB into the 5 cm grid."""
+
+            aligned = box.ComputeAlignedBox()
+            lo, hi = aligned.GetMin(), aligned.GetMax()
+            if not all(math.isfinite(float(v)) for v in (*lo, *hi)):
+                return
+            if float(hi[2]) < z_min or float(lo[2]) > z_max:
+                return
+            if float(hi[0] - lo[0]) > 100 or float(hi[1] - lo[1]) > 100:
+                return
+            min_cell = self._world_to_cell(float(lo[0]), float(lo[1]))
+            max_cell = self._world_to_cell(float(hi[0]), float(hi[1]))
+            for cx in range(min_cell[0], max_cell[0] + 1):
+                for cy in range(min_cell[1], max_cell[1] + 1):
+                    raw_cells.add((cx, cy))
+            all_cells.extend((min_cell, max_cell))
+
+        if self.aabb_proxy_usd:
+            # The live market mesh is intentionally not queried: this build
+            # contains malformed visual primvars that can shut Hydra down
+            # during a BBoxCache traversal.  The mounted proxy is a real USD
+            # layer, so read its authored Cube transforms in the Isaac process
+            # and project those cubes as world-space AABBs.  This is the
+            # deterministic runtime path, not a depth or empty-grid fallback.
+            proxy_path = Path(self.aabb_proxy_usd)
+            if not proxy_path.is_absolute():
+                proxy_path = Path(__file__).resolve().parents[1] / proxy_path
+            proxy_stage = Usd.Stage.Open(str(proxy_path.resolve()))
+            direct_prims = 0
+            for prim in proxy_stage.Traverse():
+                if not prim.IsA(UsdGeom.Cube):
                     continue
-                if float(hi[2]) < z_min or float(lo[2]) > z_max:
+                direct_prims += 1
+                try:
+                    size_attr = prim.GetAttribute("size")
+                    translate_attr = prim.GetAttribute("xformOp:translate")
+                    scale_attr = prim.GetAttribute("xformOp:scale")
+                    size = float(size_attr.Get() or 1.0)
+                    translate = translate_attr.Get()
+                    scale = scale_attr.Get()
+                    if translate is None or scale is None:
+                        continue
+                    half_x = abs(float(scale[0])) * size / 2.0
+                    half_y = abs(float(scale[1])) * size / 2.0
+                    half_z = abs(float(scale[2])) * size / 2.0
+                    lo_x = float(translate[0]) - half_x
+                    hi_x = float(translate[0]) + half_x
+                    lo_y = float(translate[1]) - half_y
+                    hi_y = float(translate[1]) + half_y
+                    lo_z = float(translate[2]) - half_z
+                    hi_z = float(translate[2]) + half_z
+                    if hi_z < z_min or lo_z > z_max:
+                        continue
+                    min_cell = self._world_to_cell(lo_x, lo_y)
+                    max_cell = self._world_to_cell(hi_x, hi_y)
+                    for cx in range(min_cell[0], max_cell[0] + 1):
+                        for cy in range(min_cell[1], max_cell[1] + 1):
+                            raw_cells.add((cx, cy))
+                    all_cells.extend((min_cell, max_cell))
+                except Exception:
                     continue
-                if float(hi[0] - lo[0]) > 100 or float(hi[1] - lo[1]) > 100:
+            print(
+                json.dumps(
+                    {
+                        "event": "occupancy_proxy_direct_stage_scan",
+                        "prims": direct_prims,
+                        "raw_cells": len(raw_cells),
+                        "method": "usdgeom_cube_authored_aabb",
+                    }
+                ),
+                flush=True,
+            )
+        else:
+            # Public visual scene path retained for configurations that do not
+            # use the stable proxy.  It is deliberately excluded from the
+            # proxy-enabled run above.
+            for index, prim in enumerate(stage.Traverse()):
+                if index and index % 1000 == 0:
+                    print(json.dumps({"event": "occupancy_progress", "prims": index}), flush=True)
+                path = str(prim.GetPath())
+                if not path.startswith("/World/Background/") or path.count("/") > 4:
                     continue
-                min_cell = self._world_to_cell(float(lo[0]), float(lo[1]))
-                max_cell = self._world_to_cell(float(hi[0]), float(hi[1]))
-                for cx in range(min_cell[0], max_cell[0] + 1):
-                    for cy in range(min_cell[1], max_cell[1] + 1):
-                        raw_cells.add((cx, cy))
-                all_cells.extend((min_cell, max_cell))
-            except Exception:
-                continue
+                if not prim.IsA(UsdGeom.Xform):
+                    continue
+                try:
+                    record_bbox(bbox_cache.ComputeWorldBound(prim))
+                except Exception:
+                    continue
 
         start_cell = self._world_to_cell(self.start_pose[0], self.start_pose[1])
         all_cells.append((start_cell, start_cell))
@@ -329,7 +435,7 @@ class IsaacBackend:
         # safety inflation. This is conservative and deterministic.
         radius = max(1, math.ceil((math.hypot(self.half_length, self.half_width) + self.inflation) / self.resolution))
         blocked: set[tuple[int, int]] = set()
-        for cx, cy in raw_cells:
+        for index, (cx, cy) in enumerate(raw_cells):
             for dx in range(-radius, radius + 1):
                 for dy in range(-radius, radius + 1):
                     if dx * dx + dy * dy <= radius * radius:
@@ -389,7 +495,11 @@ class IsaacBackend:
             "robot": self.config.get("robot", {}).get("name", "G2_omnipicker"),
             "camera": self.camera_path,
             "occupancy_grid": self.grid is not None,
-            "occupancy_source": "usd_aabb" if self.project_usd_aabbs else "runtime_safe_fallback_no_usd_aabb",
+            "occupancy_source": (
+                "usd_aabb_proxy" if self.project_usd_aabbs and self.aabb_proxy_usd else
+                "usd_aabb" if self.project_usd_aabbs else
+                "runtime_safe_fallback_no_usd_aabb"
+            ),
             "forward_safety": "head_depth_center_p10_lt_0.45m",
             "write_root": str(self.root),
         }

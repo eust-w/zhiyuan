@@ -7,7 +7,7 @@
 ## 当前状态
 
 - GPUFree L40 48GB、100GB 持久盘、SSH 公钥登录与 Isaac Sim 5.1/Genie Sim 3.0 已验证。
-- Stage 0 已验证 W/S/A/D/Space、0.25m 前进、15° 转向、RGB/depth 和 head-depth 近障碍拒绝；危险前进被拒绝后位姿保持不变。USD AABB 投影仍受公开资产稳定性限制，健康接口显式标注 fallback + depth guard。
+- Stage 0 已验证 W/S/A/D/Space、0.25m 前进、15° 转向、RGB/depth 和 head-depth 近障碍拒绝；危险前进被拒绝后位姿保持不变。新增的等价 `market-aabb-proxy.usda` 已在 Isaac/PXR 进程中完成 10 个 Cube → 5cm 栅格 → footprint + 5cm 膨胀投影（8322 原始格、30478 膨胀格）；完整视觉 HTTP 进程仍受预装市场 mesh 的 Kit 提前退出影响，详见 AABB 探针证据。
 - Stage 1 已完成 3 条冒烟、50 条训练、10 条固定 held-out；严格校验为 50/50 与 10/10，公开 RGB 无全黑帧。1762 帧带标定 RGB-D 另生成 20 万点的等价 PLY/USDA/USDZ，并在新 Isaac 进程打开。
 - Stage 2 已纠正上游 `qwen` 模板静默回退导致的假 0-loss 训练；最终 59 个真实更新步，loss `0.4167→0.0823`、峰值显存 27.19GiB、无 NaN/Inf，adapter 新进程重载通过。
 - Stage 3 已完成真正的 StreamVLN base/LoRA → GenieSim 模型闭环；相同 `eval-2001…2010` 上两者 success@0.5m 都是 0/10。base 平均最终距离 3.989m、碰撞尝试 132 次；LoRA 4.686m、45 次。结果见唯一指标源 [`eval_result.json`](experiments/exp02-equivalent-v3/eval_result.json)，不能把控制器结果冒充模型成绩。

@@ -1,0 +1,96 @@
+{
+  "schema_version": "geniesim-streamvln/equivalent-aabb-proxy/v1",
+  "asset_role": "runtime_navigation_obstacle_layer",
+  "source_visual_asset": "artifacts/equivalent-scene/sample.ply",
+  "course_private_asset": false,
+  "bbox_prim_type": "UsdGeom.Cube",
+  "resolution_m": 0.05,
+  "obstacle_height_m": [
+    0.1,
+    1.8
+  ],
+  "box_count": 10,
+  "boxes": [
+    {
+      "x": -4.5,
+      "y": 0.0,
+      "size_x": 0.2,
+      "size_y": 9.4,
+      "size_z": 1.7,
+      "label": "perimeter_west"
+    },
+    {
+      "x": 4.5,
+      "y": 0.0,
+      "size_x": 0.2,
+      "size_y": 9.4,
+      "size_z": 1.7,
+      "label": "perimeter_east"
+    },
+    {
+      "x": 0.0,
+      "y": -4.7,
+      "size_x": 9.0,
+      "size_y": 0.2,
+      "size_z": 1.7,
+      "label": "perimeter_south"
+    },
+    {
+      "x": 0.0,
+      "y": 4.7,
+      "size_x": 9.0,
+      "size_y": 0.2,
+      "size_z": 1.7,
+      "label": "perimeter_north"
+    },
+    {
+      "x": -2.35,
+      "y": 1.65,
+      "size_x": 0.55,
+      "size_y": 4.6,
+      "size_z": 1.7,
+      "label": "shelf_left"
+    },
+    {
+      "x": 2.35,
+      "y": 1.65,
+      "size_x": 0.55,
+      "size_y": 4.6,
+      "size_z": 1.7,
+      "label": "shelf_right"
+    },
+    {
+      "x": -1.1,
+      "y": -3.05,
+      "size_x": 1.8,
+      "size_y": 0.55,
+      "size_z": 1.7,
+      "label": "shelf_south_left"
+    },
+    {
+      "x": 1.1,
+      "y": -3.05,
+      "size_x": 1.8,
+      "size_y": 0.55,
+      "size_z": 1.7,
+      "label": "shelf_south_right"
+    },
+    {
+      "x": -1.1,
+      "y": 3.05,
+      "size_x": 1.8,
+      "size_y": 0.55,
+      "size_z": 1.7,
+      "label": "shelf_north_left"
+    },
+    {
+      "x": 1.1,
+      "y": 3.05,
+      "size_x": 1.8,
+      "size_y": 0.55,
+      "size_z": 1.7,
+      "label": "shelf_north_right"
+    }
+  ],
+  "output": "artifacts/equivalent-scene/market-aabb-proxy.usda"
+}

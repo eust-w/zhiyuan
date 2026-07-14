@@ -1,0 +1,89 @@
+#usda 1.0
+(
+    defaultPrim = "AABBProxy"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "AABBProxy" {
+    def Xform "ObstacleRun_0000_perimeter_west" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (0.2000, 9.4000, 1.7000)
+            double3 xformOp:translate = (-4.5000, 0.0000, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0001_perimeter_east" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (0.2000, 9.4000, 1.7000)
+            double3 xformOp:translate = (4.5000, 0.0000, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0002_perimeter_south" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (9.0000, 0.2000, 1.7000)
+            double3 xformOp:translate = (0.0000, -4.7000, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0003_perimeter_north" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (9.0000, 0.2000, 1.7000)
+            double3 xformOp:translate = (0.0000, 4.7000, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0004_shelf_left" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (0.5500, 4.6000, 1.7000)
+            double3 xformOp:translate = (-2.3500, 1.6500, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0005_shelf_right" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (0.5500, 4.6000, 1.7000)
+            double3 xformOp:translate = (2.3500, 1.6500, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0006_shelf_south_left" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (1.8000, 0.5500, 1.7000)
+            double3 xformOp:translate = (-1.1000, -3.0500, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0007_shelf_south_right" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (1.8000, 0.5500, 1.7000)
+            double3 xformOp:translate = (1.1000, -3.0500, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0008_shelf_north_left" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (1.8000, 0.5500, 1.7000)
+            double3 xformOp:translate = (-1.1000, 3.0500, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+    def Xform "ObstacleRun_0009_shelf_north_right" {
+        def Cube "obstacle" {
+            double size = 1
+            float3 xformOp:scale = (1.8000, 0.5500, 1.7000)
+            double3 xformOp:translate = (1.1000, 3.0500, 0.8500)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+}

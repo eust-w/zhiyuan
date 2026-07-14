@@ -7,7 +7,7 @@
 | 同一场景的 PLY/USDA/USDZ | 等价完成 | 1762 帧 RGB-D 自采 20 万点，三个等价文件同源并在新 Isaac 进程打开；不是课程私有原件 |
 | Isaac / GPU / 场景 / 机器人启动 | 完成 | `market_00_g2`、G2、头部 RGB/depth、`ready=true` |
 | W/S/A/D/Space | 完成 | Stage 0 debug-only keyboard 真实记录；S 不进入训练动作空间 |
-| 障碍前进拒绝 | 等价完成 | 真实 head-depth 近障碍安全门拒绝，位姿不变；不是课程 USD AABB 实现 |
+| 障碍前进拒绝 | 等价完成 | 历史 episode 有真实 head-depth 近障碍安全门拒绝，位姿不变；独立等价 Cube USD 层另有 5cm 栅格 + footprint/5cm 膨胀证据，但未进入完整视觉 HTTP 闭环 |
 | 50 条训练数据 | 完成 | seeds `1001–1050`，50/50 严格校验 |
 | RGB/depth/annotations/target/trajectory | 完成 | 公开 annotations + 完整 `geniesim-streamvln/v1` sidecar |
 | 人工抽查 RGB 轨迹 | 完成 | 文档展示多条不同起点/视角，另有 10 秒 GIF 与 1080p MP4 |
@@ -19,7 +19,7 @@
 | success/oracle/distance/path/steps/actions/collision | 完成 | 唯一来源 `eval_result.json`，包含全部成功与失败 |
 | 失败分析和下一轮计划 | 完成 | Stage 4/5 文档与抖音稿按失败复盘呈现 |
 | 测试、哈希与关机收尾 | 完成 | 31 项测试通过；5 个关键文件本地/持久盘哈希一致；控制台“已关机”证据已保存 |
-| 使用课程私有 `course_tools` 和 UDP | 未完成且不冒充 | 私有软件不可由仿真自采；使用独立等价接口，不提交课程榜单 |
+| 使用课程私有 `course_tools` 和 UDP | 未完成且不冒充 | 私有软件不可由仿真自采；使用独立等价接口；Open Session 当前是模型部署型 benchmark，与本协议不兼容，核验见 [`open-session-compatibility.md`](../evidence/open-session-compatibility.md) |
 
 ## 如何给这次实验定性
 

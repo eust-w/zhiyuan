@@ -31,10 +31,11 @@
 
 ## 第四步：验证近障碍拒绝
 
-课程资产在运行时做完整 USD AABB 遍历会导致当前 Isaac 进程退出，因此本项目没有假装获得课程私有障碍栅格。替代方案分两层：
+课程市场视觉资产在运行时做完整 USD AABB 遍历会导致当前 Isaac 进程退出，因此本项目没有假装获得课程私有障碍栅格。现已补充一个独立、可审计的等价 Cube USD 导航层，并分两层记录：
 
-1. 有界安全栅格负责 footprint 越界保护；`/health` 诚实标为 `runtime_safe_fallback_no_usd_aabb`。
-2. 真实头部 depth 的中央 40%×50% 区域使用第 10 百分位距离；小于 0.45m 时拒绝前进。
+1. `market-aabb-proxy.usda` 在 Isaac/PXR 进程中真实投影为 5cm 栅格，10 个 Cube 产生 8322 个原始格，footprint 加 5cm 膨胀半径为 10 格，最终 30478 个 blocked 格；事件和摘要见 `evidence/aabb-standalone7-events.txt`。
+2. 完整视觉 HTTP 进程仍在进入 `occupancy_built` 前退出；旧 episode 的 `/health` 仍诚实标为 `runtime_safe_fallback_no_usd_aabb`，不能将离线/独立探针混写成已完成的相机闭环。
+3. 真实头部 depth 的中央 40%×50% 区域使用第 10 百分位距离；小于 0.45m 时拒绝前进。
 
 本轮连续前进测试得到 **59 次真实 depth 安全门拒绝**，`blocked_source=head_depth_forward_guard`，每次被拒绝后位姿矩阵保持不变。
 

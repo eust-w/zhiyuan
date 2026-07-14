@@ -9,7 +9,7 @@
 - 两者通过 `127.0.0.1:5802` 的 JSON HTTP 服务交换动作和观测。
 - RGB、depth、pose、目标距离和 `blocked` 均写入实验根目录下的 `runtime/`。
 - 模型权重、adapter、原始数据和长视频不进入 Git。
-- 当前 GPUFree 资产的 USD AABB 投影会触发 SimulationApp clean shutdown；配置显式使用 `runtime_safe_fallback_no_usd_aabb`，因此不要把 fallback 结果描述成真实障碍栅格评测。
+- 适配层包含独立的 `market-aabb-proxy.usda` 等价导航层。`scripts/runtime_aabb_probe.py` 已在 Isaac/PXR 进程中完成 10 个 `UsdGeom.Cube` 的 5cm 栅格投影和 footprint+5cm 膨胀；但当前预装视觉市场 mesh 仍会令完整 HTTP Kit 进程在 `occupancy_built` 前 clean shutdown，因此历史 episode 的 health/fallback 结果不能回写成已完成的全视觉 AABB 闭环。
 
 动作契约：`0=STOP`、`1=FORWARD(0.25m)`、`2=TURN_LEFT(15°)`、`3=TURN_RIGHT(15°)`。本次交付没有把键盘后退加入训练动作空间；若后续扩展键盘验证，后退只能作为 Stage 0 辅助动作。
 
