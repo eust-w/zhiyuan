@@ -1,0 +1,47 @@
+{
+  "schema_version": "aima-vln-series-media/v1",
+  "episode": "stage0",
+  "layout": "landscape",
+  "width": 1920,
+  "height": 1080,
+  "duration_s": 60.0,
+  "real_recording_ratio": 0.11764705882352941,
+  "metric_source": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/experiments/exp02-equivalent-v3/eval_result.json",
+  "metrics": {
+    "schema_version": "geniesim-streamvln/v1",
+    "heldout_episode_ids": [
+      "eval-2001",
+      "eval-2002",
+      "eval-2003",
+      "eval-2004",
+      "eval-2005",
+      "eval-2006",
+      "eval-2007",
+      "eval-2008",
+      "eval-2009",
+      "eval-2010"
+    ],
+    "variants": {
+      "base": {
+        "success_0_5": 0,
+        "success_3": 2,
+        "collisions": 132,
+        "mean_final_distance_to_goal": 3.9889178097623224,
+        "mean_path_length": 9.675,
+        "mean_steps": 133.9
+      },
+      "lora": {
+        "success_0_5": 0,
+        "success_3": 1,
+        "collisions": 45,
+        "mean_final_distance_to_goal": 4.686244300975281,
+        "mean_path_length": 5.5,
+        "mean_steps": 53.2
+      }
+    }
+  },
+  "outputs": [
+    "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/style-sample/stage0.mp4",
+    "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/style-sample/stage0.srt"
+  ]
+}

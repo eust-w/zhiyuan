@@ -23,3 +23,12 @@ assets/frames/raw/
 # intentionally tracked; private/raw capture data remains ignored below.
 dataset-v*/
 experiments/**/checkpoints/
+
+# Four-stage tutorial renders are reproducible outputs; keep source manifests,
+# subtitles, provenance and acceptance JSON tracked, but do not commit large
+# generated audio/video files.
+assets/series/**/*.mp4
+assets/series/**/*.mp3
+assets/series/**/*.m4a
+assets/series/**/*.wav
+assets/series/*.wav

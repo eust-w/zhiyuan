@@ -1,0 +1,11 @@
+{
+  "schema_version": "aima-vln-series-voice/v1",
+  "narration": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/content/series/narration/stage1.txt",
+  "output": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage1/stage1-voice.mp3",
+  "voice": "zh-CN-YunyangNeural",
+  "rate": "-8%",
+  "language": "zh-CN",
+  "style": "沉稳男声",
+  "characters": 1689,
+  "sha256": "69553fe2429dd1f93dd4d9b7ef6461d8d26395ce99ca2cc7a12c8fe8e3889a5e"
+}

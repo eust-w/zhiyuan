@@ -1,0 +1,16 @@
+{
+  "schema_version": "aima-vln-publishing-state/v1",
+  "material_status": "draft",
+  "platforms": {
+    "bilibili": "draft_not_submitted",
+    "zhihu": "draft_not_submitted",
+    "xiaohongshu": "draft_not_submitted",
+    "douyin": "draft_not_submitted"
+  },
+  "user_login_required": true,
+  "final_submission_confirmed": false,
+  "captcha_or_scan_completed": false,
+  "cover_final_reviewed": false,
+  "public_link_verification": false,
+  "rule": "素材完成 → 用户登录 → 草稿预览 → 用户确认最终提交 → 审核中 → 未登录窗口验证公开链接"
+}

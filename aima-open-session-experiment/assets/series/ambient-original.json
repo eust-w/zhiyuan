@@ -1,0 +1,12 @@
+{
+  "schema_version": "aima-vln-original-audio/v1",
+  "kind": "original_synthesized_ambient",
+  "file": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/ambient-original.wav",
+  "duration_s": 900.0,
+  "sample_rate": 48000,
+  "channels": 2,
+  "license": "original local synthesis; no third-party recording",
+  "recipe": "two low sine oscillators (110Hz, 164.81Hz), low-volume mix, limiter",
+  "command": "ffmpeg -hide_banner -loglevel error -y -f lavfi -i sine=frequency=110:sample_rate=48000:duration=900.0 -f lavfi -i sine=frequency=164.81:sample_rate=48000:duration=900.0 -filter_complex [0:a]volume=0.025[a0];[1:a]volume=0.015[a1];[a0][a1]amix=inputs=2:duration=longest,alimiter=limit=0.8[a] -map [a] -ar 48000 -ac 2 -c:a pcm_s16le /Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/ambient-original.wav",
+  "sha256": "533c8bb48d3f1063615f97e3e558b7beb8a6abb8d451171f6b6afc9cfae52d9c"
+}

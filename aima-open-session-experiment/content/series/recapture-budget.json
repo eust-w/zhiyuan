@@ -1,0 +1,18 @@
+{
+  "schema_version": "aima-vln-gpufree-recapture/v1",
+  "status": "attempted_without_extension",
+  "purpose": "四期教程补录：场景启动、Stage 0 动作与障碍拒绝、日志落盘",
+  "currency": "CNY",
+  "hard_cap": 10.0,
+  "hourly_price_observed_cny": 2.28,
+  "theoretical_max_hours_before_buffer": 4.3859649123,
+  "shutdown_buffer_minutes": 20,
+  "paid_extension": false,
+  "remote_attempt": {
+    "started": true,
+    "result": "no_media_file_recovered",
+    "evidence": "GPUFree assets/series-recapture/stage0-started.txt, stage0-finished.txt, ffmpeg.log and adapter.log",
+    "notes": "既有实例在自动释放窗口附近执行短补录；日志文件为空且未生成 mp4，未重新启动或延长计费实例。"
+  },
+  "privacy": "不记录实例 ID、IP、账号、连接信息或价格截图"
+}

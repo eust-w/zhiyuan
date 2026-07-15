@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "errors": [],
+  "files": {
+    "stage0": {
+      "bilibili": 1796,
+      "zhihu": 4884,
+      "xiaohongshu": 1223,
+      "douyin": 832
+    },
+    "stage1": {
+      "bilibili": 1856,
+      "zhihu": 4935,
+      "xiaohongshu": 1273,
+      "douyin": 873
+    },
+    "stage2": {
+      "bilibili": 1780,
+      "zhihu": 4846,
+      "xiaohongshu": 1267,
+      "douyin": 847
+    },
+    "stage3": {
+      "bilibili": 1851,
+      "zhihu": 4952,
+      "xiaohongshu": 1299,
+      "douyin": 898
+    }
+  }
+}

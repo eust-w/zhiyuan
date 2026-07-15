@@ -1,0 +1,131 @@
+{
+  "schema_version": "aima-vln-platform-content/v1",
+  "status": "draft_waiting_for_user_confirmation",
+  "credit": "智元布道师",
+  "disclaimer": "流程参考 AIMA 指南，采用公开组件与自采等价兼容资产；不声称复制课程私有资产，也不是课程官方方案。",
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+  "primary_metric": "success@0.5m",
+  "shared_facts": {
+    "base_success_0_5": "0/10",
+    "lora_success_0_5": "0/10",
+    "base_success_3": "2/10",
+    "lora_success_3": "1/10",
+    "base_final_distance_m": 3.989,
+    "lora_final_distance_m": 4.686,
+    "base_collisions": 132,
+    "lora_collisions": 45,
+    "train_episodes": 50,
+    "heldout_episodes": 10,
+    "lora_updates": 59,
+    "lora_loss": "0.4167→0.0823",
+    "peak_memory_gib": 27.19
+  },
+  "episodes": [
+    {
+      "episode": "stage0",
+      "title": "机器人会动，不等于导航闭环",
+      "hook": "先别看成功率，先证明每个动作、每一帧观测和安全拒绝都可复核。",
+      "source_doc": "docs/01-stage0-仿真环境验证.md",
+      "narration": "content/series/narration/stage0.txt",
+      "evidence_images": [
+        "assets/screenshots/v3/stage0-validation.png",
+        "assets/screenshots/v3/stage0-forward-before.jpg",
+        "assets/screenshots/v3/stage0-forward-after.jpg",
+        "assets/screenshots/v3/stage0-before-block.jpg",
+        "assets/screenshots/v3/stage0-after-block.jpg",
+        "assets/media/v3/stage0-keyboard-and-guard.gif",
+        "assets/plots/evidence-chain.png",
+        "assets/ai-diagrams/ai-01-perception-action.png",
+        "assets/screenshots/P0-01-gpufree-desktop-browser.jpg",
+        "assets/screenshots/P0-02-environment-terminal.jpg"
+      ],
+      "cards": ["场景与相机", "四动作编码", "两帧等待", "无遮挡前进", "近障碍拒绝", "位姿不变", "接口边界", "验收结论"],
+      "bilibili_titles": [
+        "Stage 0｜机器人会动，不等于导航闭环：动作、深度与安全门",
+        "GenieSim 控制器验收实录：为什么 blocked 后 pose 必须不变",
+        "从 W/A/S/D 到 StreamVLN 动作 ID：一套可复核的仿真控制入口"
+      ],
+      "douyin_titles": ["机器人会走，为什么还不能说会导航？", "四个动作先验收，闭环还没开始", "近障碍拒绝后，位姿真的没变吗？"]
+    },
+    {
+      "episode": "stage1",
+      "title": "50 条训练与 10 条评测如何采集",
+      "hook": "数量不是数据质量；先把同步、schema、sidecar 和几何证据分开。",
+      "source_doc": "docs/02-stage1-数据采集.md",
+      "narration": "content/series/narration/stage1.txt",
+      "evidence_images": [
+        "assets/screenshots/v3/stage1-validation.png",
+        "assets/screenshots/v3/train-1001-start.jpg",
+        "assets/screenshots/v3/train-1001-goal.jpg",
+        "assets/screenshots/v3/train-1025-mid.jpg",
+        "assets/screenshots/v3/train-1050-mid.jpg",
+        "assets/media/v3/stage1-train-1001.gif",
+        "assets/plots/schema-sidecar.png",
+        "assets/plots/validation-gates.png",
+        "assets/ai-diagrams/ai-02-data-pipeline.png",
+        "assets/screenshots/v3/eval-2001-start.jpg",
+        "assets/screenshots/v3/eval-2010-start.jpg"
+      ],
+      "cards": ["三条冒烟", "固定种子", "训练与留出", "RGB-D-Pose", "公开 annotations", "sidecar", "5cm 栅格", "批量验收", "人工抽查"],
+      "bilibili_titles": [
+        "Stage 1｜50 条训练、10 条 held-out：RGB-D 数据如何可审计采集",
+        "annotations.json 不等于完整轨迹：StreamVLN 标注与 sidecar 拆解",
+        "五厘米占据栅格怎么验收？从 AABB 探针到数据落盘"
+      ],
+      "douyin_titles": ["60 条轨迹不是关键，关键是每一帧都能对上", "公开标注和完整 sidecar 为什么要分开？", "从三条冒烟到 50+10：数据采集避坑"]
+    },
+    {
+      "episode": "stage2",
+      "title": "loss 下降为什么不代表会导航",
+      "hook": "训练曲线只能证明优化发生过；adapter 重载和闭环推理要另验。",
+      "source_doc": "docs/03-stage2-lora微调.md",
+      "narration": "content/series/narration/stage2.txt",
+      "evidence_images": [
+        "assets/screenshots/v3/stage2-gates.png",
+        "assets/screenshots/v3/stage2-loss-curve.png",
+        "assets/media/v3/stage2-training-evidence.gif",
+        "assets/plots/lora-config.png",
+        "assets/plots/metrics-base-lora.png",
+        "assets/ai-diagrams/ai-03-closed-loop.png",
+        "assets/screenshots/v3/stage1-validation.png",
+        "assets/screenshots/v3/stage3-paired-metrics.png",
+        "assets/screenshots/v3/stage3-episode-distances.png",
+        "assets/screenshots/v3/final-instance-powered-off.jpg"
+      ],
+      "cards": ["Python 环境隔离", "LoRA 参数", "dataset-only", "单批前后向", "59 步更新", "loss 曲线", "显存与异常", "新进程重载", "不能证明什么"],
+      "bilibili_titles": [
+        "Stage 2｜loss 从 0.4167 到 0.0823，为什么仍不能说会导航",
+        "LoRA 四道验证门：数据、前后向、59 步训练与新进程重载",
+        "真实训练复盘：低 loss、可重载 adapter 与导航成功是三件事"
+      ],
+      "douyin_titles": ["loss 降了，机器人就会走了吗？", "59 步训练到底证明了什么？", "LoRA 重载通过，也不等于闭环成功"]
+    },
+    {
+      "episode": "stage3",
+      "title": "闭环真实，为什么 success@0.5m 仍是 0/10",
+      "hook": "同一批 10 条留出样本，base 和 LoRA 自己发动作，失败也完整公开。",
+      "source_doc": "docs/04-stage3-实时推理评测.md",
+      "narration": "content/series/narration/stage3.txt",
+      "evidence_images": [
+        "assets/screenshots/v3/stage3-paired-metrics.png",
+        "assets/screenshots/v3/stage3-episode-distances.png",
+        "assets/screenshots/v3/stage3-base-2004-start.jpg",
+        "assets/screenshots/v3/stage3-base-2004-mid.jpg",
+        "assets/screenshots/v3/stage3-base-2004-end.jpg",
+        "assets/media/v3/stage3-base-2004.gif",
+        "assets/plots/action-counts.png",
+        "assets/plots/episode-distance.png",
+        "assets/ai-diagrams/ai-04-failure-roadmap.png",
+        "assets/screenshots/v3/eval-2001-start.jpg",
+        "assets/screenshots/v3/eval-2010-start.jpg"
+      ],
+      "cards": ["模型闭环", "同批 held-out", "0.5m 主指标", "3m 辅助", "最终距离", "路径与步数", "碰撞统计", "动作计数", "域差异", "下一轮路线"],
+      "bilibili_titles": [
+        "Stage 3｜闭环是真的，success@0.5m 仍是 0/10：base 与 LoRA 配对评测",
+        "模型自己发动作的实录：为什么少撞不等于更会导航",
+        "失败复盘｜GenieSim × StreamVLN 的距离、SPL、碰撞与动作统计"
+      ],
+      "douyin_titles": ["闭环真的跑通了，但主指标还是 0/10", "LoRA 少撞了，为什么平均距离更远？", "不挑最好的一条：十条 held-out 全部公开"]
+    }
+  ]
+}

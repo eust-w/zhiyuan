@@ -1,0 +1,309 @@
+{
+  "schema_version": "aima-vln-series/v1",
+  "status": "draft_waiting_for_gpu_recapture",
+  "real_ratio_target": 0.75,
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+  "audio": {
+    "voice": "zh-CN-YunyangNeural",
+    "music_policy": "licensed_or_original_only",
+    "subtitle_max_chars_per_line": 16
+  },
+  "episodes": [
+    {
+      "episode": "stage0",
+      "title": "机器人会动，不等于导航闭环",
+      "planned_duration_s": 720,
+      "capture_plan": "补录场景启动、四动作、两帧等待和近障碍拒绝",
+      "segments": [
+        {
+          "segment_id": "stage0-01",
+          "source": "assets/carousel/carousel-01.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/博客-GenieSim-StreamVLN非官方等价闭环经验.md",
+          "duration_s": 4,
+          "layout": "landscape",
+          "narration": "先从一个看似简单的问题开始：机器人能不能听懂一句话，并把它变成一条可复核的动作轨迹？",
+          "subtitle": ["机器人会动，不等于导航闭环"],
+          "overlay": "本期：Stage 0 控制器与观测验收"
+        },
+        {
+          "segment_id": "stage0-02",
+          "source": "assets/media/v3/stage0-keyboard-and-guard.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 8,
+          "layout": "landscape",
+          "narration": "现场录屏中，W、S、A、D 和 Space 先验证基础动作，再把动作固定成四个模型可用的离散 ID。",
+          "subtitle": ["真实录屏：四动作与键盘验收"],
+          "overlay": "STOP=0  前进=1  左转=2  右转=3"
+        },
+        {
+          "segment_id": "stage0-03",
+          "source": "assets/screenshots/v3/stage0-before-block.jpg",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+          "duration_s": 8,
+          "layout": "landscape",
+          "narration": "前方距离过近时，安全门应该拒绝危险前进；关键不是出现红色提示，而是拒绝后位姿必须保持不变。",
+          "subtitle": ["真实结果图：危险前进前"],
+          "overlay": "blocked 前：记录深度与位姿"
+        },
+        {
+          "segment_id": "stage0-04",
+          "source": "assets/screenshots/v3/stage0-after-block.jpg",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+          "duration_s": 8,
+          "layout": "landscape",
+          "narration": "这张前后对照证明了拒绝动作没有偷偷改变机器人位置，碰撞安全门才有资格进入后续采集。",
+          "subtitle": ["真实结果图：拒绝后位姿不变"],
+          "overlay": "blocked 后：pose 保持一致"
+        },
+        {
+          "segment_id": "stage0-05",
+          "source": "assets/ai-diagrams/ai-01-perception-action.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "article/博客-GenieSim-StreamVLN非官方等价闭环经验.md",
+          "duration_s": 20,
+          "layout": "landscape",
+          "narration": "AI 示意图只解释感知、模型和动作之间的关系，真正的动作结果仍然以现场录屏和接口日志为准。",
+          "subtitle": ["AI 示意图：感知 → 模型 → 动作"],
+          "overlay": "示意图不作为实验指标"
+        },
+        {
+          "segment_id": "stage0-06",
+          "source": "assets/plots/evidence-chain.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/run-manifest.json",
+          "duration_s": 20,
+          "layout": "landscape",
+          "narration": "每次移动至少等待两个渲染帧，再把 RGB、depth、pose、距离和 blocked 结果一起写入证据链。",
+          "subtitle": ["提交动作 → 等两帧 → 保存观测"],
+          "overlay": "证据链：action / RGB / depth / pose / distance"
+        }
+      ]
+    },
+    {
+      "episode": "stage1",
+      "title": "50 条训练与 10 条评测如何采集",
+      "planned_duration_s": 780,
+      "capture_plan": "补录一条冒烟轨迹、训练样本写盘和 sidecar 检查",
+      "segments": [
+        {
+          "segment_id": "stage1-01",
+          "source": "assets/carousel/carousel-08.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 5,
+          "layout": "landscape",
+          "narration": "数据采集从三条冒烟开始，确认没有问题后才进入五十条训练和十条留出评测。",
+          "subtitle": ["3 条冒烟 + 50 条训练 + 10 条评测"],
+          "overlay": "固定种子：1001–1050 / 2001–2010"
+        },
+        {
+          "segment_id": "stage1-02",
+          "source": "assets/media/v3/stage1-train-1001.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 10,
+          "layout": "landscape",
+          "narration": "每个时间步不只保存一张图，还要同步保存深度、四乘四位姿、动作、目标距离和碰撞状态。",
+          "subtitle": ["真实录屏：RGB-D 与位姿同步采集"],
+          "overlay": "RGB / depth / pose / action / distance"
+        },
+        {
+          "segment_id": "stage1-03",
+          "source": "assets/screenshots/v3/stage1-validation.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+          "duration_s": 20,
+          "layout": "landscape",
+          "narration": "验收脚本把数量、schema、帧数、动作数和路径安全性一次检查，避免最后才发现训练集不可用。",
+          "subtitle": ["真实结果图：数据集验收卡"],
+          "overlay": "50/50 train · 10/10 held-out"
+        },
+        {
+          "segment_id": "stage1-04",
+          "source": "assets/plots/schema-sidecar.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 25,
+          "layout": "landscape",
+          "narration": "公开 annotations 保持 StreamVLN 格式，完整停止、深度、轨迹和目标信息放在 geniesim-streamvln/v1 sidecar。",
+          "subtitle": ["公开标注与完整旁路记录分开"],
+          "overlay": "首动作 -1 · 不把最终 STOP 写入公开动作数组"
+        },
+        {
+          "segment_id": "stage1-05",
+          "source": "assets/ai-diagrams/ai-02-data-pipeline.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "article/博客-GenieSim-StreamVLN非官方等价闭环经验.md",
+          "duration_s": 20,
+          "layout": "landscape",
+          "narration": "这张 AI 示意图用于解释目标、采集、轨迹、训练和评测之间的数据流向，不替代真实文件。",
+          "subtitle": ["AI 示意图：数据流水线"],
+          "overlay": "示意图不作为样本数量证据"
+        },
+        {
+          "segment_id": "stage1-06",
+          "source": "assets/plots/validation-gates.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "evidence/aabb-standalone7-events.txt",
+          "duration_s": 25,
+          "layout": "landscape",
+          "narration": "课程私有资产不可用时，单独的 PXR 探针仍然验证了十个 Cube、五厘米栅格和 footprint 膨胀的等价几何路径。",
+          "subtitle": ["真实结果：等价 USD AABB 探针"],
+          "overlay": "8322 原始格 → 30478 膨胀格"
+        }
+      ]
+    },
+    {
+      "episode": "stage2",
+      "title": "loss 下降为什么不代表会导航",
+      "planned_duration_s": 720,
+      "capture_plan": "补录独立 Python 环境、单批检查和 adapter 重载",
+      "segments": [
+        {
+          "segment_id": "stage2-01",
+          "source": "assets/carousel/carousel-12.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 5,
+          "layout": "landscape",
+          "narration": "训练阶段最容易误判：loss 在下降，只能说明优化过程发生过，不能直接推出机器人会导航。",
+          "subtitle": ["loss 下降 ≠ 模型会导航"],
+          "overlay": "本期：LoRA 四道验证门"
+        },
+        {
+          "segment_id": "stage2-02",
+          "source": "assets/media/v3/stage2-training-evidence.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 8,
+          "layout": "landscape",
+          "narration": "真实训练证据显示，数据集读取、单批前后向、完整更新和新进程重载被拆成四道门。",
+          "subtitle": ["真实录屏：四道训练验证门"],
+          "overlay": "dataset-only / forward-backward / train / reload"
+        },
+        {
+          "segment_id": "stage2-03",
+          "source": "assets/screenshots/v3/stage2-gates.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+          "duration_s": 20,
+          "layout": "landscape",
+          "narration": "这张验收卡把每道门的通过条件写清楚，尤其要确认 loss、梯度和 adapter 文件都不是空结果。",
+          "subtitle": ["真实结果图：四道验证门"],
+          "overlay": "无 NaN/Inf · 新进程重载通过"
+        },
+        {
+          "segment_id": "stage2-04",
+          "source": "assets/screenshots/v3/stage2-loss-curve.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "runs/2026-07-13/stage2-training.stdout.log",
+          "duration_s": 25,
+          "layout": "landscape",
+          "narration": "最终记录了五十九个有限的非零更新步，loss 从零点四一六七下降到零点零八二三，峰值显存约二十七点一九 GiB。",
+          "subtitle": ["59 步更新：0.4167 → 0.0823"],
+          "overlay": "peak GPU memory ≈ 27.19 GiB"
+        },
+        {
+          "segment_id": "stage2-05",
+          "source": "assets/plots/lora-config.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 25,
+          "layout": "landscape",
+          "narration": "秩八、缩放十六、丢弃率零点零五、批量一和学习率二乘十的负五次方，是为了让实验可重复，而不是效果保证。",
+          "subtitle": ["LoRA：r=8 · alpha=16 · dropout=0.05"],
+          "overlay": "BF16 · gradient checkpointing · mm_lora_layer"
+        },
+        {
+          "segment_id": "stage2-06",
+          "source": "assets/ai-diagrams/ai-03-closed-loop.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "article/博客-GenieSim-StreamVLN非官方等价闭环经验.md",
+          "duration_s": 20,
+          "layout": "landscape",
+          "narration": "训练证据和导航证据必须分开，下一期才会真正把 base 和 LoRA 接回仿真闭环。",
+          "subtitle": ["AI 示意图：训练证据不等于导航证据"],
+          "overlay": "下一期：模型自己发动作"
+        }
+      ]
+    },
+    {
+      "episode": "stage3",
+      "title": "闭环真实，为什么 success@0.5m 仍是 0/10",
+      "planned_duration_s": 840,
+      "capture_plan": "补录 base/LoRA 各一条同批模型轨迹和指标生成",
+      "segments": [
+        {
+          "segment_id": "stage3-01",
+          "source": "assets/carousel/carousel-20.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "docs/04-stage3-实时推理评测.md",
+          "duration_s": 5,
+          "layout": "landscape",
+          "narration": "真正的结果不只看有没有一条漂亮轨迹，而要看同一批十条留出样本的总体指标。",
+          "subtitle": ["闭环是真的，成功率仍为 0/10"],
+          "overlay": "主指标：success@0.5m"
+        },
+        {
+          "segment_id": "stage3-02",
+          "source": "assets/media/v3/stage3-base-2004.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 10,
+          "layout": "landscape",
+          "narration": "这段真实回放不是控制器代跑，而是模型读取观测、生成动作、调用适配器并收到下一帧。",
+          "subtitle": ["真实录屏：模型闭环轨迹"],
+          "overlay": "模型 → 适配器 → GenieSim → 下一帧"
+        },
+        {
+          "segment_id": "stage3-03",
+          "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 30,
+          "layout": "landscape",
+          "narration": "基础模型和 LoRA 在同一批十条 episode 上，半米成功率都是零；三米辅助成功率分别是二条和一条。",
+          "subtitle": ["base 0/10 · LoRA 0/10 · 主指标为 0.5m"],
+          "overlay": "3m：base 2/10 · LoRA 1/10"
+        },
+        {
+          "segment_id": "stage3-04",
+          "source": "assets/plots/episode-distance.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 30,
+          "layout": "landscape",
+          "narration": "LoRA 的步数和安全门拦截次数下降，但平均最终距离变远，所以少撞不能直接等于更会导航。",
+          "subtitle": ["少撞，不等于更接近目标"],
+          "overlay": "base 3.989m · LoRA 4.686m"
+        },
+        {
+          "segment_id": "stage3-05",
+          "source": "assets/plots/action-counts.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 25,
+          "layout": "landscape",
+          "narration": "停止、前进、左转和右转全部进入统计，不能只挑一条看起来最好的 episode。",
+          "subtitle": ["动作统计：十条样本全部计入"],
+          "overlay": "STOP / FORWARD / LEFT / RIGHT"
+        },
+        {
+          "segment_id": "stage3-06",
+          "source": "assets/ai-diagrams/ai-04-failure-roadmap.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/05-结果分析与排障.md",
+          "duration_s": 25,
+          "layout": "landscape",
+          "narration": "失败原因拆成几何、感知和模型三层，下一轮先修复资产与深度，再谈成功率。",
+          "subtitle": ["AI 示意图：失败定位与下一轮路线"],
+          "overlay": "几何 → 感知 → 模型 → 指标"
+        }
+      ]
+    }
+  ]
+}
