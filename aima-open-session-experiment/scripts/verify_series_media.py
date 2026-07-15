@@ -16,7 +16,7 @@ except ModuleNotFoundError:  # Direct script invocation.
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SENSITIVE = re.compile(r"(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\d{1,3}\.){3}\d{1,3}|__REDACTED_CREDENTIAL_LITERAL__|实例ID|ssh\s+\S+@)", re.I)
+SENSITIVE = re.compile(r"(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\d{1,3}\.){3}\d{1,3}|实例ID|ssh\s+\S+@)", re.I)
 
 
 def probe(path: Path) -> dict[str, Any]:

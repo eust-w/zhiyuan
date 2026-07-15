@@ -1,0 +1,107 @@
+{
+  "schema_version": "aima-vln-xhs-cards/v1",
+  "episode": "stage2",
+  "status": "draft",
+  "count": 9,
+  "cards": [
+    {
+      "index": 1,
+      "title": "Python 环境隔离",
+      "copy": "Isaac 使用预装 Python 3.11，StreamVLN 使用独立 Python 3.9，避免依赖互相污染。",
+      "source": "assets/screenshots/v3/stage2-gates.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage2/card-01.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "87ca6e8209c992f2a29e5c4af2f2b710256252f659f9ebd4f264a1eff26ad5e3"
+    },
+    {
+      "index": 2,
+      "title": "LoRA 参数",
+      "copy": "LoRA 固定 r=8、alpha=16、dropout=0.05、批量1和学习率2×10⁻⁵。",
+      "source": "assets/screenshots/v3/stage2-loss-curve.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage2/card-02.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "2ba0f9ae7d15432202a4dc1440672ddeb5c77d7d2f7367208436b8b9ae5492fe"
+    },
+    {
+      "index": 3,
+      "title": "dataset-only",
+      "copy": "第一道门只读取数据，先排除路径、格式、帧数和首动作错误。",
+      "source": "assets/media/v3/stage2-training-evidence.gif",
+      "label": "真实录屏帧",
+      "output": "assets/series/xiaohongshu/stage2/card-03.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "42c0e70c1f6c804e23a25163103c232999de6f89c55d27367d4ec9d22e2faa9f"
+    },
+    {
+      "index": 4,
+      "title": "单批前后向",
+      "copy": "第二道门运行一个 batch，确认 loss、梯度与输出都没有 NaN 或 Inf。",
+      "source": "assets/plots/lora-config.png",
+      "label": "真实指标图",
+      "output": "assets/series/xiaohongshu/stage2/card-04.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "366d1cc956e00591bbec9cf6e254e28b79ebc48e8b8aa12d469f1d917c30101b"
+    },
+    {
+      "index": 5,
+      "title": "59 步更新",
+      "copy": "完整训练记录59个真实更新步，不能用空循环或零 loss 代替。",
+      "source": "assets/plots/metrics-base-lora.png",
+      "label": "真实指标图",
+      "output": "assets/series/xiaohongshu/stage2/card-05.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "36247f00c964591d73d0d813e55e554910b190d2a182f48ae7ebaabd959f66a1"
+    },
+    {
+      "index": 6,
+      "title": "loss 曲线",
+      "copy": "loss 从0.4167降到0.0823，只能证明优化发生，不等于导航成功。",
+      "source": "assets/ai-diagrams/ai-03-closed-loop.png",
+      "label": "AI 示意图",
+      "output": "assets/series/xiaohongshu/stage2/card-06.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "5aa324fff3b80c22ee9e976f2aa045c16005461086123eb801ae80d3033fe0d2"
+    },
+    {
+      "index": 7,
+      "title": "显存与异常",
+      "copy": "峰值显存约27.19GiB；没有 OOM 证据时不切换四比特路径。",
+      "source": "assets/screenshots/v3/stage1-validation.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage2/card-07.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "34a5f18048121c9a0954f3163b3efa2b08dd8a01092cf24486d69653fad324b1"
+    },
+    {
+      "index": 8,
+      "title": "新进程重载",
+      "copy": "关闭训练进程后重新加载 adapter，验证文件、配置、形状和哈希。",
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage2/card-08.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "82c307e654ae245d99c64d835a54fb60919d47cc0c1df830e25e3036eba1ae04"
+    },
+    {
+      "index": 9,
+      "title": "不能证明什么",
+      "copy": "重载通过仍不能证明模型会规划；真正答案必须来自 held-out 闭环。",
+      "source": "assets/screenshots/v3/stage3-episode-distances.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage2/card-09.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "8712fafd6b5be11c74cdf66bce09c15936d0a827dda276e971bdf7c4ae2491eb"
+    }
+  ]
+}

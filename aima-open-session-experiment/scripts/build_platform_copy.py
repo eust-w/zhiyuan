@@ -22,6 +22,26 @@ def read_text(root: Path, relative: str) -> str:
     return sanitize((root / relative).read_text(encoding="utf-8"))
 
 
+def coherent_excerpt(text: str, limit: int) -> str:
+    """Return complete Markdown paragraphs without carrying local media links."""
+
+    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    paragraphs = [paragraph.strip() for paragraph in re.split(r"\n\s*\n", text) if paragraph.strip()]
+    selected: list[str] = []
+    length = 0
+    for paragraph in paragraphs:
+        added = len(paragraph) + (2 if selected else 0)
+        if selected and length + added > limit:
+            break
+        if not selected and added > limit:
+            selected.append(paragraph[:limit].rsplit("。", 1)[0] + "。")
+            break
+        selected.append(paragraph)
+        length += added
+    return "\n\n".join(selected)
+
+
 def facts_line(facts: dict[str, object]) -> str:
     return (
         f"唯一指标源为 `eval_result.json`；主指标 success@0.5m：base {facts['base_success_0_5']}，"
@@ -56,9 +76,12 @@ def build_zhihu(root: Path, item: dict[str, object], facts: dict[str, object]) -
     narration = read_text(root, str(item["narration"]))
     # Keep each platform draft within the requested 3000–5000 Chinese
     # character range while linking the full local evidence documents.
-    source_excerpt = source[:1500] + "\n\n（完整阶段文档见仓库链接，发布时可继续展开命令与截图说明。）"
-    narration_excerpt = narration[:1250] + "\n\n（完整旁白脚本保留在 series/narration/，用于视频合成。）"
-    evidence = "\n".join(f"- `{path}`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）" for path in item["evidence_images"])
+    source_excerpt = coherent_excerpt(source, 1180) + "\n\n（完整阶段文档见仓库链接，发布时可继续展开命令与截图说明。）"
+    narration_excerpt = coherent_excerpt(narration, 900) + "\n\n（完整旁白脚本保留在 series/narration/，用于视频合成。）"
+    evidence = "\n\n".join(
+        f"![{stage} 证据图 {index}](../../{path})\n\n图 {index}：`{path}`（按画面角标区分真实录屏、真实结果图与 AI 示意图）"
+        for index, path in enumerate(item["evidence_images"], 1)
+    )
     sections = [
         f"# {item['title']}｜知乎教程草稿",
         "\n> 发布前状态：草稿。统一署名“智元布道师”，统一声明为非官方等价适配。素材中的真实录屏、真实结果图和 AI 示意图会在成片与图片上分别标注。",
@@ -131,7 +154,10 @@ def build_bilibili(root: Path, item: dict[str, object], facts: dict[str, object]
 
 def build_xhs(root: Path, item: dict[str, object], facts: dict[str, object]) -> str:
     stage = str(item["episode"])
-    card_lines = "\n".join(f"{i}. {card}" for i, card in enumerate(item["cards"], 1))
+    card_lines = "\n\n".join(
+        f"{i}. {card}\n\n![{stage} 步骤卡 {i}](../../assets/series/xiaohongshu/{stage}/card-{i:02}.png)"
+        for i, card in enumerate(item["cards"], 1)
+    )
     body = (
         f"今天把 {item['title']} 拆成一组步骤卡。开头先回答一个问题：{item['hook']} "
         "我没有把一张漂亮的截图当成成功证据，而是把现场录屏、结果图、日志和示意图分开标注。"
@@ -216,6 +242,24 @@ def build_package(root: Path, inventory: Path, output: Path) -> list[Path]:
             path.write_text(content, encoding="utf-8")
             generated.append(path)
             readme.append(f"- [{name}]({name})")
+        readme.append(f"- [小红书 Stage {stage[-1]} 卡片目录](../../assets/series/xiaohongshu/{stage}/)")
+    readme.extend([
+        "",
+        "## B 站封面草稿",
+        "",
+        *[f"- [Stage {index} 封面](../../assets/series/covers/stage{index}-cover.png)" for index in range(4)],
+        "",
+        "## 四期长片粗剪（明确不是最终发布）",
+        "",
+        "以下视频已达到约 10–12 分钟，用于校对沉稳男声、章节节奏、字幕容器和音频混音；画面会循环 60 秒样片，并烧录“粗剪草稿｜旧素材片段复用｜未满足最终比例”标识。GPUFree 新补录和真实录屏比例未通过前，不得发布。",
+        "",
+        *[
+            f"- [Stage {index} 粗剪](../../assets/series/long-drafts/stage{index}/stage{index}-rough-cut-draft.mp4) · "
+            f"[SRT](../../assets/series/long-drafts/stage{index}/stage{index}-rough-cut-draft.srt) · "
+            f"[清单](../../assets/series/long-drafts/stage{index}/stage{index}-rough-cut-manifest.json)"
+            for index in range(4)
+        ],
+    ])
     (output / "README.md").write_text("\n".join(readme) + "\n", encoding="utf-8")
     generated.append(output / "README.md")
     return generated

@@ -1,0 +1,118 @@
+{
+  "schema_version": "aima-vln-xhs-cards/v1",
+  "episode": "stage3",
+  "status": "draft",
+  "count": 10,
+  "cards": [
+    {
+      "index": 1,
+      "title": "模型闭环",
+      "copy": "模型读取观测、生成动作、驱动 GenieSim 并接收下一帧，形成真实闭环。",
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage3/card-01.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "32f6c5afa09269ffc187323b9e889de3129fab3447528e79c9c507673c8b96e2"
+    },
+    {
+      "index": 2,
+      "title": "同批 held-out",
+      "copy": "base 与 LoRA 使用完全相同的十条 held-out，逐条重置缓存、队列和历史。",
+      "source": "assets/screenshots/v3/stage3-episode-distances.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage3/card-02.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "1cb223202f6a783a71e3849dfab0df0e1566cdcf001addfc06c8acc2f13754ac"
+    },
+    {
+      "index": 3,
+      "title": "0.5m 主指标",
+      "copy": "主成功半径固定为0.5米：base 0/10，LoRA 0/10。",
+      "source": "assets/screenshots/v3/stage3-base-2004-start.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage3/card-03.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "aa6e6d4d075c66c9b07c7aff7fed9fcb8c924befbfb88c6e0ce608f5c45bf771"
+    },
+    {
+      "index": 4,
+      "title": "3m 辅助",
+      "copy": "三米只作辅助观察：base 2/10，LoRA 1/10，不能替代主指标。",
+      "source": "assets/screenshots/v3/stage3-base-2004-mid.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage3/card-04.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "a563b923d3f2c2e537c10aeba64fac39c55193a1605c592670c4b4a8cbd223ca"
+    },
+    {
+      "index": 5,
+      "title": "最终距离",
+      "copy": "平均最终距离：base 3.989米，LoRA 4.686米；少走不等于更接近。",
+      "source": "assets/screenshots/v3/stage3-base-2004-end.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage3/card-05.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "2040511d2c2a4133afa323d2d34beceed8aa10c2ecfb0c9d7d0a4ac2ee6a133f"
+    },
+    {
+      "index": 6,
+      "title": "路径与步数",
+      "copy": "base 平均路径9.675米、133.9步；LoRA 5.5米、53.2步。",
+      "source": "assets/media/v3/stage3-base-2004.gif",
+      "label": "真实录屏帧",
+      "output": "assets/series/xiaohongshu/stage3/card-06.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "04a29f67e3ba0b3fcf14812d36aaf0c942e76f7d5664fc01affe3d28174edcf9"
+    },
+    {
+      "index": 7,
+      "title": "碰撞统计",
+      "copy": "碰撞尝试分别为132与45；碰撞变少可能只是更早停止。",
+      "source": "assets/plots/action-counts.png",
+      "label": "真实指标图",
+      "output": "assets/series/xiaohongshu/stage3/card-07.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "0770ef128c3d786e48d2a9ee7f236b6a6b4429b0d241dad76f91186b010badb9"
+    },
+    {
+      "index": 8,
+      "title": "动作计数",
+      "copy": "停止、前进、左转、右转必须和请求数、blocked 数及位姿变化一起解释。",
+      "source": "assets/plots/episode-distance.png",
+      "label": "真实指标图",
+      "output": "assets/series/xiaohongshu/stage3/card-08.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "6bf9bcf28e8db6cfd3c18d2ae6743ef78a6fe40a7213d3bdfdde401630153526"
+    },
+    {
+      "index": 9,
+      "title": "域差异",
+      "copy": "几何、目标可见性和现实 checkpoint 到仿真相机域都可能造成失败。",
+      "source": "assets/ai-diagrams/ai-04-failure-roadmap.png",
+      "label": "AI 示意图",
+      "output": "assets/series/xiaohongshu/stage3/card-09.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "05479c9dcb8f185bfff5fc363e438a981dc256bb98e90a9d46c28e730c93d7af"
+    },
+    {
+      "index": 10,
+      "title": "下一轮路线",
+      "copy": "下一轮先做安全门、目标牌和相机域消融，再按同一0.5米协议重评。",
+      "source": "assets/screenshots/v3/eval-2001-start.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage3/card-10.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "ec7e4cfda3302ef780bec7db7cec10e7b3e3eb4624d7a39260d7751eb5626555"
+    }
+  ]
+}

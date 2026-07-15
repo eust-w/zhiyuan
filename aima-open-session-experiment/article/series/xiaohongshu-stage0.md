@@ -9,13 +9,36 @@
 ## 8–10 张卡片顺序
 
 1. 场景与相机
+
+![stage0 步骤卡 1](../../assets/series/xiaohongshu/stage0/card-01.png)
+
 2. 四动作编码
+
+![stage0 步骤卡 2](../../assets/series/xiaohongshu/stage0/card-02.png)
+
 3. 两帧等待
+
+![stage0 步骤卡 3](../../assets/series/xiaohongshu/stage0/card-03.png)
+
 4. 无遮挡前进
+
+![stage0 步骤卡 4](../../assets/series/xiaohongshu/stage0/card-04.png)
+
 5. 近障碍拒绝
+
+![stage0 步骤卡 5](../../assets/series/xiaohongshu/stage0/card-05.png)
+
 6. 位姿不变
+
+![stage0 步骤卡 6](../../assets/series/xiaohongshu/stage0/card-06.png)
+
 7. 接口边界
+
+![stage0 步骤卡 7](../../assets/series/xiaohongshu/stage0/card-07.png)
+
 8. 验收结论
+
+![stage0 步骤卡 8](../../assets/series/xiaohongshu/stage0/card-08.png)
 
 ## 正文（建议 800–1000 字，发布前按最终图片微调）
 

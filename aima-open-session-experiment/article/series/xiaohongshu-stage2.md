@@ -9,14 +9,40 @@ loss 下降为什么不代表会导航
 ## 8–10 张卡片顺序
 
 1. Python 环境隔离
+
+![stage2 步骤卡 1](../../assets/series/xiaohongshu/stage2/card-01.png)
+
 2. LoRA 参数
+
+![stage2 步骤卡 2](../../assets/series/xiaohongshu/stage2/card-02.png)
+
 3. dataset-only
+
+![stage2 步骤卡 3](../../assets/series/xiaohongshu/stage2/card-03.png)
+
 4. 单批前后向
+
+![stage2 步骤卡 4](../../assets/series/xiaohongshu/stage2/card-04.png)
+
 5. 59 步更新
+
+![stage2 步骤卡 5](../../assets/series/xiaohongshu/stage2/card-05.png)
+
 6. loss 曲线
+
+![stage2 步骤卡 6](../../assets/series/xiaohongshu/stage2/card-06.png)
+
 7. 显存与异常
+
+![stage2 步骤卡 7](../../assets/series/xiaohongshu/stage2/card-07.png)
+
 8. 新进程重载
+
+![stage2 步骤卡 8](../../assets/series/xiaohongshu/stage2/card-08.png)
+
 9. 不能证明什么
+
+![stage2 步骤卡 9](../../assets/series/xiaohongshu/stage2/card-09.png)
 
 ## 正文（建议 800–1000 字，发布前按最终图片微调）
 

@@ -9,15 +9,44 @@
 ## 8–10 张卡片顺序
 
 1. 模型闭环
+
+![stage3 步骤卡 1](../../assets/series/xiaohongshu/stage3/card-01.png)
+
 2. 同批 held-out
+
+![stage3 步骤卡 2](../../assets/series/xiaohongshu/stage3/card-02.png)
+
 3. 0.5m 主指标
+
+![stage3 步骤卡 3](../../assets/series/xiaohongshu/stage3/card-03.png)
+
 4. 3m 辅助
+
+![stage3 步骤卡 4](../../assets/series/xiaohongshu/stage3/card-04.png)
+
 5. 最终距离
+
+![stage3 步骤卡 5](../../assets/series/xiaohongshu/stage3/card-05.png)
+
 6. 路径与步数
+
+![stage3 步骤卡 6](../../assets/series/xiaohongshu/stage3/card-06.png)
+
 7. 碰撞统计
+
+![stage3 步骤卡 7](../../assets/series/xiaohongshu/stage3/card-07.png)
+
 8. 动作计数
+
+![stage3 步骤卡 8](../../assets/series/xiaohongshu/stage3/card-08.png)
+
 9. 域差异
+
+![stage3 步骤卡 9](../../assets/series/xiaohongshu/stage3/card-09.png)
+
 10. 下一轮路线
+
+![stage3 步骤卡 10](../../assets/series/xiaohongshu/stage3/card-10.png)
 
 ## 正文（建议 800–1000 字，发布前按最终图片微调）
 

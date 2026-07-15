@@ -1,0 +1,107 @@
+{
+  "schema_version": "aima-vln-xhs-cards/v1",
+  "episode": "stage1",
+  "status": "draft",
+  "count": 9,
+  "cards": [
+    {
+      "index": 1,
+      "title": "三条冒烟",
+      "copy": "先采三条冒烟轨迹，发现深度为空、动作错位或目标不可达时立即停止批量。",
+      "source": "assets/screenshots/v3/stage1-validation.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage1/card-01.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "5e2b9f1111450a3417e8b579791ff734c20d617e8cb12fc5d9d406a8ef06e1e0"
+    },
+    {
+      "index": 2,
+      "title": "固定种子",
+      "copy": "训练使用1001–1050，评测使用2001–2010；同一种子必须得到可追溯的采样结果。",
+      "source": "assets/screenshots/v3/train-1001-start.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage1/card-02.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "09812676e594ed6b8a0f536e881786460e1b7231f25493d281fc339eee1ca6ef"
+    },
+    {
+      "index": 3,
+      "title": "训练与留出",
+      "copy": "五十条训练和十条留出从种子层面隔离，评测样本不得进入 LoRA 更新。",
+      "source": "assets/screenshots/v3/train-1001-goal.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage1/card-03.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "9425ed991b4234238484549adc8107e8b9d716919e9117f960a999a47bd70de5"
+    },
+    {
+      "index": 4,
+      "title": "RGB-D-Pose",
+      "copy": "每一步同步保存彩色图、深度、四乘四位姿、动作、距离和碰撞状态。",
+      "source": "assets/screenshots/v3/train-1025-mid.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage1/card-04.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "c32bff6634123b0b0b5aba256fb81633da5ea73600314cafa49de0eb00427eb9"
+    },
+    {
+      "index": 5,
+      "title": "公开 annotations",
+      "copy": "公开 annotations 首动作写负一，图像数与动作数一致，不追加最终停止。",
+      "source": "assets/screenshots/v3/train-1050-mid.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage1/card-05.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "09e670a1e487234630a8bff6b27dce873d098c6c8c42630592949a2d7a5ee5c7"
+    },
+    {
+      "index": 6,
+      "title": "sidecar",
+      "copy": "完整停止、深度、轨迹、目标牌和碰撞信息进入独立 sidecar。",
+      "source": "assets/media/v3/stage1-train-1001.gif",
+      "label": "真实录屏帧",
+      "output": "assets/series/xiaohongshu/stage1/card-06.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "a071fe42dd7ea00d2590ca8aa913b7ea514551d782fd8c20d7e51fea8586a9d7"
+    },
+    {
+      "index": 7,
+      "title": "5cm 栅格",
+      "copy": "障碍物投影为五厘米栅格，再按机器人 footprint 膨胀五厘米。",
+      "source": "assets/plots/schema-sidecar.png",
+      "label": "真实指标图",
+      "output": "assets/series/xiaohongshu/stage1/card-07.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "c7f1075f97a9f102233c7858894510c5a76bf10f66145630a28326a8233b1963"
+    },
+    {
+      "index": 8,
+      "title": "批量验收",
+      "copy": "验收数量、格式、帧数、动作数、路径安全和图片可解码，失败样本不能静默跳过。",
+      "source": "assets/plots/validation-gates.png",
+      "label": "真实指标图",
+      "output": "assets/series/xiaohongshu/stage1/card-08.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "55e22f592c36920aaf18e1414e584e2033aaf5cca23a08ff792ee1ad523e7b26"
+    },
+    {
+      "index": 9,
+      "title": "人工抽查",
+      "copy": "至少抽查五条轨迹，核对目标可见性、深度、轨迹线和敏感信息。",
+      "source": "assets/ai-diagrams/ai-02-data-pipeline.png",
+      "label": "AI 示意图",
+      "output": "assets/series/xiaohongshu/stage1/card-09.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "9be70b57827405338feaa6c06d859344763998dc0303ae236cfa150efb9d8504"
+    }
+  ]
+}

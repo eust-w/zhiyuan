@@ -126,7 +126,7 @@ def stage0_cards(exp: Path, output: Path) -> None:
     end_pose = forward["step"]["pose_matrix"]
     distance = ((end_pose[3] - start_pose[3]) ** 2 + (end_pose[7] - start_pose[7]) ** 2) ** 0.5
     rows = [
-        ("服务", f"{health['host']}:{health['port']}，ready=true"),
+        ("服务", "仅本机监听，ready=true"),
         ("场景与机器人", f"{health['scene']} / {health['robot']}"),
         ("键盘", " / ".join(keys_seen)),
         ("前进增量", f"{distance:.2f} m"),

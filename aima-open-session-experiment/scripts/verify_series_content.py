@@ -9,8 +9,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SENSITIVE = re.compile(r"(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\d{1,3}\.){3}\d{1,3}|__REDACTED_CREDENTIAL_LITERAL__)", re.I)
+SENSITIVE = re.compile(r"(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\d{1,3}\.){3}\d{1,3}|实例ID|ssh\s+\S+@)", re.I)
 FORBIDDEN = ("个人实验", "官方适配", "课程原样复现", "榜单成绩")
+IMAGE_LINK = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
 
 
 def section(text: str, start: str, end: str) -> str:
@@ -46,12 +47,25 @@ def build_report(root: Path = ROOT, article_root: Path | None = None) -> dict[st
                 desc = section(text, "## 投稿简介\n", "\n## 标签")
                 if not 800 <= len(desc) <= 1200:
                     errors.append(f"bilibili description length {len(desc)} in {path.name}")
-            elif platform == "zhihu" and not 3000 <= len(text) <= 5000:
-                errors.append(f"zhihu length {len(text)} in {path.name}")
+            elif platform == "zhihu":
+                if not 3000 <= len(text) <= 5000:
+                    errors.append(f"zhihu length {len(text)} in {path.name}")
+                images = IMAGE_LINK.findall(text)
+                if not 10 <= len(images) <= 14:
+                    errors.append(f"zhihu embedded image count {len(images)} in {path.name}")
+                for image in images:
+                    if not (path.parent / image).resolve().is_file():
+                        errors.append(f"missing embedded image {image} in {path.name}")
             elif platform == "xiaohongshu":
                 body = section(text, "## 正文（建议 800–1000 字，发布前按最终图片微调）\n", "\n## 避坑清单")
                 if not 800 <= len(body) <= 1000:
                     errors.append(f"xiaohongshu body length {len(body)} in {path.name}")
+                images = IMAGE_LINK.findall(text)
+                if not 8 <= len(images) <= 10:
+                    errors.append(f"xiaohongshu card count {len(images)} in {path.name}")
+                for image in images:
+                    if not (path.parent / image).resolve().is_file():
+                        errors.append(f"missing card image {image} in {path.name}")
             elif platform == "douyin" and text.count(". ") < 3:
                 errors.append(f"douyin title candidates missing in {path.name}")
     return {"status": "passed" if not errors else "failed", "errors": errors, "files": files}

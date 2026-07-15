@@ -4,26 +4,26 @@
   "files": {
     "stage0": {
       "bilibili": 1796,
-      "zhihu": 4884,
-      "xiaohongshu": 1223,
+      "zhihu": 4608,
+      "xiaohongshu": 1782,
       "douyin": 832
     },
     "stage1": {
       "bilibili": 1856,
-      "zhihu": 4935,
-      "xiaohongshu": 1273,
+      "zhihu": 4816,
+      "xiaohongshu": 1902,
       "douyin": 873
     },
     "stage2": {
       "bilibili": 1780,
-      "zhihu": 4846,
-      "xiaohongshu": 1267,
+      "zhihu": 4781,
+      "xiaohongshu": 1896,
       "douyin": 847
     },
     "stage3": {
       "bilibili": 1851,
-      "zhihu": 4952,
-      "xiaohongshu": 1299,
+      "zhihu": 4865,
+      "xiaohongshu": 1999,
       "douyin": 898
     }
   }

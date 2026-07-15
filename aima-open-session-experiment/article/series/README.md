@@ -10,18 +10,22 @@
 - [zhihu-stage0.md](zhihu-stage0.md)
 - [xiaohongshu-stage0.md](xiaohongshu-stage0.md)
 - [douyin-stage0.md](douyin-stage0.md)
+- [小红书 Stage 0 卡片目录](../../assets/series/xiaohongshu/stage0/)
 - [bilibili-stage1.md](bilibili-stage1.md)
 - [zhihu-stage1.md](zhihu-stage1.md)
 - [xiaohongshu-stage1.md](xiaohongshu-stage1.md)
 - [douyin-stage1.md](douyin-stage1.md)
+- [小红书 Stage 1 卡片目录](../../assets/series/xiaohongshu/stage1/)
 - [bilibili-stage2.md](bilibili-stage2.md)
 - [zhihu-stage2.md](zhihu-stage2.md)
 - [xiaohongshu-stage2.md](xiaohongshu-stage2.md)
 - [douyin-stage2.md](douyin-stage2.md)
+- [小红书 Stage 2 卡片目录](../../assets/series/xiaohongshu/stage2/)
 - [bilibili-stage3.md](bilibili-stage3.md)
 - [zhihu-stage3.md](zhihu-stage3.md)
 - [xiaohongshu-stage3.md](xiaohongshu-stage3.md)
 - [douyin-stage3.md](douyin-stage3.md)
+- [小红书 Stage 3 卡片目录](../../assets/series/xiaohongshu/stage3/)
 
 ## B 站封面草稿
 

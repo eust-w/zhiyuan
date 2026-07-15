@@ -12,8 +12,6 @@
 
 同学们，Stage 1 不是“多截几张图”，而是把每条导航过程整理成视觉、动作、语言和几何信息严格对齐的监督样本。先采 3 条冒烟轨迹，确认链路没问题，再采 50 条训练和 10 条固定评测。
 
-![Stage 1 数据验收卡](../assets/screenshots/v3/stage1-validation.png)
-
 ## 第一步：固定数据划分
 
 | 数据 | episode / seed | 用途 |
@@ -28,19 +26,11 @@
 
 公开 `annotations.json` 遵循 StreamVLN 格式：第一项动作是 `-1`，RGB 数量与动作数组长度相同，不把最终 STOP 写入公开动作。完整 STOP、depth、4×4 pose、相机内参/外参、碰撞、目标和传感器降级字段保存在 `geniesim-streamvln/v1` sidecar。
 
-![训练轨迹起点](../assets/screenshots/v3/train-1001-start.jpg)
-
-![货架第一视角](../assets/screenshots/v3/train-1025-mid.jpg)
-
-![另一条训练轨迹](../assets/screenshots/v3/train-1050-mid.jpg)
-
-![真实轨迹动图](../assets/media/v3/stage1-train-1001.gif)
-
-原始 1080p/30fps 无声轨迹片段：[stage1-train-1001.mp4](../assets/media/v3/stage1-train-1001.mp4)。
+原始 1080p/30fps 无声轨迹片段：stage1-train-1001.mp4。
 
 ## 第三步：做严格校验
 
-机器可读结果在 [`dataset-validation.json`](../experiments/exp02-equivalent-v3/dataset-validation.json)：
+机器可读结果在 `dataset-validation.json`：
 
 ```text
 train: episodes=50, valid=50, invalid=0
@@ -57,8 +47,6 @@ eval:  episodes=10, valid=10, invalid=0
 - `sample.usda`
 - `sample.usdz`
 
-三份文件均在新 Isaac 进程
-
 （完整阶段文档见仓库链接，发布时可继续展开命令与截图说明。）
 
 ## 按画面顺序讲解
@@ -73,12 +61,6 @@ eval:  episodes=10, valid=10, invalid=0
 
 先看一条训练样本的真实录屏。画面本身不是唯一的证据，旁边还要有写盘日志和校验结果。验收脚本逐条检查 episode 数量、首动作、帧数、动作数、目标距离、是否有 NaN、图片能否解码，以及相对路径是否仍然在实验根目录内。三条冒烟全部通过后，才开始批量采集五十条训练和十条评测。
 
-为什么要保留冒烟？因为如果第一条就发现深度为空、动作长度错一位或者目标不在可达区域，继续生成六十条只会放大错误。冒烟轨迹不是训练数据的替代品，而是采集器的回归测试。我们的经验是，先把一条轨迹从 reset、step 到 close 完整走通，再确认批量循环的种子、目录和 manifest。
-
-几何验证也不能靠一张平面图。课程私有 USD 资产不可用时，我们单独构建了自采等价的 PLY、USDA 和 USDZ 资产，并在新 Isaac 进程中重新打开。探针把可用高度范围内的障碍物 AABB 投影到五厘米占据栅格，再按机器人 footprint 膨胀五厘米。这个结果用于说明几何管线可复核，不能被描述成课程 sample 原件，也不能用来暗示课程私有包已经安装。
-
-数据采集的另外一个陷阱是把最终 STOP 写进公开动作数组。这样会造成 RGB 数量、动作数量和模型训练约定不一致。我们采用公开 annotations 与
-
 （完整旁白脚本保留在 series/narration/，用于视频合成。）
 
 ## 读者可以照着做的验收表
@@ -92,17 +74,49 @@ eval:  episodes=10, valid=10, invalid=0
 
 ## 证据索引（10–14 张）
 
-- `assets/screenshots/v3/stage1-validation.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/train-1001-start.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/train-1001-goal.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/train-1025-mid.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/train-1050-mid.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/media/v3/stage1-train-1001.gif`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/plots/schema-sidecar.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/plots/validation-gates.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/ai-diagrams/ai-02-data-pipeline.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/eval-2001-start.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/eval-2010-start.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
+![stage1 证据图 1](../../assets/screenshots/v3/stage1-validation.png)
+
+图 1：`assets/screenshots/v3/stage1-validation.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 2](../../assets/screenshots/v3/train-1001-start.jpg)
+
+图 2：`assets/screenshots/v3/train-1001-start.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 3](../../assets/screenshots/v3/train-1001-goal.jpg)
+
+图 3：`assets/screenshots/v3/train-1001-goal.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 4](../../assets/screenshots/v3/train-1025-mid.jpg)
+
+图 4：`assets/screenshots/v3/train-1025-mid.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 5](../../assets/screenshots/v3/train-1050-mid.jpg)
+
+图 5：`assets/screenshots/v3/train-1050-mid.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 6](../../assets/media/v3/stage1-train-1001.gif)
+
+图 6：`assets/media/v3/stage1-train-1001.gif`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 7](../../assets/plots/schema-sidecar.png)
+
+图 7：`assets/plots/schema-sidecar.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 8](../../assets/plots/validation-gates.png)
+
+图 8：`assets/plots/validation-gates.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 9](../../assets/ai-diagrams/ai-02-data-pipeline.png)
+
+图 9：`assets/ai-diagrams/ai-02-data-pipeline.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 10](../../assets/screenshots/v3/eval-2001-start.jpg)
+
+图 10：`assets/screenshots/v3/eval-2001-start.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage1 证据图 11](../../assets/screenshots/v3/eval-2010-start.jpg)
+
+图 11：`assets/screenshots/v3/eval-2010-start.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
 
 ## 失败边界与复盘
 

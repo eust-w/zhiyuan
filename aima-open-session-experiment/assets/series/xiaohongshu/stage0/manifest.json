@@ -1,0 +1,96 @@
+{
+  "schema_version": "aima-vln-xhs-cards/v1",
+  "episode": "stage0",
+  "status": "draft",
+  "count": 8,
+  "cards": [
+    {
+      "index": 1,
+      "title": "场景与相机",
+      "copy": "先确认 G2、头部彩色相机与深度相机持续输出；这一步只证明环境可观测。",
+      "source": "assets/screenshots/v3/stage0-validation.png",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage0/card-01.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "03715c2557b6b77cd1e922b72e61964d7fd352ae975d2a86f6ed097cc092792f"
+    },
+    {
+      "index": 2,
+      "title": "四动作编码",
+      "copy": "停止=0、前进0.25米=1、左转15度=2、右转15度=3；后退只用于调试。",
+      "source": "assets/screenshots/v3/stage0-forward-before.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage0/card-02.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "41d677b6b7b0a751acd7be9db70212149983a7c1026498479a29a1e0f0ad88a5"
+    },
+    {
+      "index": 3,
+      "title": "两帧等待",
+      "copy": "动作由仿真主线程执行，至少等待两个渲染帧，再保存图像、深度和位姿。",
+      "source": "assets/screenshots/v3/stage0-forward-after.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage0/card-03.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "c955e8a64f95fe00955cccad518439a0d99e3a7d49aa0bfe01d7cd584c7208fc"
+    },
+    {
+      "index": 4,
+      "title": "无遮挡前进",
+      "copy": "用位姿矩阵计算平面位移，验证前进增量接近0.25米，而不是只凭肉眼。",
+      "source": "assets/screenshots/v3/stage0-before-block.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage0/card-04.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "4759f9deb77fd1358027b38b7489af6917f77a7f2e2a594491ead7725e8ee04b"
+    },
+    {
+      "index": 5,
+      "title": "近障碍拒绝",
+      "copy": "前方深度过近时标记 blocked，危险前进必须被拒绝。",
+      "source": "assets/screenshots/v3/stage0-after-block.jpg",
+      "label": "真实结果图",
+      "output": "assets/series/xiaohongshu/stage0/card-05.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "c9ef586bc96e9c049ae88acc99f1099d5c8890b9443072a50ffe4a423a0370fc"
+    },
+    {
+      "index": 6,
+      "title": "位姿不变",
+      "copy": "拒绝前后 pose 必须一致；只有提示而没有位姿对照不算通过。",
+      "source": "assets/media/v3/stage0-keyboard-and-guard.gif",
+      "label": "真实录屏帧",
+      "output": "assets/series/xiaohongshu/stage0/card-06.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "8b24297c6801b418f29e13bcdc786ec905f0e5407b481662e48d8e613a083bf4"
+    },
+    {
+      "index": 7,
+      "title": "接口边界",
+      "copy": "请求入队、主线程动作、相对路径回传；文件必须留在实验根目录。",
+      "source": "assets/plots/evidence-chain.png",
+      "label": "真实指标图",
+      "output": "assets/series/xiaohongshu/stage0/card-07.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "06fe273a73ab76893cd86618ec0314878b02593f86e8a104d6d0b41d1c3d5ca5"
+    },
+    {
+      "index": 8,
+      "title": "验收结论",
+      "copy": "Stage 0 只证明控制和观测可信，不代表模型已经会导航。",
+      "source": "assets/ai-diagrams/ai-01-perception-action.png",
+      "label": "AI 示意图",
+      "output": "assets/series/xiaohongshu/stage0/card-08.png",
+      "width": 1080,
+      "height": 1440,
+      "sha256": "da4f0f62b0e4bc6672aa0d49e2f1c62b5a1e164130911fa1e48997b47d630d55"
+    }
+  ]
+}

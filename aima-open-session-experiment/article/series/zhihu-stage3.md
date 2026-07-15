@@ -12,8 +12,6 @@
 
 同学们，Stage 3 最容易犯的错误，是拿 A* 控制器的成功轨迹冒充模型成绩。本轮严格分开：控制器只负责 Stage 1 采样；这里的每个动作都来自 StreamVLN `generate`，然后通过本机适配层送回 GenieSim。
 
-![base 与 LoRA 配对结果](../assets/screenshots/v3/stage3-paired-metrics.png)
-
 ## 闭环到底怎样运行
 
 每条 episode 都按下面顺序执行：
@@ -29,7 +27,7 @@
 
 ## 同一批 10 条的最终成绩
 
-唯一指标源是 [`eval_result.json`](../experiments/exp02-equivalent-v3/eval_result.json)，held-out ID 均为 `eval-2001…2010`，顺序完全一致。
+唯一指标源是 `eval_result.json`，held-out ID 均为 `eval-2001…2010`，顺序完全一致。
 
 | 指标 | StreamVLN base | 新 LoRA |
 | --- | ---: | ---: |
@@ -45,15 +43,9 @@
 | 平均步数 | 133.9 | 53.2 |
 | 近障碍/边界碰撞尝试 | 132 | 45 |
 
-![逐 episode 最终距离](../assets/screenshots/v3/stage3-episode-distances.png)
-
 ## 怎么读这个结果
 
 LoRA 的平均步数、路径和碰撞尝试都更少，但 3m 成功、oracle success、最终距离和最小距离反而更差。换句话说，它更早停或更少探索，却没有更接近目标。不能只挑“碰撞少”这一项说 LoRA 更好。
-
-训练轨迹的末端画面中，红色目标在不少视角里并不清晰，说明目标可见性和训练监督仍是主要数据问题。base 也会长时间原地调整或向错误方向探索；head-depth 安全门阻止了穿越货架，却不能替代视觉目标识别和停止决策。
-
-![模型轨迹起点](../assets/screenshots/v3/stage3-
 
 （完整阶段文档见仓库链接，发布时可继续展开命令与截图说明。）
 
@@ -69,12 +61,6 @@ LoRA 的平均步数、路径和碰撞尝试都更少，但 3m 成功、oracle s
 
 碰撞统计也要一起看。base 的碰撞尝试是 132 次，LoRA 是 45 次。这个变化可能说明安全门拦截更积极，也可能说明模型更早停下或更快进入截断状态。只有把碰撞、步数、动作计数和最终距离放在同一个表里，观众才有机会判断“少撞”到底代表什么。我们不挑单条 episode，也不把安全门回退动作冒充模型成功。
 
-动作计数包含 STOP、前进、左转和右转。模型输出经过安全映射后才进入适配器，适配器响应中保留 step_id、RGB 和 depth 相对路径、四乘四 pose、目标距离、blocked、terminated 和 truncated。每一步都可以沿着 run-manifest 回到原始观测。这样，模型→适配器→GenieSim→下一帧的链路才是真实闭环，而不是离线播放器循环一段预先录好的轨迹。
-
-深度安全门是当前等价适配的重要边界。预装场景的真实 mesh、相机域和课程私有资产并不完全一致，因此适配器采用 head depth 的中心区域作为安全回退，同时把 blocked 记录下来。它能保护仿真不发生明显穿模，却不能把视觉域差异消除。要达到课程私有资产和接口的同等条件，需要另行取得对应资产与授权；本项目只能称为非官方等价适配。
-
-为什么 success 仍然是零？从证据看，几何、感知和模型三层都可能有贡献。几何层使用了自采的 PLY、USDA、USDZ 等价资产和 AABB 探针；感知层需要检查目标牌在 RGB 和 d
-
 （完整旁白脚本保留在 series/narration/，用于视频合成。）
 
 ## 读者可以照着做的验收表
@@ -88,17 +74,49 @@ LoRA 的平均步数、路径和碰撞尝试都更少，但 3m 成功、oracle s
 
 ## 证据索引（10–14 张）
 
-- `assets/screenshots/v3/stage3-paired-metrics.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage3-episode-distances.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage3-base-2004-start.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage3-base-2004-mid.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage3-base-2004-end.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/media/v3/stage3-base-2004.gif`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/plots/action-counts.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/plots/episode-distance.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/ai-diagrams/ai-04-failure-roadmap.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/eval-2001-start.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/eval-2010-start.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
+![stage3 证据图 1](../../assets/screenshots/v3/stage3-paired-metrics.png)
+
+图 1：`assets/screenshots/v3/stage3-paired-metrics.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 2](../../assets/screenshots/v3/stage3-episode-distances.png)
+
+图 2：`assets/screenshots/v3/stage3-episode-distances.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 3](../../assets/screenshots/v3/stage3-base-2004-start.jpg)
+
+图 3：`assets/screenshots/v3/stage3-base-2004-start.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 4](../../assets/screenshots/v3/stage3-base-2004-mid.jpg)
+
+图 4：`assets/screenshots/v3/stage3-base-2004-mid.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 5](../../assets/screenshots/v3/stage3-base-2004-end.jpg)
+
+图 5：`assets/screenshots/v3/stage3-base-2004-end.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 6](../../assets/media/v3/stage3-base-2004.gif)
+
+图 6：`assets/media/v3/stage3-base-2004.gif`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 7](../../assets/plots/action-counts.png)
+
+图 7：`assets/plots/action-counts.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 8](../../assets/plots/episode-distance.png)
+
+图 8：`assets/plots/episode-distance.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 9](../../assets/ai-diagrams/ai-04-failure-roadmap.png)
+
+图 9：`assets/ai-diagrams/ai-04-failure-roadmap.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 10](../../assets/screenshots/v3/eval-2001-start.jpg)
+
+图 10：`assets/screenshots/v3/eval-2001-start.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage3 证据图 11](../../assets/screenshots/v3/eval-2010-start.jpg)
+
+图 11：`assets/screenshots/v3/eval-2010-start.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
 
 ## 失败边界与复盘
 

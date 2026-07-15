@@ -12,8 +12,6 @@
 
 同学们，这一步先不要急着训练。Stage 0 的任务只有一个：证明场景、机器人、相机和动作链都真的在工作。流程参考 AIMA 指南，但课程私有 UDP 服务未提供，所以本实验使用独立的 loopback HTTP 适配层；它不是官方协议复刻。
 
-![Stage 0 验收卡](../assets/screenshots/v3/stage0-validation.png)
-
 ## 第一步：确认你启动的是哪套环境
 
 - 场景：GenieSim `market_00_g2`。
@@ -23,27 +21,21 @@
 - 训练动作：`STOP=0`、前进 0.25m、左转 15°、右转 15°。
 - Stage 0 调试动作：额外允许后退 0.25m，但只走 `/v1/debug/...`，不会写入训练集。
 
-健康检查的机器可读证据在 [`stage0-health.json`](../experiments/exp02-equivalent-v3/stage0-health.json)。其中 `ready=true`，并明确记录 `forward_safety=head_depth_center_p10_lt_0.45m`。
+健康检查的机器可读证据在 `stage0-health.json`。其中 `ready=true`，并明确记录 `forward_safety=head_depth_center_p10_lt_0.45m`。
 
 ## 第二步：把 W/S/A/D/Space 都按一遍
 
-真实键盘客户端位于 `adapter/keyboard_control.py`。本轮用同一程序的非交互序列模式留下可复核 JSON，实际观察到 W、S、A、D、Space 五种键；完整记录见 [`stage0-keyboard.json`](../experiments/exp02-equivalent-v3/stage0-keyboard.json)。
+真实键盘客户端位于 `adapter/keyboard_control.py`。本轮用同一程序的非交互序列模式留下可复核 JSON，实际观察到 W、S、A、D、Space 五种键；完整记录见 `stage0-keyboard.json`。
 
 请注意这个教学细节：S 对应的后退动作只为 Stage 0 验证服务，公开 StreamVLN 动作空间仍然严格保持 0–3，不让“调试便利”悄悄污染训练标注。
 
 ## 第三步：核对位姿增量
 
-我们换到无遮挡朝向后执行一次 W，4×4 pose 中 XY 位移模长为 **0.25m**；原始前后观测见 [`stage0-forward-check.json`](../experiments/exp02-equivalent-v3/stage0-forward-check.json)。
-
-![无遮挡前进前](../assets/screenshots/v3/stage0-forward-before.jpg)
-
-![无遮挡前进后](../assets/screenshots/v3/stage0-forward-after.jpg)
+我们换到无遮挡朝向后执行一次 W，4×4 pose 中 XY 位移模长为 **0.25m**；原始前后观测见 `stage0-forward-check.json`。
 
 ## 第四步：验证近障碍拒绝
 
 课程市场视觉资产在运行时做完整 USD AABB 遍历会导致当前 Isaac 进程退出，因此本项目没有假装获得课程私有障碍栅格。现已补充一个独立、可审计的等价 Cube USD 导航层，并分两层记录：
-
-1. `market-aabb-proxy.usda` 在 Isaac/PXR 进程中真实投影为 5cm 栅格，10 个 Cube 产生 8322 个原始格，footprint 加 5cm 膨胀半径为 10 格，最终 30478 个 blocked 格；事件和摘要见 `evidence/aabb-standalone7
 
 （完整阶段文档见仓库链接，发布时可继续展开命令与截图说明。）
 
@@ -59,12 +51,6 @@
 
 接着看无遮挡前进。机器人向前移动零点二五米，前后位姿的平面位移模长应当接近这个数。这里我们不只看画面上机器人有没有向前，而是读取记录里的 pose 矩阵，计算 x、y 两个分量的差值。转向也采用同样的思路，十五度的增量必须在容差范围内。动作精度和画面观感是两件事，前者才是后续评测可以复核的证据。
 
-再看近障碍拒绝。当前方头部深度的中心区域已经低于安全阈值时，安全门会把前进请求标记为 blocked。关键验收条件有两个：响应里要有 blocked 标记，机器人拒绝动作前后的位姿还要保持一致。如果只显示一张红色提示图，却没有记录前后 pose，那只能算界面演示，不能算碰撞安全验证。
-
-在本实验中，适配器只监听本机回环地址的五八零二端口，不复用课程资料中未确认的 UDP 端口。这样做不是为了让系统显得更复杂，而是为了把已验证的接口边界说清楚。服务返回相对路径，所有路径解析以后还必须位于持久盘实验根目录内，避免日志把本机绝对路径、实例编号或其他连接信息带入公开素材。
-
-画面里出现的流程图、箭头和颜色说明属于 AI 示意图。它们帮助观众理解感知、模型和动作之间的关系，但不作为指标来源。真实证据来自录屏、JSON 日志和截图；指标来源只有实验目录中的 eval_result.json。制作视频时，我们会在画面角落标注真实录屏、真实结果图或 AI 示意图，避免观众把示意动画误认为
-
 （完整旁白脚本保留在 series/narration/，用于视频合成。）
 
 ## 读者可以照着做的验收表
@@ -78,16 +64,45 @@
 
 ## 证据索引（10–14 张）
 
-- `assets/screenshots/v3/stage0-validation.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage0-forward-before.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage0-forward-after.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage0-before-block.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage0-after-block.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/media/v3/stage0-keyboard-and-guard.gif`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/plots/evidence-chain.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/ai-diagrams/ai-01-perception-action.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/P0-01-gpufree-desktop-browser.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/P0-02-environment-terminal.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
+![stage0 证据图 1](../../assets/screenshots/v3/stage0-validation.png)
+
+图 1：`assets/screenshots/v3/stage0-validation.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 2](../../assets/screenshots/v3/stage0-forward-before.jpg)
+
+图 2：`assets/screenshots/v3/stage0-forward-before.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 3](../../assets/screenshots/v3/stage0-forward-after.jpg)
+
+图 3：`assets/screenshots/v3/stage0-forward-after.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 4](../../assets/screenshots/v3/stage0-before-block.jpg)
+
+图 4：`assets/screenshots/v3/stage0-before-block.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 5](../../assets/screenshots/v3/stage0-after-block.jpg)
+
+图 5：`assets/screenshots/v3/stage0-after-block.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 6](../../assets/media/v3/stage0-keyboard-and-guard.gif)
+
+图 6：`assets/media/v3/stage0-keyboard-and-guard.gif`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 7](../../assets/plots/evidence-chain.png)
+
+图 7：`assets/plots/evidence-chain.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 8](../../assets/ai-diagrams/ai-01-perception-action.png)
+
+图 8：`assets/ai-diagrams/ai-01-perception-action.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 9](../../assets/screenshots/P0-01-gpufree-desktop-browser.jpg)
+
+图 9：`assets/screenshots/P0-01-gpufree-desktop-browser.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage0 证据图 10](../../assets/screenshots/P0-02-environment-terminal.jpg)
+
+图 10：`assets/screenshots/P0-02-environment-terminal.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
 
 ## 失败边界与复盘
 

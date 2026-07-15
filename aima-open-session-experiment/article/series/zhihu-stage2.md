@@ -12,8 +12,6 @@
 
 同学们，训练进程“退出码为 0”并不等于训练有效。本轮第一次运行就遇到一个很典型的陷阱：上游脚本收到不存在的 `qwen` 模板键后静默回退到 Vicuna，动作标签全部被 mask，最后 59 步 loss 和梯度都是 0。我们保留失败证据，并把“非零 loss + 非零梯度”设为硬门。
 
-![Stage 2 四道门](../assets/screenshots/v3/stage2-gates.png)
-
 ## 固定训练配置
 
 | 参数 | 本轮值 |
@@ -44,21 +42,13 @@ NaN / Inf  = false
 
 ## 第三道门：完整训练
 
-![59 步 loss 与 grad_norm](../assets/screenshots/v3/stage2-loss-curve.png)
-
-训练证据动图：[stage2-training-evidence.gif](../assets/media/v3/stage2-training-evidence.gif)；1080p/30fps 无声片段：[MP4](../assets/media/v3/stage2-training-evidence.mp4)。
+训练证据动图：stage2-training-evidence.gif；1080p/30fps 无声片段：MP4。
 
 完整训练实际记录 **59 个更新步**，首步 loss `0.4167`，末步 `0.0823`，最大 grad_norm `0.8733`，峰值显存约 `27.19GiB`，没有 OOM、NaN 或 Inf。训练 loss 下降只说明模型拟合了这批数据，不能替代仿真成功率。
 
 ## 第四道门：新进程重载
 
 训练结束后另起 Python 3.9 进程，用 PEFT 将 adapter 挂载到基座，重载通过。adapter 文件 SHA-256 为：
-
-```text
-7e4a1fbb6b7fa7b23f2a9459db7f02e88c3cb2ae0a23e23d74f1dfdefd8c57c3
-```
-
-完整机器结果见 [`stage2_result_v2.json`](../experiments/exp02
 
 （完整阶段文档见仓库链接，发布时可继续展开命令与截图说明。）
 
@@ -74,12 +64,6 @@ LoRA 配置是固定的：秩 r 等于八，alpha 等于十六，dropout 为零�
 
 这次完整日志里有五十九个真实、有限且非零的更新步，loss 从零点四一六七下降到零点零八二三，峰值显存约二十七点一九 GiB。曲线说明优化过程发生过，但它没有证明模型理解“走向红色目标”这句话，更没有证明它能在新的相机观测里找到目标。我们把训练证据和导航证据分开放，就是为了不让一条漂亮的曲线替代真实闭环。
 
-还要检查 adapter 重载。训练结束后，关闭当前进程，在一个新进程里只加载基础权重和 adapter，确认配置、参数形状、哈希和输出接口都一致。重载通过只能证明 adapter 文件没有损坏、依赖边界可复现；它不能证明新进程的动作已经接入 GenieSim，也不能证明 success、SPL 或碰撞统计会改善。
-
-为什么不直接切四 bit LoRA？计划规定，BF16 只有在保留 OOM 证据后才允许切换。原因是量化会改变数值路径，如果没有先记录 BF16 的显存和失败现场，后面就无法区分“模型变好了”和“精度路径变了”。本轮显存没有触发 OOM，所以不把量化作为默认捷径。
-
-训练日志还要做异常检查。除了 NaN 和 Inf，还要检查 loss 是否长期为零，梯度是否始终为空，更新步是否真的增加，adapter 文
-
 （完整旁白脚本保留在 series/narration/，用于视频合成。）
 
 ## 读者可以照着做的验收表
@@ -93,16 +77,45 @@ LoRA 配置是固定的：秩 r 等于八，alpha 等于十六，dropout 为零�
 
 ## 证据索引（10–14 张）
 
-- `assets/screenshots/v3/stage2-gates.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage2-loss-curve.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/media/v3/stage2-training-evidence.gif`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/plots/lora-config.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/plots/metrics-base-lora.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/ai-diagrams/ai-03-closed-loop.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage1-validation.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage3-paired-metrics.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/stage3-episode-distances.png`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
-- `assets/screenshots/v3/final-instance-powered-off.jpg`（真实录屏、真实结果图或 AI 示意图，按素材本身标签区分）
+![stage2 证据图 1](../../assets/screenshots/v3/stage2-gates.png)
+
+图 1：`assets/screenshots/v3/stage2-gates.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 2](../../assets/screenshots/v3/stage2-loss-curve.png)
+
+图 2：`assets/screenshots/v3/stage2-loss-curve.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 3](../../assets/media/v3/stage2-training-evidence.gif)
+
+图 3：`assets/media/v3/stage2-training-evidence.gif`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 4](../../assets/plots/lora-config.png)
+
+图 4：`assets/plots/lora-config.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 5](../../assets/plots/metrics-base-lora.png)
+
+图 5：`assets/plots/metrics-base-lora.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 6](../../assets/ai-diagrams/ai-03-closed-loop.png)
+
+图 6：`assets/ai-diagrams/ai-03-closed-loop.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 7](../../assets/screenshots/v3/stage1-validation.png)
+
+图 7：`assets/screenshots/v3/stage1-validation.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 8](../../assets/screenshots/v3/stage3-paired-metrics.png)
+
+图 8：`assets/screenshots/v3/stage3-paired-metrics.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 9](../../assets/screenshots/v3/stage3-episode-distances.png)
+
+图 9：`assets/screenshots/v3/stage3-episode-distances.png`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
+
+![stage2 证据图 10](../../assets/screenshots/v3/final-instance-powered-off.jpg)
+
+图 10：`assets/screenshots/v3/final-instance-powered-off.jpg`（按画面角标区分真实录屏、真实结果图与 AI 示意图）
 
 ## 失败边界与复盘
 

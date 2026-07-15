@@ -9,14 +9,40 @@
 ## 8–10 张卡片顺序
 
 1. 三条冒烟
+
+![stage1 步骤卡 1](../../assets/series/xiaohongshu/stage1/card-01.png)
+
 2. 固定种子
+
+![stage1 步骤卡 2](../../assets/series/xiaohongshu/stage1/card-02.png)
+
 3. 训练与留出
+
+![stage1 步骤卡 3](../../assets/series/xiaohongshu/stage1/card-03.png)
+
 4. RGB-D-Pose
+
+![stage1 步骤卡 4](../../assets/series/xiaohongshu/stage1/card-04.png)
+
 5. 公开 annotations
+
+![stage1 步骤卡 5](../../assets/series/xiaohongshu/stage1/card-05.png)
+
 6. sidecar
+
+![stage1 步骤卡 6](../../assets/series/xiaohongshu/stage1/card-06.png)
+
 7. 5cm 栅格
+
+![stage1 步骤卡 7](../../assets/series/xiaohongshu/stage1/card-07.png)
+
 8. 批量验收
+
+![stage1 步骤卡 8](../../assets/series/xiaohongshu/stage1/card-08.png)
+
 9. 人工抽查
+
+![stage1 步骤卡 9](../../assets/series/xiaohongshu/stage1/card-09.png)
 
 ## 正文（建议 800–1000 字，发布前按最终图片微调）
 
