@@ -16,7 +16,14 @@ except ModuleNotFoundError:  # Direct script invocation.
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SENSITIVE = re.compile(r"(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\d{1,3}\.){3}\d{1,3}|实例ID|ssh\s+\S+@)", re.I)
+SENSITIVE = re.compile(
+    r"(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\d{1,3}\.){3}\d{1,3}|实例ID|ssh\s+\S+@|/(?:Users|root|home)/[^\s\"']+)",
+    re.I,
+)
+
+
+def public_media_path(path: Path, root: Path = ROOT) -> str:
+    return path.resolve().relative_to(root.resolve()).as_posix()
 
 
 def probe(path: Path) -> dict[str, Any]:
@@ -46,11 +53,11 @@ def subtitle_errors(path: Path) -> list[str]:
     return errors
 
 
-def validate_media(video: Path, srt: Path, layout: str, expected_metrics: dict[str, Any]) -> dict[str, Any]:
+def validate_media(video: Path, srt: Path, layout: str, expected_metrics: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     errors: list[str] = []
     if not video.is_file():
         errors.append("video missing")
-        return {"video": str(video), "status": "failed", "errors": errors}
+        return {"video": public_media_path(video, root), "status": "failed", "errors": errors}
     if not srt.is_file():
         errors.append("srt missing")
     info = probe(video)
@@ -69,8 +76,8 @@ def validate_media(video: Path, srt: Path, layout: str, expected_metrics: dict[s
     if srt.is_file():
         errors.extend(subtitle_errors(srt))
     return {
-        "video": str(video),
-        "srt": str(srt),
+        "video": public_media_path(video, root),
+        "srt": public_media_path(srt, root),
         "layout": layout,
         "duration_s": float(info.get("format", {}).get("duration", 0)),
         "status": "passed" if not errors else "failed",
@@ -84,22 +91,32 @@ def scan_sensitive(root: Path) -> list[str]:
     for path in root.rglob("*"):
         if not path.is_file() or path.suffix.lower() not in {".md", ".json", ".srt", ".txt"}:
             continue
+        relative = path.relative_to(root)
+        if relative.parts[:2] == ("recapture", "raw"):
+            continue
         text = path.read_text(encoding="utf-8", errors="ignore")
         if SENSITIVE.search(text):
-            hits.append(str(path.relative_to(root)))
+            hits.append(str(relative))
     return hits
+
+
+def acceptance_status(outputs: list[dict[str, Any]], ratio_blockers: list[dict[str, Any]], sensitive_hits: list[str]) -> str:
+    if ratio_blockers or sensitive_hits or not all(item["status"] == "passed" for item in outputs):
+        return "draft_blocked"
+    return "passed"
 
 
 def build_report(series_manifest: Path, media_root: Path, eval_path: Path, require_final: bool = False) -> dict[str, Any]:
     manifest = load_manifest(series_manifest)
     metrics = metric_snapshot(eval_path)
+    project_root = series_manifest.parent.parent.parent
     outputs: list[dict[str, Any]] = []
     for episode in manifest["episodes"]:
         episode_id = episode["episode"]
         episode_dir = media_root / episode_id
         video = episode_dir / f"{episode_id}.mp4"
         srt = episode_dir / f"{episode_id}.srt"
-        outputs.append(validate_media(video, srt, "landscape", metrics))
+        outputs.append(validate_media(video, srt, "landscape", metrics, project_root))
     ratio_blockers = []
     for episode in manifest["episodes"]:
         total = sum(float(s.get("duration_s", 0)) for s in episode.get("segments", []))
@@ -113,9 +130,9 @@ def build_report(series_manifest: Path, media_root: Path, eval_path: Path, requi
         sensitive_hits.extend(f"article/series/{hit}" for hit in scan_sensitive(platform_root))
     report = {
         "schema_version": "aima-vln-series-acceptance/v1",
-        "status": "passed" if not ratio_blockers and all(item["status"] == "passed" for item in outputs) else "draft_blocked",
+        "status": acceptance_status(outputs, ratio_blockers, sensitive_hits),
         "require_final": require_final,
-        "metric_source": str(eval_path),
+        "metric_source": public_media_path(eval_path, project_root),
         "metrics": metrics,
         "media": outputs,
         "real_ratio_blockers": ratio_blockers,

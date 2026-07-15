@@ -14,6 +14,16 @@ import subprocess
 from pathlib import Path
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def public_output_path(path: Path, root: Path = ROOT) -> str:
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path.name
+
+
 def build_bgm(output: Path, duration_s: float) -> dict[str, object]:
     output.parent.mkdir(parents=True, exist_ok=True)
     command = [
@@ -44,16 +54,18 @@ def build_bgm(output: Path, duration_s: float) -> dict[str, object]:
     ]
     subprocess.run(command, check=True)
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
+    public_file = public_output_path(output)
+    public_command = [public_file if item == str(output) else item for item in command]
     metadata = {
         "schema_version": "aima-vln-original-audio/v1",
         "kind": "original_synthesized_ambient",
-        "file": str(output),
+        "file": public_file,
         "duration_s": duration_s,
         "sample_rate": 48000,
         "channels": 2,
         "license": "original local synthesis; no third-party recording",
         "recipe": "two low sine oscillators (110Hz, 164.81Hz), low-volume mix, limiter",
-        "command": " ".join(command),
+        "command": " ".join(public_command),
         "sha256": digest,
     }
     output.with_suffix(".json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

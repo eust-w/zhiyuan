@@ -19,6 +19,8 @@ class OriginalBgmTests(unittest.TestCase):
 
             self.assertEqual(metadata["license"], "original local synthesis; no third-party recording")
             self.assertEqual(len(metadata["sha256"]), 64)
+            self.assertEqual(metadata["file"], "ambient.wav")
+            self.assertNotIn(str(Path(tmp)), metadata["command"])
             self.assertTrue(output.with_suffix(".json").exists())
 
 

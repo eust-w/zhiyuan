@@ -1,18 +1,18 @@
-# 四期教程 GPUFree 补录记录（Stage 0/1 已补，正片仍阻塞）
+# 四期教程 GPUFree 补录记录（Stage 0–3 样片素材已补，正片仍待重剪）
 
 ## 目的
 
-为四期教程补录不超过预算的真实 GenieSim 画面，优先覆盖场景启动、Stage 0 动作、近障碍安全门、RGB/depth 同步、单条轨迹采集和数据落盘。完整 50 条训练、10 条留出评测及全量 LoRA 训练不在本轮重复执行。
+为四期教程补录不超过预算的真实 GenieSim 画面，覆盖场景启动、Stage 0 动作、近障碍安全门、RGB/depth 同步、Stage 1 单条轨迹采集、Stage 2 单批训练与 adapter 重载，以及 Stage 3 base/LoRA 模型闭环轨迹。完整 50 条训练、10 条留出评测及全量 LoRA 训练不在补录轮次重复执行。
 
 ## 预算与保护
 
 - L40/48G 启动前观察价为 ¥2.28/h。
-- 新增算力硬上限为 ¥10；本轮控制台估算费用为 ¥4.23。
+- 新增算力硬上限为 ¥10。7 月 15 日轮次估算 ¥4.23；7 月 16 日轮次约运行 46 分钟，按相同单价估算 ¥1.75；合计估算 ¥5.98，低于硬上限。
 - 已设置定时关机，并预留超过 20 分钟的收尾缓冲。
-- 补录结束后先确认适配器、训练和闭环评测进程均已停止，再手动关机；控制台于 `2026-07-15 17:25:54 +08:00` 显示“已关机”。
+- 两轮补录结束后均先停止适配器、训练和闭环评测进程，再手动关机；控制台分别于 `2026-07-15 17:25:54 +08:00` 和 `2026-07-16 02:23:00 +08:00` 显示“已关机”。
 - 不在公开证据中记录账号、IP、实例编号、连接地址或持久盘真实路径。
 - 预算明细见 [`content/series/recapture-budget.json`](../../content/series/recapture-budget.json)。
-- 脱敏关机状态见 [`2026-07-15-gpufree-shutdown.json`](./2026-07-15-gpufree-shutdown.json)。
+- 脱敏关机状态见 [`2026-07-15-gpufree-shutdown.json`](./2026-07-15-gpufree-shutdown.json) 与 [`2026-07-16-gpufree-shutdown.json`](./2026-07-16-gpufree-shutdown.json)。
 
 ## 真实运行结果
 
@@ -42,6 +42,25 @@ Stage 0 使用 `market_00_g2`、G2 Omnipicker 和头部相机启动成功。为�
 - Stage 1 60 秒样片将同一段真实采集素材分章节复用，真实素材时间占比 80%；这只是单 episode 的媒体复核，不替代原有 50 条训练、10 条评测数据集。
 - 完整采集摘要、校验结果、动作统计和媒体哈希见 [`2026-07-15-stage1-recapture-evidence.json`](./2026-07-15-stage1-recapture-evidence.json)。
 
+## Stage 2 单批训练与新进程重载补录
+
+7 月 16 日在隔离的 StreamVLN Python 环境中重新执行一个真实更新步。训练集长度为 59，单步 `loss=0.4167`、`grad_norm=0.3841767907142639`、运行时间 `2.7822s`，模型输出正常保存。该结果只复核“单批前后向门”，全量 59 步训练仍引用原始训练结果，不能用单步补录替代。
+
+adapter 第一次在新进程重载时真实失败，错误为 `ModuleNotFoundError: No module named 'utils'`。定位到新进程没有包含两个公开 StreamVLN 模块根目录后，显式补齐模块搜索路径并重新运行；四个检查点分片完成加载，返回 `status=passed`、`peft_type=LORA`、`lora_r=8`。公开视频保留“先失败、再定位、再通过”的顺序，不把失败记录删掉。
+
+两段日志均先用原始文件哈希固化，再生成全中文脱敏回放；画面不包含远端路径、账号、地址或实例信息。完整结构化摘要见 [`2026-07-16-stage2-stage3-recapture-evidence.json`](./2026-07-16-stage2-stage3-recapture-evidence.json)。
+
+## Stage 3 base/LoRA 模型闭环补录
+
+本轮在同一个 `eval-2001` 上分别运行 StreamVLN base 与 LoRA，解码方式均为 `generate`，最大 20 步。动作由模型生成并逐步提交给 GenieSim adapter，视频来自每一步返回的真实头部相机 RGB，而不是 A* 控制器或卡片动画。公开回放逐帧叠加动作 ID、目标距离、blocked、碰撞和轨迹俯视图，叠加值直接从对应 JSON 读取。
+
+| 变体 | success@0.5m | success@3m | 最终距离 | 最小距离 | 路径长度 | 步数 | 碰撞 | 动作计数（停/前/左/右） |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| base | 否 | 否 | 4.0668m | 3.8831m | 1.75m | 20 | 0 | 0 / 7 / 6 / 7 |
+| LoRA | 否 | 否 | 4.4192m | 3.8558m | 2.50m | 20 | 0 | 0 / 10 / 4 / 6 |
+
+这两条是媒体补录样本，不替代 canonical 十条配对评测。最终指标仍唯一来自 `experiments/exp02-equivalent-v3/eval_result.json`：base 与 LoRA 的 `success@0.5m` 均为 0/10，SPL 均为 0；3m 仅作为辅助观察，分别为 2/10 与 1/10。
+
 ## 失败边界
 
 启用 AABB 代理的两次新鲜启动都在 `occupancy_proxy_direct_stage_scan` 后以退出码 0 结束，未进入 `adapter_ready`。尝试过的心跳改动在远端没有改善，已从本地工作树撤回，不会以未验证修复提交。
@@ -50,4 +69,4 @@ Stage 0 使用 `market_00_g2`、G2 Omnipicker 和头部相机启动成功。为�
 
 ## 对四期交付的影响
 
-Stage 0 和 Stage 1 的 60 秒样片均已达到 80% 真实素材时间占比，可用于确认画面、字幕、音色和节奏；但它们仍不是 10–15 分钟正片。Stage 2 的训练/重载实录、Stage 3 的 base/LoRA 配对轨迹实录，以及四期最终长片仍未补齐。因此系列状态仍是 `draft_waiting_for_gpu_recapture`，四个平台只保存草稿，不执行最终发布。
+Stage 0–3 四支 60 秒样片现在均达到 80% 真实素材时间占比，并通过 H.264、1080p、30fps、AAC、字幕行长、指标源与敏感信息检查。Stage 2 已接入真实训练/重载日志，Stage 3 已接入 base/LoRA 模型轨迹；但这些仍是风格样片，不是四支 10–15 分钟最终正片。系列状态更新为 `four_style_samples_ready_final_long_cuts_pending`，四个平台继续只保留草稿，不执行最终发布。

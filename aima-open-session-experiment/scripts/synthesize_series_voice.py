@@ -9,6 +9,16 @@ import json
 from pathlib import Path
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def public_voice_path(path: Path, root: Path = ROOT) -> str:
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path.name
+
+
 def load_narration(path: Path) -> str:
     text = "\n".join(line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
     if len(text) < 500:
@@ -30,8 +40,8 @@ def build_voice(narration: Path, output: Path, voice: str = "zh-CN-YunyangNeural
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
     metadata = {
         "schema_version": "aima-vln-series-voice/v1",
-        "narration": str(narration),
-        "output": str(output),
+        "narration": public_voice_path(narration),
+        "output": public_voice_path(output),
         "voice": voice,
         "rate": rate,
         "language": "zh-CN",

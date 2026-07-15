@@ -28,6 +28,8 @@ class SeriesVoiceTests(unittest.TestCase):
 
             self.assertEqual(metadata["voice"], "zh-CN-YunyangNeural")
             self.assertEqual(metadata["style"], "沉稳男声")
+            self.assertEqual(metadata["narration"], "stage.txt")
+            self.assertEqual(metadata["output"], "stage.mp3")
             self.assertTrue(output.with_suffix(".json").exists())
 
 

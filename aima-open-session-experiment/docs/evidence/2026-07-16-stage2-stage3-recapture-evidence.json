@@ -1,0 +1,204 @@
+{
+  "schema_version": "aima-vln-recapture-evidence/v1",
+  "run_date": "2026-07-16",
+  "status": "stage2_stage3_recapture_passed",
+  "disclaimer": "流程参考 AIMA 指南，但未使用课程私有适配包；本轮采用公开 StreamVLN 与 GenieSim 非官方等价适配。",
+  "runtime": {
+    "scene": "market_00_g2",
+    "robot": "G2_omnipicker",
+    "camera": "head_front_Camera",
+    "occupancy_mode": "runtime_safe_fallback_no_usd_aabb",
+    "project_usd_aabbs": false,
+    "boundary": "本轮媒体补录不声称重新闭合 USD AABB 运行链；等价 USD/AABB 证据沿用原有独立验证。"
+  },
+  "budget": {
+    "currency": "CNY",
+    "hard_cap": 10.0,
+    "hourly_price_observed": 2.28,
+    "prior_recap_estimate": 4.23,
+    "this_run_start_observed_at": "2026-07-16T01:37:00+08:00",
+    "this_run_shutdown_observed_at": "2026-07-16T02:23:00+08:00",
+    "this_run_elapsed_minutes_estimate": 46,
+    "this_run_compute_estimate": 1.75,
+    "combined_compute_estimate": 5.98,
+    "scheduled_hard_stop": "2026-07-16T03:48:00+08:00",
+    "manual_shutdown_completed_early": true,
+    "shutdown_evidence": "docs/evidence/2026-07-16-gpufree-shutdown.json",
+    "note": "金额为按可见小时价与运行时长计算的估算，不冒充最终账单。"
+  },
+  "stage2": {
+    "single_batch": {
+      "status": "passed",
+      "dataset_size": 59,
+      "update_steps": 1,
+      "loss": 0.4167,
+      "train_loss": 0.4167117476463318,
+      "grad_norm": 0.3841767907142639,
+      "runtime_seconds": 2.7822,
+      "trainable_parameters_megabytes": 20.19,
+      "output_saved": true
+    },
+    "adapter_reload": {
+      "first_attempt": "failed_missing_utils_module_path",
+      "first_error": "ModuleNotFoundError: No module named 'utils'",
+      "recovery": "在新进程显式补齐两个公开 StreamVLN 模块根目录后重试",
+      "second_attempt": "passed",
+      "checkpoint_shards": "4/4",
+      "peft_type": "LORA",
+      "lora_r": 8,
+      "inference_trainable_parameters": 0
+    },
+    "full_training_context": {
+      "source": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "updates": 59,
+      "initial_loss": 0.4167,
+      "final_loss": 0.0823,
+      "peak_gpu_memory_gib": 27.19,
+      "boundary": "本轮只重跑单批门与重载门，未重复执行完整训练。"
+    }
+  },
+  "stage3_media_samples": {
+    "purpose": "用于证明模型生成动作到 GenieSim 下一帧的真实媒体链，不替代十条总体评测。",
+    "same_episode": "eval-2001",
+    "decoder": "generate",
+    "max_steps": 20,
+    "base": {
+      "success_0_5": false,
+      "success_3": false,
+      "oracle_success_0_5": false,
+      "final_distance_to_goal_m": 4.066837784060112,
+      "min_distance_to_goal_m": 3.883105206443409,
+      "path_length_m": 1.75,
+      "spl_0_5": 0.0,
+      "steps": 20,
+      "collisions": 0,
+      "action_counts": {
+        "stop": 0,
+        "forward": 7,
+        "left": 6,
+        "right": 7
+      }
+    },
+    "lora": {
+      "success_0_5": false,
+      "success_3": false,
+      "oracle_success_0_5": false,
+      "final_distance_to_goal_m": 4.419217014847968,
+      "min_distance_to_goal_m": 3.8558217577520413,
+      "path_length_m": 2.5,
+      "spl_0_5": 0.0,
+      "steps": 20,
+      "collisions": 0,
+      "action_counts": {
+        "stop": 0,
+        "forward": 10,
+        "left": 4,
+        "right": 6
+      }
+    }
+  },
+  "canonical_paired_evaluation": {
+    "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+    "metric_source_sha256": "50c851126c1aa1e3d80983bb98fb2deacd7f3f0b58eb8f115954b1bb438c008c",
+    "heldout_episode_ids": [
+      "eval-2001",
+      "eval-2002",
+      "eval-2003",
+      "eval-2004",
+      "eval-2005",
+      "eval-2006",
+      "eval-2007",
+      "eval-2008",
+      "eval-2009",
+      "eval-2010"
+    ],
+    "primary_radius_m": 0.5,
+    "base": {
+      "success_0_5": 0,
+      "success_3": 2,
+      "oracle_success_0_5": 0,
+      "spl_0_5": 0.0,
+      "collisions": 132,
+      "mean_final_distance_to_goal_m": 3.9889178097623224,
+      "mean_path_length_m": 9.675,
+      "mean_steps": 133.9
+    },
+    "lora": {
+      "success_0_5": 0,
+      "success_3": 1,
+      "oracle_success_0_5": 0,
+      "spl_0_5": 0.0,
+      "collisions": 45,
+      "mean_final_distance_to_goal_m": 4.686244300975281,
+      "mean_path_length_m": 5.5,
+      "mean_steps": 53.2
+    }
+  },
+  "artifacts": [
+    {
+      "path": "assets/series/recapture/raw/recapture-stage23-evidence-full.tar.gz",
+      "sha256": "0f476a7af752ba67795a933cdc74b16234a986a2e98c0a385a11f870686dcdd3",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/single-batch.log",
+      "sha256": "80ebf1707c7e4beb9fa932ec7318c49c462438f5d0a61bb36800f8252dcba15f",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/adapter-reload.log",
+      "sha256": "e1c0f55e722cd0b88227c2f8fe015b328bdd130d79fa7b9f399fcbb1cf1b03a0",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/adapter-reload-fixed.log",
+      "sha256": "9df27bc6f9fb1d60b6fbc52c9f8101eb20cbbbaa6bfa974af4cbd73c92b7ff2e",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/base-one.json",
+      "sha256": "dac0752ae515fce3ad6583d660524fa8d7445987bfef9b94310572639368ddb5",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/lora-one.json",
+      "sha256": "bd858a13aef736ddb3ef9f73edb27eaf5fd648a6cefb8bd0f951fb3941b4f9fd",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/base-one-rgb.mp4",
+      "sha256": "bd545583416ad2275c4bebff358b623dc7a979dedc41dbc0afc4afec70c67692",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/lora-one-rgb.mp4",
+      "sha256": "f47289183e190e858bf41b8fa5315c6cbdf5053fea8c35e1d7369bbfd5334eaf",
+      "public": false
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/base-one-annotated.mp4",
+      "sha256": "a6e917710b2affabd1a1c234649027be739604812feaa2fc3f3ccd56f1ad9dcf",
+      "public": true,
+      "label": "真实模型闭环录屏（逐步指标与轨迹叠加）"
+    },
+    {
+      "path": "assets/series/recapture/raw/stage23-evidence/lora-one-annotated.mp4",
+      "sha256": "7072b36b9138d0769b323799d94cf5819307c6b040761e202e810c604b8d4508",
+      "public": true,
+      "label": "真实模型闭环录屏（逐步指标与轨迹叠加）"
+    },
+    {
+      "path": "assets/series/recapture/raw/stage2-single-batch-replay.mp4",
+      "sha256": "ff7b81464af4ed58b6ae527cb052a5183b393ec62883e0bf60ed2d0802dc4ed6",
+      "public": true,
+      "label": "真实日志回放（已脱敏）"
+    },
+    {
+      "path": "assets/series/recapture/raw/stage2-adapter-reload-replay.mp4",
+      "sha256": "3a76b7108f6bbaf887d3e9a71f834f9f8cfd947a1982a1e197b0cb02768fcdf1",
+      "public": true,
+      "label": "真实日志回放（已脱敏）"
+    }
+  ],
+  "privacy": "公开 JSON、字幕和成片不含账号、邮箱、IP、实例编号、连接信息或远端绝对路径。"
+}

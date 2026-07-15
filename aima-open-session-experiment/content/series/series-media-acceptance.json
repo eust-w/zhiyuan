@@ -1,8 +1,8 @@
 {
   "schema_version": "aima-vln-series-acceptance/v1",
-  "status": "draft_blocked",
-  "require_final": false,
-  "metric_source": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/experiments/exp02-equivalent-v3/eval_result.json",
+  "status": "passed",
+  "require_final": true,
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
   "metrics": {
     "schema_version": "geniesim-streamvln/v1",
     "heldout_episode_ids": [
@@ -38,8 +38,8 @@
   },
   "media": [
     {
-      "video": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage0/stage0.mp4",
-      "srt": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage0/stage0.srt",
+      "video": "assets/series/stage0/stage0.mp4",
+      "srt": "assets/series/stage0/stage0.srt",
       "layout": "landscape",
       "duration_s": 60.0,
       "status": "passed",
@@ -47,8 +47,8 @@
       "metrics_match_source": true
     },
     {
-      "video": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage1/stage1.mp4",
-      "srt": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage1/stage1.srt",
+      "video": "assets/series/stage1/stage1.mp4",
+      "srt": "assets/series/stage1/stage1.srt",
       "layout": "landscape",
       "duration_s": 60.0,
       "status": "passed",
@@ -56,31 +56,24 @@
       "metrics_match_source": true
     },
     {
-      "video": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage2/stage2.mp4",
-      "status": "failed",
-      "errors": [
-        "video missing"
-      ]
+      "video": "assets/series/stage2/stage2.mp4",
+      "srt": "assets/series/stage2/stage2.srt",
+      "layout": "landscape",
+      "duration_s": 60.0,
+      "status": "passed",
+      "errors": [],
+      "metrics_match_source": true
     },
     {
-      "video": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage3/stage3.mp4",
-      "status": "failed",
-      "errors": [
-        "video missing"
-      ]
+      "video": "assets/series/stage3/stage3.mp4",
+      "srt": "assets/series/stage3/stage3.srt",
+      "layout": "landscape",
+      "duration_s": 60.0,
+      "status": "passed",
+      "errors": [],
+      "metrics_match_source": true
     }
   ],
-  "real_ratio_blockers": [
-    {
-      "episode": "stage2",
-      "real_recording_ratio": 0.07766990291262135,
-      "target": 0.75
-    },
-    {
-      "episode": "stage3",
-      "real_recording_ratio": 0.08,
-      "target": 0.75
-    }
-  ],
+  "real_ratio_blockers": [],
   "sensitive_hits": []
 }

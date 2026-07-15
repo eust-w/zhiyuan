@@ -37,6 +37,11 @@ def dimensions(layout: str) -> tuple[int, int]:
     raise ValueError(f"unsupported layout: {layout}")
 
 
+def public_path(path: Path, root: Path = ROOT) -> str:
+    """Return a repository-relative path for shareable media metadata."""
+    return path.resolve().relative_to(root.resolve()).as_posix()
+
+
 def font(size: int):
     candidates = [
         "/System/Library/Fonts/PingFang.ttc",
@@ -60,11 +65,13 @@ def wrap_subtitle(text: str, limit: int = 16) -> list[str]:
     current = ""
     for char in text.strip():
         if len(current) >= limit:
-            lines.append(current)
+            if current.strip():
+                lines.append(current.strip())
             current = ""
         current += char
     if current:
-        lines.append(current)
+        if current.strip():
+            lines.append(current.strip())
     return lines or [""]
 
 
@@ -104,6 +111,9 @@ def write_srt(episode: dict[str, Any], path: Path) -> None:
 def overlay_image(episode: dict[str, Any], segment: dict[str, Any], path: Path, layout: str = "landscape") -> None:
     width, height = dimensions(layout)
     canvas = Image.new("RGBA", (width, height), (8, 14, 23, 0))
+    if segment.get("preserve_source_overlay"):
+        canvas.save(path)
+        return
     draw = ImageDraw.Draw(canvas)
     scale = min(width / 1920, height / 1080)
     label_font = font(max(22, int(28 * scale)))
@@ -286,9 +296,9 @@ def render_episode(manifest_path: Path, episode_id: str, output_dir: Path, eval_
         "height": dimensions(layout)[1],
         "duration_s": duration or sum(float(segment["duration_s"]) for segment in episode["segments"]),
         "real_recording_ratio": real_recording_ratio(episode),
-        "metric_source": str(eval_path),
+        "metric_source": public_path(eval_path),
         "metrics": snapshot,
-        "outputs": [str(final), str(srt)],
+        "outputs": [public_path(final), public_path(srt)],
     }
     (output_dir / f"{episode_id}-media-manifest.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return metadata

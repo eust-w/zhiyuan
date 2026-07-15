@@ -1,7 +1,7 @@
 {
   "schema_version": "aima-vln-series-voice/v1",
-  "narration": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/content/series/narration/stage0.txt",
-  "output": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage0/stage0-voice.mp3",
+  "narration": "content/series/narration/stage0.txt",
+  "output": "assets/series/stage0/stage0-voice.mp3",
   "voice": "zh-CN-YunyangNeural",
   "rate": "-10%",
   "language": "zh-CN",

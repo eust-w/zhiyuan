@@ -48,7 +48,7 @@
   "config": {
     "official": false,
     "scene": "market_00_g2",
-    "service": "127.0.0.1:5802",
+    "service": "loopback-only adapter service",
     "target_id": "red-target-marker"
   },
   "created_at_utc": "2026-07-13T15:40:37+00:00",

@@ -1,6 +1,6 @@
 # 四期教程平台原生发布包
 
-状态：draft_waiting_for_user_confirmation。流程参考 AIMA 指南，采用公开组件与自采等价兼容资产；不声称复制课程私有资产，也不是课程官方方案。
+状态：four_style_samples_ready_final_long_cuts_pending。流程参考 AIMA 指南，采用公开组件与自采等价兼容资产；不声称复制课程私有资产，也不是课程官方方案。四个平台仍只保留草稿，最终发布必须由用户确认。
 
 指标源：`experiments/exp02-equivalent-v3/eval_result.json`；主指标：`success@0.5m`。
 
@@ -52,9 +52,26 @@
 - [脱敏实验记录](../../docs/evidence/2026-07-15-series-gpufree-recapture.md)
 - [结构化证据](../../docs/evidence/2026-07-15-stage1-recapture-evidence.json)
 
+## Stage 2 新鲜实录样片
+
+[Stage 2 60 秒样片](../../assets/series/stage2/stage2.mp4) 已接入两段新鲜的真实日志回放：单批训练实测 `loss=0.4167`、`grad_norm=0.3842`，以及 adapter 首次因缺少模块路径失败、修复后 `status=passed` 的完整过程。原始日志保持私有，公开画面只显示脱敏后的可复核字段；真实素材时间占比 80%。
+
+- [SRT](../../assets/series/stage2/stage2.srt)
+- [媒体验收清单](../../assets/series/stage2/stage2-media-manifest.json)
+- [Stage 2/3 结构化证据](../../docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json)
+
+## Stage 3 新鲜实录样片
+
+[Stage 3 60 秒样片](../../assets/series/stage3/stage3.mp4) 使用同一个 `eval-2001` 的 base 与 LoRA 真实头部相机轨迹，各占 24 秒。两条轨迹均由模型 `generate` 输出动作并驱动 GenieSim，不是控制器代跑；画面逐步叠加动作 ID、目标距离、blocked、碰撞和俯视轨迹，单条结果均未达到 0.5m。最终总体结论仍从同一批十条 `eval_result.json` 自动读取：base 与 LoRA 均为 0/10。
+
+- [SRT](../../assets/series/stage3/stage3.srt)
+- [媒体验收清单](../../assets/series/stage3/stage3-media-manifest.json)
+- [Stage 2/3 结构化证据](../../docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json)
+- [四期样片验收](../../content/series/series-media-acceptance.json)
+
 ## 四期长片粗剪（明确不是最终发布）
 
-以下视频已达到约 10–12 分钟，用于校对沉稳男声、章节节奏、字幕容器和音频混音；它们仍是本轮补录之前生成的循环粗剪，并烧录“粗剪草稿｜旧素材片段复用｜未满足最终比例”标识。Stage 2/3 新补录和四期最终比例未通过前，不得发布。
+以下视频已达到约 10–12 分钟，用于校对沉稳男声、章节节奏、字幕容器和音频混音；它们仍是补录之前生成的循环粗剪，并烧录“粗剪草稿｜旧素材片段复用｜未满足最终比例”标识。虽然四支 60 秒样片现在均达到 80% 真实素材比例，但长片还没有按新故事板重剪，因此这些粗剪不得发布。
 
 - [Stage 0 粗剪](../../assets/series/long-drafts/stage0/stage0-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage0/stage0-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage0/stage0-rough-cut-manifest.json)
 - [Stage 1 粗剪](../../assets/series/long-drafts/stage1/stage1-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage1/stage1-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage1/stage1-rough-cut-manifest.json)

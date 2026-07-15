@@ -1,16 +1,47 @@
 {
-  "schema_version": "aima-vln-audio-acceptance/v1",
-  "sample": "assets/series/style-sample/stage0.mp4",
-  "measurement": "ffmpeg loudnorm=I=-16:TP=-1.0:LRA=11",
-  "input_i_lufs": -16.44,
-  "input_true_peak_dbtp": -3.83,
-  "output_i_lufs": -16.02,
-  "output_true_peak_dbtp": -3.25,
+  "schema_version": "aima-vln-audio-acceptance/v2",
+  "measurement": "ffmpeg loudnorm=I=-16:TP=-1.0:LRA=11 and blackdetect=d=0.5:pix_th=0.10",
   "target": {
     "voice_and_mix_lufs": -16.0,
+    "accepted_lufs_tolerance": 1.0,
     "true_peak_max_dbtp": -1.0,
-    "bgm_ducking_db": "10–12"
+    "bgm_ducking_db": "10–12",
+    "black_frame_max_continuous_seconds": 0.5
   },
-  "status": "passed",
-  "note": "样片已达到目标响度且峰值低于 -1 dBTP；正式四期成片需逐片重新测量。"
+  "samples": [
+    {
+      "episode": "stage0",
+      "path": "assets/series/stage0/stage0.mp4",
+      "input_i_lufs": -16.44,
+      "input_true_peak_dbtp": -3.83,
+      "black_segments_over_threshold": 0,
+      "status": "passed"
+    },
+    {
+      "episode": "stage1",
+      "path": "assets/series/stage1/stage1.mp4",
+      "input_i_lufs": -16.87,
+      "input_true_peak_dbtp": -3.83,
+      "black_segments_over_threshold": 0,
+      "status": "passed"
+    },
+    {
+      "episode": "stage2",
+      "path": "assets/series/stage2/stage2.mp4",
+      "input_i_lufs": -15.94,
+      "input_true_peak_dbtp": -1.64,
+      "black_segments_over_threshold": 0,
+      "status": "passed"
+    },
+    {
+      "episode": "stage3",
+      "path": "assets/series/stage3/stage3.mp4",
+      "input_i_lufs": -16.15,
+      "input_true_peak_dbtp": -1.5,
+      "black_segments_over_threshold": 0,
+      "status": "passed"
+    }
+  ],
+  "status": "passed_all_four_style_samples",
+  "note": "四支 60 秒样片均达到目标响度容差、峰值低于 -1 dBTP，且未检出持续 0.5 秒以上黑场；10–15 分钟最终长片完成后必须逐片重新测量。"
 }

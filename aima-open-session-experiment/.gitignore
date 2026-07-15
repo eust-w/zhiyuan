@@ -28,6 +28,7 @@ experiments/**/checkpoints/
 # subtitles, provenance and acceptance JSON tracked, but do not commit large
 # generated audio/video files.
 assets/series/**/*.mp4
+assets/series/recapture/raw/
 assets/series/**/*.mp3
 assets/series/**/*.m4a
 assets/series/**/*.wav

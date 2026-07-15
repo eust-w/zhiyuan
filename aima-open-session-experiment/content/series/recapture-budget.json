@@ -1,32 +1,51 @@
 {
-  "schema_version": "aima-vln-gpufree-recapture/v1",
-  "status": "stage0_stage1_partial_success",
-  "purpose": "四期教程补录：场景启动、Stage 0 动作与障碍拒绝、Stage 1 单条采集与日志落盘",
+  "schema_version": "aima-vln-gpufree-recapture/v2",
+  "status": "stage0_to_stage3_style_samples_ready",
+  "purpose": "四期教程真实素材补录：Stage 0 动作与障碍拒绝、Stage 1 单条采集、Stage 2 单批训练与重载、Stage 3 base/LoRA 模型闭环轨迹",
   "currency": "CNY",
   "hard_cap": 10.0,
   "hourly_price_observed_cny": 2.28,
-  "theoretical_max_hours_before_buffer": 4.3859649123,
   "shutdown_buffer_minutes": 20,
-  "instance_started": true,
-  "estimated_compute_cny": 4.23,
-  "scheduled_shutdown": true,
-  "manual_shutdown_completed": true,
-  "shutdown_observed_at": "2026-07-15T17:25:54+08:00",
-  "shutdown_evidence": "docs/evidence/2026-07-15-gpufree-shutdown.json",
-  "remote_attempt": {
-    "started": true,
-    "result": "stage0_actions_depth_guard_and_stage1_single_episode_recovered",
-    "runtime_mode": "runtime_safe_fallback_no_usd_aabb",
-    "evidence": [
-      "docs/evidence/2026-07-15-stage0-recapture-evidence.json",
-      "docs/evidence/2026-07-15-stage1-recapture-evidence.json"
-    ],
-    "media": [
-      "assets/series/recapture/raw/stage0-rgb-replay.mp4",
-      "assets/series/recapture/raw/stage0-blocked-replay.mp4",
-      "assets/series/recapture/raw/stage1-train1001-replay.mp4"
-    ],
-    "notes": "Stage 0 的 W/S/A/D/Space 与 RGB/depth 落盘通过；连续前进从第 2 步起由头部深度安全门拒绝，阻挡前后位姿和距离不变。Stage 1 固定种子 1001 的 20 步轨迹完成并通过 1/1 数据集校验，公开注释不写最终 STOP，完整 sidecar 保留 STOP。AABB 代理同轮启动未进入 adapter_ready，证据边界单独披露。"
-  },
-  "privacy": "不记录实例 ID、IP、账号、连接信息或价格截图"
+  "runs": [
+    {
+      "date": "2026-07-15",
+      "estimated_compute_cny": 4.23,
+      "manual_shutdown_completed": true,
+      "shutdown_observed_at": "2026-07-15T17:25:54+08:00",
+      "result": "stage0_actions_depth_guard_and_stage1_single_episode_recovered",
+      "evidence": [
+        "docs/evidence/2026-07-15-stage0-recapture-evidence.json",
+        "docs/evidence/2026-07-15-stage1-recapture-evidence.json",
+        "docs/evidence/2026-07-15-gpufree-shutdown.json"
+      ]
+    },
+    {
+      "date": "2026-07-16",
+      "estimated_compute_cny": 1.75,
+      "started_at": "2026-07-16T01:37:00+08:00",
+      "manual_shutdown_completed": true,
+      "shutdown_observed_at": "2026-07-16T02:23:00+08:00",
+      "scheduled_hard_stop": "2026-07-16T03:48:00+08:00",
+      "result": "stage2_single_batch_reload_and_stage3_base_lora_episode_recaptured",
+      "evidence": [
+        "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+        "docs/evidence/2026-07-16-gpufree-shutdown.json"
+      ]
+    }
+  ],
+  "combined_estimated_compute_cny": 5.98,
+  "remaining_estimated_budget_cny": 4.02,
+  "budget_result": "passed_under_hard_cap",
+  "runtime_mode": "runtime_safe_fallback_no_usd_aabb",
+  "media": [
+    "assets/series/recapture/raw/stage0-rgb-replay.mp4",
+    "assets/series/recapture/raw/stage0-blocked-replay.mp4",
+    "assets/series/recapture/raw/stage1-train1001-replay.mp4",
+    "assets/series/recapture/raw/stage2-single-batch-replay.mp4",
+    "assets/series/recapture/raw/stage2-adapter-reload-replay.mp4",
+    "assets/series/recapture/raw/stage23-evidence/base-one-annotated.mp4",
+    "assets/series/recapture/raw/stage23-evidence/lora-one-annotated.mp4"
+  ],
+  "notes": "两轮金额均为小时价乘运行时长的估算，不冒充最终账单。四期 60 秒样片已各达到 80% 真实素材时间占比；10–15 分钟最终长片仍待按新样片结构重剪。",
+  "privacy": "不记录实例 ID、IP、账号、连接信息、控制台原图或持久盘真实路径。"
 }

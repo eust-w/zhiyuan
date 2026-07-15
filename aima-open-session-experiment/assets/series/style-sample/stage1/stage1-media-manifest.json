@@ -6,7 +6,7 @@
   "height": 1080,
   "duration_s": 60.0,
   "real_recording_ratio": 0.8,
-  "metric_source": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/experiments/exp02-equivalent-v3/eval_result.json",
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
   "metrics": {
     "schema_version": "geniesim-streamvln/v1",
     "heldout_episode_ids": [
@@ -41,7 +41,7 @@
     }
   },
   "outputs": [
-    "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/style-sample/stage1/stage1.mp4",
-    "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/style-sample/stage1/stage1.srt"
+    "assets/series/style-sample/stage1/stage1.mp4",
+    "assets/series/style-sample/stage1/stage1.srt"
   ]
 }
