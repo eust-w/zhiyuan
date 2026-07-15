@@ -29,3 +29,12 @@
 - [Stage 1 封面](../../assets/series/covers/stage1-cover.png)
 - [Stage 2 封面](../../assets/series/covers/stage2-cover.png)
 - [Stage 3 封面](../../assets/series/covers/stage3-cover.png)
+
+## 四期长片粗剪（明确不是最终发布）
+
+以下视频已达到约 10–12 分钟，用于校对沉稳男声、章节节奏、字幕容器和音频混音；画面会循环 60 秒样片，并烧录“粗剪草稿｜旧素材片段复用｜未满足最终比例”标识。GPUFree 新补录和真实录屏比例未通过前，不得发布。
+
+- [Stage 0 粗剪](../../assets/series/long-drafts/stage0/stage0-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage0/stage0-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage0/stage0-rough-cut-manifest.json)
+- [Stage 1 粗剪](../../assets/series/long-drafts/stage1/stage1-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage1/stage1-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage1/stage1-rough-cut-manifest.json)
+- [Stage 2 粗剪](../../assets/series/long-drafts/stage2/stage2-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage2/stage2-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage2/stage2-rough-cut-manifest.json)
+- [Stage 3 粗剪](../../assets/series/long-drafts/stage3/stage3-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage3/stage3-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage3/stage3-rough-cut-manifest.json)

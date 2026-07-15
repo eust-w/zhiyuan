@@ -10,9 +10,9 @@
   "paid_extension": false,
   "remote_attempt": {
     "started": true,
-    "result": "no_media_file_recovered",
-    "evidence": "GPUFree assets/series-recapture/stage0-started.txt, stage0-finished.txt, ffmpeg.log and adapter.log",
-    "notes": "既有实例在自动释放窗口附近执行短补录；日志文件为空且未生成 mp4，未重新启动或延长计费实例。"
+    "result": "no_media_file_recovered_after_two_attempts",
+    "evidence": "GPUFree assets/series-recapture/stage0-started.txt, stage0-finished.txt, ffmpeg.log, adapter.log, ffmpeg-last.log and adapter-last.log",
+    "notes": "既有实例在自动释放窗口附近执行两次短补录；两次 ffmpeg 与适配器进程均以自动超时退出且未生成 mp4，未重新启动或延长计费实例。"
   },
   "privacy": "不记录实例 ID、IP、账号、连接信息或价格截图"
 }

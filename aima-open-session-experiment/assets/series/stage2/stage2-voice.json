@@ -3,9 +3,9 @@
   "narration": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/content/series/narration/stage2.txt",
   "output": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage2/stage2-voice.mp3",
   "voice": "zh-CN-YunyangNeural",
-  "rate": "-8%",
+  "rate": "-10%",
   "language": "zh-CN",
   "style": "沉稳男声",
-  "characters": 1796,
-  "sha256": "4c8505929d2aff97f9efe62b5c9b96459c9d6714a5a6e114260281b3b3d8dd9f"
+  "characters": 3198,
+  "sha256": "abbc635cf0fc83fec6d0d050c7e9181adc188f24a74f63a0487bd3b10d8eed5f"
 }

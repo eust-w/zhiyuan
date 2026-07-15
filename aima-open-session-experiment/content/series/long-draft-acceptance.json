@@ -1,0 +1,32 @@
+{
+  "schema_version": "aima-vln-long-draft-acceptance/v1",
+  "status": "passed_rough_cut_only",
+  "final_publishable": false,
+  "reason": "所有长片均为旧素材循环粗剪，等待 GPUFree 新录屏后重渲染",
+  "media": [
+    {
+      "episode": "stage0",
+      "duration_s": 655.266667,
+      "status": "passed",
+      "errors": []
+    },
+    {
+      "episode": "stage1",
+      "duration_s": 654.833333,
+      "status": "passed",
+      "errors": []
+    },
+    {
+      "episode": "stage2",
+      "duration_s": 652.166667,
+      "status": "passed",
+      "errors": []
+    },
+    {
+      "episode": "stage3",
+      "duration_s": 693.5,
+      "status": "passed",
+      "errors": []
+    }
+  ]
+}

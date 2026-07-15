@@ -38,6 +38,8 @@
 - [媒体验收报告](content/series/series-media-acceptance.json)
 - [音频与原始氛围音说明](assets/series/ambient-original.json)
 - [样片响度验收](content/series/audio-loudness.json)
+- [四期 10–15 分钟粗剪清单](assets/series/long-drafts/)
+- [长片粗剪规格验收](content/series/long-draft-acceptance.json)
 - [B 站 / 知乎 / 小红书 / 抖音交付目录](article/series/README.md)
 
 样片和补录状态必须单独阅读验收报告：样片已验证编码、字幕、旁白和指标读取；四期 10–15 分钟正片、GPUFree 新补录和“真实录屏 ≥75%”在远端素材回收并通过验收前不得标记为最终成片或直接发布。

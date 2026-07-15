@@ -1,0 +1,14 @@
+{
+  "schema_version": "aima-vln-long-draft/v1",
+  "episode": "stage0",
+  "status": "rough_cut_draft",
+  "duration_s": 655.266667,
+  "source_sample": "assets/series/style-sample/stage0.mp4",
+  "watermarked_sample": "assets/series/long-drafts/stage0/stage0-watermarked-sample.mp4",
+  "source_reuse": true,
+  "real_recording_ratio_verified": false,
+  "final_acceptance_blocker": "GPUFree fresh recordings unavailable; do not publish",
+  "voice": "assets/series/stage0/stage0-voice.mp3",
+  "music": "assets/series/ambient-original.wav",
+  "watermark": "assets/series/long-drafts/stage0/stage0-draft-watermark.png"
+}

@@ -17,7 +17,7 @@
 
 ## 结果
 
-远端目录中只出现空的 `ffmpeg.log` 与 `adapter.log`，没有生成 `stage0-desktop.mp4` 或可下载的模型轨迹。原因是实例已进入自动释放窗口，无法把这次尝试当作有效录屏。该事实不会被包装成“补录完成”，也不会把空日志写入最终媒体证据。
+远端目录中只出现空的 `ffmpeg.log`、`adapter.log`、`ffmpeg-last.log` 与 `adapter-last.log`，两次短命令均以自动超时退出，没有生成 `stage0-desktop.mp4`、`stage0-recapture-last.mp4` 或可下载的模型轨迹。原因是实例已进入自动释放窗口，无法把这两次尝试当作有效录屏。该事实不会被包装成“补录完成”，也不会把空日志写入最终媒体证据。
 
 ## 对交付的影响
 
