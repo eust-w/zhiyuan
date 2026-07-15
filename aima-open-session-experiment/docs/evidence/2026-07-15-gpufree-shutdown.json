@@ -1,0 +1,10 @@
+{
+  "schema_version": "aima-vln-gpufree-shutdown/v1",
+  "observed_at": "2026-07-15T17:25:54+08:00",
+  "adapter_processes": "stopped",
+  "training_processes": "stopped",
+  "closed_loop_eval_processes": "stopped",
+  "instance_state": "已关机",
+  "verification_surface": "GPUFree 控制台可见状态",
+  "privacy": "未记录账号、IP、实例编号、连接地址或持久盘真实路径"
+}

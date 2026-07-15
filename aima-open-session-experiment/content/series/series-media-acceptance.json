@@ -41,17 +41,19 @@
       "video": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage0/stage0.mp4",
       "srt": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage0/stage0.srt",
       "layout": "landscape",
-      "duration_s": 60.096,
+      "duration_s": 60.0,
       "status": "passed",
       "errors": [],
       "metrics_match_source": true
     },
     {
       "video": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage1/stage1.mp4",
-      "status": "failed",
-      "errors": [
-        "video missing"
-      ]
+      "srt": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage1/stage1.srt",
+      "layout": "landscape",
+      "duration_s": 60.0,
+      "status": "passed",
+      "errors": [],
+      "metrics_match_source": true
     },
     {
       "video": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/assets/series/stage2/stage2.mp4",
@@ -69,16 +71,6 @@
     }
   ],
   "real_ratio_blockers": [
-    {
-      "episode": "stage0",
-      "real_recording_ratio": 0.11764705882352941,
-      "target": 0.75
-    },
-    {
-      "episode": "stage1",
-      "real_recording_ratio": 0.09523809523809523,
-      "target": 0.75
-    },
     {
       "episode": "stage2",
       "real_recording_ratio": 0.07766990291262135,

@@ -5,7 +5,7 @@
   "width": 1920,
   "height": 1080,
   "duration_s": 60.0,
-  "real_recording_ratio": 0.11764705882352941,
+  "real_recording_ratio": 0.8,
   "metric_source": "/Users/longtaowu/workspace/zhiyuan/aima-open-session-experiment/experiments/exp02-equivalent-v3/eval_result.json",
   "metrics": {
     "schema_version": "geniesim-streamvln/v1",
