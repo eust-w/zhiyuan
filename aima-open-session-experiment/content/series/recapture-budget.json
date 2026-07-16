@@ -1,7 +1,7 @@
 {
-  "schema_version": "aima-vln-gpufree-recapture/v2",
-  "status": "stage0_to_stage3_style_samples_ready",
-  "purpose": "四期教程真实素材补录：Stage 0 动作与障碍拒绝、Stage 1 单条采集、Stage 2 单批训练与重载、Stage 3 base/LoRA 模型闭环轨迹",
+  "schema_version": "aima-vln-gpufree-recapture/v3",
+  "status": "canonical_twenty_trajectories_and_final_long_cuts_ready",
+  "purpose": "四期教程真实素材补录：动作与障碍拒绝、单条采集、单批训练与重载，以及基础模型/低秩适配模型各 10 条 canonical 闭环轨迹",
   "currency": "CNY",
   "hard_cap": 10.0,
   "hourly_price_observed_cny": 2.28,
@@ -31,10 +31,23 @@
         "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
         "docs/evidence/2026-07-16-gpufree-shutdown.json"
       ]
+    },
+    {
+      "date": "2026-07-16",
+      "estimated_compute_cny": 0.58,
+      "started_at": "2026-07-16T14:38:01+08:00",
+      "manual_shutdown_completed": true,
+      "shutdown_observed_at": "2026-07-16T14:53:14+08:00",
+      "scheduled_hard_stop": "2026-07-16T16:00:00+08:00",
+      "estimated_hard_stop_cny": 3.0,
+      "result": "canonical_base_lora_twenty_episode_frames_packaged_and_downloaded",
+      "evidence": [
+        "docs/evidence/2026-07-16-canonical-final-long-evidence.json"
+      ]
     }
   ],
-  "combined_estimated_compute_cny": 5.98,
-  "remaining_estimated_budget_cny": 4.02,
+  "combined_estimated_compute_cny": 6.56,
+  "remaining_estimated_budget_cny": 3.44,
   "budget_result": "passed_under_hard_cap",
   "runtime_mode": "runtime_safe_fallback_no_usd_aabb",
   "media": [
@@ -44,8 +57,13 @@
     "assets/series/recapture/raw/stage2-single-batch-replay.mp4",
     "assets/series/recapture/raw/stage2-adapter-reload-replay.mp4",
     "assets/series/recapture/raw/stage23-evidence/base-one-annotated.mp4",
-    "assets/series/recapture/raw/stage23-evidence/lora-one-annotated.mp4"
+    "assets/series/recapture/raw/stage23-evidence/lora-one-annotated.mp4",
+    "assets/series/recapture/canonical/manifest.json",
+    "assets/series/final-long/stage0/stage0.mp4",
+    "assets/series/final-long/stage1/stage1.mp4",
+    "assets/series/final-long/stage2/stage2.mp4",
+    "assets/series/final-long/stage3/stage3.mp4"
   ],
-  "notes": "两轮金额均为小时价乘运行时长的估算，不冒充最终账单。四期 60 秒样片已各达到 80% 真实素材时间占比；10–15 分钟最终长片仍待按新样片结构重剪。",
+  "notes": "三轮金额均为小时价乘运行时长的估算，不冒充最终账单。第三轮取回基础模型 1349 帧、低秩适配模型 542 帧，共 20 条同批留出轨迹；四期 10 分钟最终长片均达到 80% 真实实录时间占比并通过深度媒体验收。",
   "privacy": "不记录实例 ID、IP、账号、连接信息、控制台原图或持久盘真实路径。"
 }

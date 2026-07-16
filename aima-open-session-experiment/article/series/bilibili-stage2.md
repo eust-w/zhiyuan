@@ -1,4 +1,6 @@
-# STAGE2｜B 站投稿包
+# 阶段二｜B 站投稿包
+
+> 最终正片：[视频](../../assets/series/final-long/stage2/stage2.mp4) · [可关闭字幕](../../assets/series/final-long/stage2/stage2.srt) · [验收](../../content/series/final-long-acceptance.json)
 
 ## 三个标题候选
 
@@ -6,14 +8,14 @@
 2. LoRA 四道验证门：数据、前后向、59 步训练与新进程重载
 3. 真实训练复盘：低 loss、可重载 adapter 与导航成功是三件事
 
-## 章节时间轴（粗剪计划，正片完成后以 SRT 和成片复核为准）
+## 章节时间轴（最终成片）
 
 - 00:00 loss 的误读
-- 01:30 环境隔离
-- 04:00 LoRA 参数
-- 06:00 四道验证门
-- 09:00 59 步和显存
-- 12:00 adapter 重载边界
+- 01:20 环境隔离
+- 03:00 LoRA 参数
+- 04:40 四道验证门
+- 06:30 59 步和显存
+- 08:30 adapter 重载边界
 
 ## 投稿简介
 

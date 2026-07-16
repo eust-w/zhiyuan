@@ -1,4 +1,6 @@
-# STAGE1｜B 站投稿包
+# 阶段一｜B 站投稿包
+
+> 最终正片：[视频](../../assets/series/final-long/stage1/stage1.mp4) · [可关闭字幕](../../assets/series/final-long/stage1/stage1.srt) · [验收](../../content/series/final-long-acceptance.json)
 
 ## 三个标题候选
 
@@ -6,14 +8,14 @@
 2. annotations.json 不等于完整轨迹：StreamVLN 标注与 sidecar 拆解
 3. 五厘米占据栅格怎么验收？从 AABB 探针到数据落盘
 
-## 章节时间轴（粗剪计划，正片完成后以 SRT 和成片复核为准）
+## 章节时间轴（最终成片）
 
 - 00:00 为什么先做冒烟
-- 01:30 固定种子和拆分
-- 04:00 RGB-D-Pose 同步
-- 06:30 annotations 与 sidecar
-- 09:00 五厘米栅格探针
-- 12:00 批量验收与抽查
+- 01:20 固定种子和拆分
+- 03:00 RGB-D-Pose 同步
+- 05:00 annotations 与 sidecar
+- 07:00 五厘米栅格探针
+- 08:40 批量验收与抽查
 
 ## 投稿简介
 

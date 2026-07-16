@@ -1,6 +1,6 @@
 # 四期教程平台原生发布包
 
-状态：four_style_samples_ready_final_long_cuts_pending。流程参考 AIMA 指南，采用公开组件与自采等价兼容资产；不声称复制课程私有资产，也不是课程官方方案。四个平台仍只保留草稿，最终发布必须由用户确认。
+状态：final_long_media_ready_drafts_not_submitted。流程参考 AIMA 指南，采用公开组件与自采等价兼容资产；不声称复制课程私有资产，也不是课程官方方案。四期 10 分钟最终长片已完成并通过媒体验收，四个平台仍未提交；最终发布必须由用户登录、预览并确认。
 
 指标源：`experiments/exp02-equivalent-v3/eval_result.json`；主指标：`success@0.5m`。
 
@@ -34,9 +34,21 @@
 - [Stage 2 封面](../../assets/series/covers/stage2-cover.png)
 - [Stage 3 封面](../../assets/series/covers/stage3-cover.png)
 
+## 四期 10 分钟最终长片
+
+四期正片均为 1920×1080、30fps、H.264/AAC，单集 600 秒，真实实录时间占比 80%。全片解码、黑帧、响度、字幕行长、敏感信息与指标一致性检查已通过。第四期使用基础模型和低秩适配模型各 10 条、共 20 条 canonical held-out 真实轨迹；画面逐帧显示动作、目标距离、受阻、碰撞与轨迹，不再是单条样片或循环粗剪。
+
+- [阶段零正片](../../assets/series/final-long/stage0/stage0.mp4) · [SRT](../../assets/series/final-long/stage0/stage0.srt) · [清单](../../assets/series/final-long/stage0/stage0-media-manifest.json)
+- [阶段一正片](../../assets/series/final-long/stage1/stage1.mp4) · [SRT](../../assets/series/final-long/stage1/stage1.srt) · [清单](../../assets/series/final-long/stage1/stage1-media-manifest.json)
+- [阶段二正片](../../assets/series/final-long/stage2/stage2.mp4) · [SRT](../../assets/series/final-long/stage2/stage2.srt) · [清单](../../assets/series/final-long/stage2/stage2-media-manifest.json)
+- [阶段三正片](../../assets/series/final-long/stage3/stage3.mp4) · [SRT](../../assets/series/final-long/stage3/stage3.srt) · [清单](../../assets/series/final-long/stage3/stage3-media-manifest.json)
+- [最终长片故事板](../../content/series/final-long-manifest.json)
+- [最终长片验收](../../content/series/final-long-acceptance.json)
+- [canonical 轨迹与长片结构化证据](../../docs/evidence/2026-07-16-canonical-final-long-evidence.json)
+
 ## Stage 0 新鲜实录样片
 
-[Stage 0 60 秒样片](../../assets/series/stage0/stage0.mp4) 已接入本轮 GPUFree 真实 RGB 数据回放，时长 60 秒，真实录制素材占比 80%，包含 W/S/A/D/Space、两帧等待、头部深度安全门和阻挡后位姿不变证据。该样片使用运行时安全配置，AABB/USD 证据单独披露；它只代表 Stage 0 样片通过，不代表四期正片完成。
+[Stage 0 60 秒样片](../../assets/series/stage0/stage0.mp4) 已接入本轮 GPUFree 真实 RGB 数据回放，时长 60 秒，真实录制素材占比 80%，包含 W/S/A/D/Space、两帧等待、头部深度安全门和阻挡后位姿不变证据。该文件保留为短平台预告；四期正片以本页“最终长片”目录为准。
 
 - [SRT](../../assets/series/stage0/stage0.srt)
 - [媒体验收清单](../../assets/series/stage0/stage0-media-manifest.json)
@@ -69,9 +81,9 @@
 - [Stage 2/3 结构化证据](../../docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json)
 - [四期样片验收](../../content/series/series-media-acceptance.json)
 
-## 四期长片粗剪（明确不是最终发布）
+## 归档：四期旧循环粗剪（不得发布）
 
-以下视频已达到约 10–12 分钟，用于校对沉稳男声、章节节奏、字幕容器和音频混音；它们仍是补录之前生成的循环粗剪，并烧录“粗剪草稿｜旧素材片段复用｜未满足最终比例”标识。虽然四支 60 秒样片现在均达到 80% 真实素材比例，但长片还没有按新故事板重剪，因此这些粗剪不得发布。
+以下文件只保留作历史归档，用于对照早期旁白与节奏；它们烧录“粗剪草稿｜旧素材片段复用｜未满足最终比例”标识，不是当前正片，也不得作为平台上传文件。当前可上传媒体仅指上方 `assets/series/final-long/` 下的四期最终长片。
 
 - [Stage 0 粗剪](../../assets/series/long-drafts/stage0/stage0-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage0/stage0-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage0/stage0-rough-cut-manifest.json)
 - [Stage 1 粗剪](../../assets/series/long-drafts/stage1/stage1-rough-cut-draft.mp4) · [SRT](../../assets/series/long-drafts/stage1/stage1-rough-cut-draft.srt) · [清单](../../assets/series/long-drafts/stage1/stage1-rough-cut-manifest.json)

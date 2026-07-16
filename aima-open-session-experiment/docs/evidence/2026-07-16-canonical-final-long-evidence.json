@@ -1,0 +1,85 @@
+{
+  "schema_version": "aima-vln-canonical-final-long-evidence/v1",
+  "captured_at": "2026-07-16T14:38:01+08:00",
+  "shutdown_observed_at": "2026-07-16T14:53:14+08:00",
+  "runtime": {
+    "gpu": "L40 48GB",
+    "hourly_price_observed_cny": 2.28,
+    "scheduled_hard_stop": "2026-07-16T16:00:00+08:00",
+    "estimated_hard_stop_cny": 3.0,
+    "estimated_actual_compute_cny": 0.58,
+    "manual_shutdown_completed": true,
+    "final_state": "已关机"
+  },
+  "canonical_bundle": {
+    "sha256": "fc84d5015f3f091b48ae33db5f99043bae78dbadca1154d7786cdb7e7f9f9fbf",
+    "base_frames": 1349,
+    "lora_frames": 542,
+    "total_frames": 1891,
+    "base_episodes": 10,
+    "lora_episodes": 10,
+    "raw_bundle_git_ignored": true,
+    "annotated_manifest": "assets/series/recapture/canonical/manifest.json",
+    "annotated_manifest_sha256": "c261e3ae1d434df4647a23cdeb411310b77be77725df6d48805dfa8a2d9c0390"
+  },
+  "metric_source": {
+    "path": "experiments/exp02-equivalent-v3/eval_result.json",
+    "sha256": "50c851126c1aa1e3d80983bb98fb2deacd7f3f0b58eb8f115954b1bb438c008c",
+    "same_heldout_batch": true,
+    "heldout_episodes": 10,
+    "base_success_0_5": 0,
+    "lora_success_0_5": 0,
+    "base_spl_0_5": 0.0,
+    "lora_spl_0_5": 0.0,
+    "base_collisions": 132,
+    "lora_collisions": 45
+  },
+  "final_long_media": [
+    {
+      "episode": "stage0",
+      "path": "assets/series/final-long/stage0/stage0.mp4",
+      "sha256": "c5970531e0e3593c39e1f208986ef3a756ad00f506821e50151f566d0b2b49d1",
+      "duration_s": 600.0,
+      "real_recording_ratio": 0.8,
+      "integrated_lufs": -16.8,
+      "true_peak_dbfs": -3.7
+    },
+    {
+      "episode": "stage1",
+      "path": "assets/series/final-long/stage1/stage1.mp4",
+      "sha256": "b4b733c22a86b46b6eccc165749532dfd3e3f7df5eeb96ae8a5c005f0b98ebc3",
+      "duration_s": 600.0,
+      "real_recording_ratio": 0.8,
+      "integrated_lufs": -16.9,
+      "true_peak_dbfs": -3.6
+    },
+    {
+      "episode": "stage2",
+      "path": "assets/series/final-long/stage2/stage2.mp4",
+      "sha256": "3746cf846b7d15c2ebb83d104c561c8798b33b95b9e44b35e9f2409ee2eb4e2a",
+      "duration_s": 600.0,
+      "real_recording_ratio": 0.8,
+      "integrated_lufs": -17.0,
+      "true_peak_dbfs": -3.6
+    },
+    {
+      "episode": "stage3",
+      "path": "assets/series/final-long/stage3/stage3.mp4",
+      "sha256": "594220d2740358602bda5bcfdccf5d40143f451891e22d41f7fe043768019d10",
+      "duration_s": 600.0,
+      "real_recording_ratio": 0.8,
+      "integrated_lufs": -16.9,
+      "true_peak_dbfs": -3.4
+    }
+  ],
+  "acceptance": {
+    "path": "content/series/final-long-acceptance.json",
+    "sha256": "56009001c5eba35015d4a29bd14d523f878ca8ca696730c862fd5b3af08893e4",
+    "status": "passed",
+    "black_frame_hits": 0,
+    "sensitive_hits": 0,
+    "publishable_media_ready": true,
+    "platform_submission_completed": false
+  },
+  "privacy": "公开证据不记录账号、邮箱、实例编号、IP、连接命令、持久盘真实路径或私有权重。"
+}

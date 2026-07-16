@@ -1,0 +1,2193 @@
+{
+  "schema_version": "aima-vln-series/v1",
+  "series_title": "GenieSim × StreamVLN 非官方等价适配深度教程",
+  "status": "final_long_storyboard_ready",
+  "real_ratio_target": 0.75,
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+  "episodes": [
+    {
+      "episode": "stage0",
+      "title": "机器人会动，不等于导航闭环",
+      "segments": [
+        {
+          "segment_id": "stage0-长片-01-实录",
+          "source": "assets/series/recapture/raw/stage0-rgb-replay.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "动作必须能复核，不能只看画面像是在移动。",
+          "subtitle": [
+            "动作必须能复核，不能只看画面像是在移动。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": false
+        },
+        {
+          "segment_id": "stage0-长片-01-解释",
+          "source": "assets/carousel/carousel-01.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage0.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一页解释控制与观测之间的证据链。",
+          "subtitle": [
+            "这一页解释控制与观测之间的证据链。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-02-实录",
+          "source": "assets/series/recapture/raw/stage0-blocked-replay.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。",
+          "subtitle": [
+            "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": false
+        },
+        {
+          "segment_id": "stage0-长片-02-解释",
+          "source": "assets/ai-diagrams/ai-01-perception-action.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "示意图只帮助理解，验收仍以真实日志和录屏为准。",
+          "subtitle": [
+            "示意图只帮助理解，验收仍以真实日志和录屏为准。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-03-实录",
+          "source": "assets/series/recapture/raw/stage23-evidence/base-one-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "安全门返回受阻时，机器人位姿必须保持不变。",
+          "subtitle": [
+            "安全门返回受阻时，机器人位姿必须保持不变。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-03-解释",
+          "source": "assets/plots/evidence-chain.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/run-manifest.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "动作、距离、碰撞和位姿必须落在同一条记录里。",
+          "subtitle": [
+            "动作、距离、碰撞和位姿必须落在同一条记录里。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-04-实录",
+          "source": "assets/series/recapture/raw/stage23-evidence/lora-one-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "停止、前进、左转和右转统一映射到公开动作编号。",
+          "subtitle": [
+            "停止、前进、左转和右转统一映射到公开动作编号。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-04-解释",
+          "source": "assets/screenshots/v3/stage0-validation.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "阶段零通过，才有资格继续采集训练数据。",
+          "subtitle": [
+            "阶段零通过，才有资格继续采集训练数据。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-05-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "主线程执行仿真，服务线程只提交动作请求。",
+          "subtitle": [
+            "主线程执行仿真，服务线程只提交动作请求。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-05-解释",
+          "source": "assets/carousel/carousel-01.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage0.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一页解释控制与观测之间的证据链。",
+          "subtitle": [
+            "这一页解释控制与观测之间的证据链。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-06-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "动作必须能复核，不能只看画面像是在移动。",
+          "subtitle": [
+            "动作必须能复核，不能只看画面像是在移动。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-06-解释",
+          "source": "assets/ai-diagrams/ai-01-perception-action.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "示意图只帮助理解，验收仍以真实日志和录屏为准。",
+          "subtitle": [
+            "示意图只帮助理解，验收仍以真实日志和录屏为准。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-07-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。",
+          "subtitle": [
+            "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-07-解释",
+          "source": "assets/plots/evidence-chain.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/run-manifest.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "动作、距离、碰撞和位姿必须落在同一条记录里。",
+          "subtitle": [
+            "动作、距离、碰撞和位姿必须落在同一条记录里。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-08-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "安全门返回受阻时，机器人位姿必须保持不变。",
+          "subtitle": [
+            "安全门返回受阻时，机器人位姿必须保持不变。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-08-解释",
+          "source": "assets/screenshots/v3/stage0-validation.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "阶段零通过，才有资格继续采集训练数据。",
+          "subtitle": [
+            "阶段零通过，才有资格继续采集训练数据。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-09-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "停止、前进、左转和右转统一映射到公开动作编号。",
+          "subtitle": [
+            "停止、前进、左转和右转统一映射到公开动作编号。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-09-解释",
+          "source": "assets/carousel/carousel-01.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage0.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一页解释控制与观测之间的证据链。",
+          "subtitle": [
+            "这一页解释控制与观测之间的证据链。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-10-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "主线程执行仿真，服务线程只提交动作请求。",
+          "subtitle": [
+            "主线程执行仿真，服务线程只提交动作请求。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-10-解释",
+          "source": "assets/ai-diagrams/ai-01-perception-action.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "示意图只帮助理解，验收仍以真实日志和录屏为准。",
+          "subtitle": [
+            "示意图只帮助理解，验收仍以真实日志和录屏为准。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-11-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "动作必须能复核，不能只看画面像是在移动。",
+          "subtitle": [
+            "动作必须能复核，不能只看画面像是在移动。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-11-解释",
+          "source": "assets/plots/evidence-chain.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/run-manifest.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "动作、距离、碰撞和位姿必须落在同一条记录里。",
+          "subtitle": [
+            "动作、距离、碰撞和位姿必须落在同一条记录里。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-12-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。",
+          "subtitle": [
+            "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-12-解释",
+          "source": "assets/screenshots/v3/stage0-validation.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "阶段零通过，才有资格继续采集训练数据。",
+          "subtitle": [
+            "阶段零通过，才有资格继续采集训练数据。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-13-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "安全门返回受阻时，机器人位姿必须保持不变。",
+          "subtitle": [
+            "安全门返回受阻时，机器人位姿必须保持不变。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-13-解释",
+          "source": "assets/carousel/carousel-01.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage0.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一页解释控制与观测之间的证据链。",
+          "subtitle": [
+            "这一页解释控制与观测之间的证据链。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-14-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "停止、前进、左转和右转统一映射到公开动作编号。",
+          "subtitle": [
+            "停止、前进、左转和右转统一映射到公开动作编号。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-14-解释",
+          "source": "assets/ai-diagrams/ai-01-perception-action.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "示意图只帮助理解，验收仍以真实日志和录屏为准。",
+          "subtitle": [
+            "示意图只帮助理解，验收仍以真实日志和录屏为准。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-15-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "主线程执行仿真，服务线程只提交动作请求。",
+          "subtitle": [
+            "主线程执行仿真，服务线程只提交动作请求。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-15-解释",
+          "source": "assets/plots/evidence-chain.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/run-manifest.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "动作、距离、碰撞和位姿必须落在同一条记录里。",
+          "subtitle": [
+            "动作、距离、碰撞和位姿必须落在同一条记录里。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-16-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "动作必须能复核，不能只看画面像是在移动。",
+          "subtitle": [
+            "动作必须能复核，不能只看画面像是在移动。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-16-解释",
+          "source": "assets/screenshots/v3/stage0-validation.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "阶段零通过，才有资格继续采集训练数据。",
+          "subtitle": [
+            "阶段零通过，才有资格继续采集训练数据。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-17-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。",
+          "subtitle": [
+            "每次动作之后都等待两帧，再同步保存彩色图、深度和位姿。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-17-解释",
+          "source": "assets/carousel/carousel-01.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage0.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一页解释控制与观测之间的证据链。",
+          "subtitle": [
+            "这一页解释控制与观测之间的证据链。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-18-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "安全门返回受阻时，机器人位姿必须保持不变。",
+          "subtitle": [
+            "安全门返回受阻时，机器人位姿必须保持不变。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-18-解释",
+          "source": "assets/ai-diagrams/ai-01-perception-action.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "示意图只帮助理解，验收仍以真实日志和录屏为准。",
+          "subtitle": [
+            "示意图只帮助理解，验收仍以真实日志和录屏为准。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-19-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "停止、前进、左转和右转统一映射到公开动作编号。",
+          "subtitle": [
+            "停止、前进、左转和右转统一映射到公开动作编号。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-19-解释",
+          "source": "assets/plots/evidence-chain.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/run-manifest.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "动作、距离、碰撞和位姿必须落在同一条记录里。",
+          "subtitle": [
+            "动作、距离、碰撞和位姿必须落在同一条记录里。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        },
+        {
+          "segment_id": "stage0-长片-20-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "主线程执行仿真，服务线程只提交动作请求。",
+          "subtitle": [
+            "主线程执行仿真，服务线程只提交动作请求。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage0-长片-20-解释",
+          "source": "assets/screenshots/v3/stage0-validation.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "docs/01-stage0-仿真环境验证.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "阶段零通过，才有资格继续采集训练数据。",
+          "subtitle": [
+            "阶段零通过，才有资格继续采集训练数据。"
+          ],
+          "overlay": "动作、观测、位姿与安全门必须同步"
+        }
+      ]
+    },
+    {
+      "episode": "stage1",
+      "title": "五十条训练与十条评测如何采集",
+      "segments": [
+        {
+          "segment_id": "stage1-长片-01-实录",
+          "source": "assets/series/recapture/raw/stage1-train1001-replay.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "固定种子让每条轨迹能够重复生成和逐项核验。",
+          "subtitle": [
+            "固定种子让每条轨迹能够重复生成和逐项核验。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": false
+        },
+        {
+          "segment_id": "stage1-长片-01-解释",
+          "source": "assets/carousel/carousel-08.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage1.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "三条冒烟通过后，再进入五十条训练轨迹。",
+          "subtitle": [
+            "三条冒烟通过后，再进入五十条训练轨迹。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-02-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。",
+          "subtitle": [
+            "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-02-解释",
+          "source": "assets/plots/schema-sidecar.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "公开标注与完整旁路记录承担不同职责。",
+          "subtitle": [
+            "公开标注与完整旁路记录承担不同职责。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-03-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练集与评测集从种子开始隔离，避免把评测样本混入训练。",
+          "subtitle": [
+            "训练集与评测集从种子开始隔离，避免把评测样本混入训练。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-03-解释",
+          "source": "assets/plots/validation-gates.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "五厘米栅格和障碍膨胀用于规划与碰撞验收。",
+          "subtitle": [
+            "五厘米栅格和障碍膨胀用于规划与碰撞验收。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-04-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每条轨迹都检查帧数、动作数、路径和图像可解码性。",
+          "subtitle": [
+            "每条轨迹都检查帧数、动作数、路径和图像可解码性。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-04-解释",
+          "source": "assets/ai-diagrams/ai-02-data-pipeline.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "失败轨迹也必须进入数据质量记录。",
+          "subtitle": [
+            "失败轨迹也必须进入数据质量记录。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-05-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。",
+          "subtitle": [
+            "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-05-解释",
+          "source": "assets/carousel/carousel-08.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage1.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "三条冒烟通过后，再进入五十条训练轨迹。",
+          "subtitle": [
+            "三条冒烟通过后，再进入五十条训练轨迹。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-06-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "固定种子让每条轨迹能够重复生成和逐项核验。",
+          "subtitle": [
+            "固定种子让每条轨迹能够重复生成和逐项核验。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-06-解释",
+          "source": "assets/plots/schema-sidecar.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "公开标注与完整旁路记录承担不同职责。",
+          "subtitle": [
+            "公开标注与完整旁路记录承担不同职责。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-07-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。",
+          "subtitle": [
+            "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-07-解释",
+          "source": "assets/plots/validation-gates.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "五厘米栅格和障碍膨胀用于规划与碰撞验收。",
+          "subtitle": [
+            "五厘米栅格和障碍膨胀用于规划与碰撞验收。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-08-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练集与评测集从种子开始隔离，避免把评测样本混入训练。",
+          "subtitle": [
+            "训练集与评测集从种子开始隔离，避免把评测样本混入训练。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-08-解释",
+          "source": "assets/ai-diagrams/ai-02-data-pipeline.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "失败轨迹也必须进入数据质量记录。",
+          "subtitle": [
+            "失败轨迹也必须进入数据质量记录。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-09-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每条轨迹都检查帧数、动作数、路径和图像可解码性。",
+          "subtitle": [
+            "每条轨迹都检查帧数、动作数、路径和图像可解码性。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-09-解释",
+          "source": "assets/carousel/carousel-08.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage1.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "三条冒烟通过后，再进入五十条训练轨迹。",
+          "subtitle": [
+            "三条冒烟通过后，再进入五十条训练轨迹。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-10-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。",
+          "subtitle": [
+            "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-10-解释",
+          "source": "assets/plots/schema-sidecar.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "公开标注与完整旁路记录承担不同职责。",
+          "subtitle": [
+            "公开标注与完整旁路记录承担不同职责。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-11-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "固定种子让每条轨迹能够重复生成和逐项核验。",
+          "subtitle": [
+            "固定种子让每条轨迹能够重复生成和逐项核验。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-11-解释",
+          "source": "assets/plots/validation-gates.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "五厘米栅格和障碍膨胀用于规划与碰撞验收。",
+          "subtitle": [
+            "五厘米栅格和障碍膨胀用于规划与碰撞验收。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-12-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。",
+          "subtitle": [
+            "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-12-解释",
+          "source": "assets/ai-diagrams/ai-02-data-pipeline.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "失败轨迹也必须进入数据质量记录。",
+          "subtitle": [
+            "失败轨迹也必须进入数据质量记录。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-13-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练集与评测集从种子开始隔离，避免把评测样本混入训练。",
+          "subtitle": [
+            "训练集与评测集从种子开始隔离，避免把评测样本混入训练。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-13-解释",
+          "source": "assets/carousel/carousel-08.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage1.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "三条冒烟通过后，再进入五十条训练轨迹。",
+          "subtitle": [
+            "三条冒烟通过后，再进入五十条训练轨迹。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-14-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每条轨迹都检查帧数、动作数、路径和图像可解码性。",
+          "subtitle": [
+            "每条轨迹都检查帧数、动作数、路径和图像可解码性。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-14-解释",
+          "source": "assets/plots/schema-sidecar.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "公开标注与完整旁路记录承担不同职责。",
+          "subtitle": [
+            "公开标注与完整旁路记录承担不同职责。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-15-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。",
+          "subtitle": [
+            "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-15-解释",
+          "source": "assets/plots/validation-gates.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "五厘米栅格和障碍膨胀用于规划与碰撞验收。",
+          "subtitle": [
+            "五厘米栅格和障碍膨胀用于规划与碰撞验收。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-16-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "固定种子让每条轨迹能够重复生成和逐项核验。",
+          "subtitle": [
+            "固定种子让每条轨迹能够重复生成和逐项核验。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-16-解释",
+          "source": "assets/ai-diagrams/ai-02-data-pipeline.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "失败轨迹也必须进入数据质量记录。",
+          "subtitle": [
+            "失败轨迹也必须进入数据质量记录。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-17-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。",
+          "subtitle": [
+            "公开标注保留训练所需字段，完整旁路记录保存停止、深度和碰撞。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-17-解释",
+          "source": "assets/carousel/carousel-08.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage1.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "三条冒烟通过后，再进入五十条训练轨迹。",
+          "subtitle": [
+            "三条冒烟通过后，再进入五十条训练轨迹。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-18-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练集与评测集从种子开始隔离，避免把评测样本混入训练。",
+          "subtitle": [
+            "训练集与评测集从种子开始隔离，避免把评测样本混入训练。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-18-解释",
+          "source": "assets/plots/schema-sidecar.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "公开标注与完整旁路记录承担不同职责。",
+          "subtitle": [
+            "公开标注与完整旁路记录承担不同职责。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-19-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每条轨迹都检查帧数、动作数、路径和图像可解码性。",
+          "subtitle": [
+            "每条轨迹都检查帧数、动作数、路径和图像可解码性。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-19-解释",
+          "source": "assets/plots/validation-gates.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "五厘米栅格和障碍膨胀用于规划与碰撞验收。",
+          "subtitle": [
+            "五厘米栅格和障碍膨胀用于规划与碰撞验收。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        },
+        {
+          "segment_id": "stage1-长片-20-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。",
+          "subtitle": [
+            "留出轨迹不是漂亮样例，而是后续配对评测的统一输入。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage1-长片-20-解释",
+          "source": "assets/ai-diagrams/ai-02-data-pipeline.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/02-stage1-数据采集.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "失败轨迹也必须进入数据质量记录。",
+          "subtitle": [
+            "失败轨迹也必须进入数据质量记录。"
+          ],
+          "overlay": "固定种子、数据隔离、双层标注与逐条验收"
+        }
+      ]
+    },
+    {
+      "episode": "stage2",
+      "title": "损失下降为什么不代表会导航",
+      "segments": [
+        {
+          "segment_id": "stage2-长片-01-实录",
+          "source": "assets/series/recapture/raw/stage2-single-batch-replay.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "单批前后向先证明数据和梯度链路能够工作。",
+          "subtitle": [
+            "单批前后向先证明数据和梯度链路能够工作。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": false
+        },
+        {
+          "segment_id": "stage2-长片-01-解释",
+          "source": "assets/carousel/carousel-12.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage2.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "损失从零点四一六七下降到零点零八二三。",
+          "subtitle": [
+            "损失从零点四一六七下降到零点零八二三。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-02-实录",
+          "source": "assets/series/recapture/raw/stage2-adapter-reload-replay.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "docs/evidence/2026-07-16-stage2-stage3-recapture-evidence.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "五十九个有限更新步说明优化发生过，但不代表导航成功。",
+          "subtitle": [
+            "五十九个有限更新步说明优化发生过，但不代表导航成功。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": false
+        },
+        {
+          "segment_id": "stage2-长片-02-解释",
+          "source": "assets/screenshots/v3/stage2-loss-curve.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "runs/2026-07-13/stage2-training.stdout.log",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "峰值显存约二十七点一九吉比字节。",
+          "subtitle": [
+            "峰值显存约二十七点一九吉比字节。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-03-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "适配器必须在新进程中重新加载，排除当前进程残留状态。",
+          "subtitle": [
+            "适配器必须在新进程中重新加载，排除当前进程残留状态。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-03-解释",
+          "source": "assets/plots/lora-config.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "重载成功只能证明权重可用，不能证明机器人会到达目标。",
+          "subtitle": [
+            "重载成功只能证明权重可用，不能证明机器人会到达目标。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-04-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练日志、显存峰值和适配器哈希共同构成训练证据。",
+          "subtitle": [
+            "训练日志、显存峰值和适配器哈希共同构成训练证据。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-04-解释",
+          "source": "assets/ai-diagrams/ai-03-closed-loop.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "训练证据和导航证据必须分开报告。",
+          "subtitle": [
+            "训练证据和导航证据必须分开报告。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-05-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。",
+          "subtitle": [
+            "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-05-解释",
+          "source": "assets/carousel/carousel-12.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage2.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "损失从零点四一六七下降到零点零八二三。",
+          "subtitle": [
+            "损失从零点四一六七下降到零点零八二三。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-06-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "单批前后向先证明数据和梯度链路能够工作。",
+          "subtitle": [
+            "单批前后向先证明数据和梯度链路能够工作。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-06-解释",
+          "source": "assets/screenshots/v3/stage2-loss-curve.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "runs/2026-07-13/stage2-training.stdout.log",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "峰值显存约二十七点一九吉比字节。",
+          "subtitle": [
+            "峰值显存约二十七点一九吉比字节。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-07-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "五十九个有限更新步说明优化发生过，但不代表导航成功。",
+          "subtitle": [
+            "五十九个有限更新步说明优化发生过，但不代表导航成功。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-07-解释",
+          "source": "assets/plots/lora-config.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "重载成功只能证明权重可用，不能证明机器人会到达目标。",
+          "subtitle": [
+            "重载成功只能证明权重可用，不能证明机器人会到达目标。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-08-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "适配器必须在新进程中重新加载，排除当前进程残留状态。",
+          "subtitle": [
+            "适配器必须在新进程中重新加载，排除当前进程残留状态。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-08-解释",
+          "source": "assets/ai-diagrams/ai-03-closed-loop.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "训练证据和导航证据必须分开报告。",
+          "subtitle": [
+            "训练证据和导航证据必须分开报告。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-09-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练日志、显存峰值和适配器哈希共同构成训练证据。",
+          "subtitle": [
+            "训练日志、显存峰值和适配器哈希共同构成训练证据。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-09-解释",
+          "source": "assets/carousel/carousel-12.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage2.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "损失从零点四一六七下降到零点零八二三。",
+          "subtitle": [
+            "损失从零点四一六七下降到零点零八二三。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-10-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。",
+          "subtitle": [
+            "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-10-解释",
+          "source": "assets/screenshots/v3/stage2-loss-curve.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "runs/2026-07-13/stage2-training.stdout.log",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "峰值显存约二十七点一九吉比字节。",
+          "subtitle": [
+            "峰值显存约二十七点一九吉比字节。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-11-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "单批前后向先证明数据和梯度链路能够工作。",
+          "subtitle": [
+            "单批前后向先证明数据和梯度链路能够工作。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-11-解释",
+          "source": "assets/plots/lora-config.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "重载成功只能证明权重可用，不能证明机器人会到达目标。",
+          "subtitle": [
+            "重载成功只能证明权重可用，不能证明机器人会到达目标。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-12-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "五十九个有限更新步说明优化发生过，但不代表导航成功。",
+          "subtitle": [
+            "五十九个有限更新步说明优化发生过，但不代表导航成功。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-12-解释",
+          "source": "assets/ai-diagrams/ai-03-closed-loop.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "训练证据和导航证据必须分开报告。",
+          "subtitle": [
+            "训练证据和导航证据必须分开报告。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-13-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "适配器必须在新进程中重新加载，排除当前进程残留状态。",
+          "subtitle": [
+            "适配器必须在新进程中重新加载，排除当前进程残留状态。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-13-解释",
+          "source": "assets/carousel/carousel-12.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage2.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "损失从零点四一六七下降到零点零八二三。",
+          "subtitle": [
+            "损失从零点四一六七下降到零点零八二三。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-14-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练日志、显存峰值和适配器哈希共同构成训练证据。",
+          "subtitle": [
+            "训练日志、显存峰值和适配器哈希共同构成训练证据。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-14-解释",
+          "source": "assets/screenshots/v3/stage2-loss-curve.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "runs/2026-07-13/stage2-training.stdout.log",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "峰值显存约二十七点一九吉比字节。",
+          "subtitle": [
+            "峰值显存约二十七点一九吉比字节。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-15-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。",
+          "subtitle": [
+            "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-15-解释",
+          "source": "assets/plots/lora-config.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "重载成功只能证明权重可用，不能证明机器人会到达目标。",
+          "subtitle": [
+            "重载成功只能证明权重可用，不能证明机器人会到达目标。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-16-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "单批前后向先证明数据和梯度链路能够工作。",
+          "subtitle": [
+            "单批前后向先证明数据和梯度链路能够工作。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-16-解释",
+          "source": "assets/ai-diagrams/ai-03-closed-loop.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "训练证据和导航证据必须分开报告。",
+          "subtitle": [
+            "训练证据和导航证据必须分开报告。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-17-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "五十九个有限更新步说明优化发生过，但不代表导航成功。",
+          "subtitle": [
+            "五十九个有限更新步说明优化发生过，但不代表导航成功。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-17-解释",
+          "source": "assets/carousel/carousel-12.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage2.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "损失从零点四一六七下降到零点零八二三。",
+          "subtitle": [
+            "损失从零点四一六七下降到零点零八二三。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-18-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "适配器必须在新进程中重新加载，排除当前进程残留状态。",
+          "subtitle": [
+            "适配器必须在新进程中重新加载，排除当前进程残留状态。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-18-解释",
+          "source": "assets/screenshots/v3/stage2-loss-curve.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "runs/2026-07-13/stage2-training.stdout.log",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "峰值显存约二十七点一九吉比字节。",
+          "subtitle": [
+            "峰值显存约二十七点一九吉比字节。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-19-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "训练日志、显存峰值和适配器哈希共同构成训练证据。",
+          "subtitle": [
+            "训练日志、显存峰值和适配器哈希共同构成训练证据。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-19-解释",
+          "source": "assets/plots/lora-config.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "重载成功只能证明权重可用，不能证明机器人会到达目标。",
+          "subtitle": [
+            "重载成功只能证明权重可用，不能证明机器人会到达目标。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        },
+        {
+          "segment_id": "stage2-长片-20-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。",
+          "subtitle": [
+            "真实闭环轨迹用来检验训练结果，而不是替训练曲线背书。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage2-长片-20-解释",
+          "source": "assets/ai-diagrams/ai-03-closed-loop.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/03-stage2-lora微调.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "训练证据和导航证据必须分开报告。",
+          "subtitle": [
+            "训练证据和导航证据必须分开报告。"
+          ],
+          "overlay": "数据检查、单批训练、完整训练、独立重载"
+        }
+      ]
+    },
+    {
+      "episode": "stage3",
+      "title": "闭环真实，为什么半米成功仍为零比十",
+      "segments": [
+        {
+          "segment_id": "stage3-长片-01-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "模型读取头部相机并自己生成动作，控制器只负责安全执行。",
+          "subtitle": [
+            "模型读取头部相机并自己生成动作，控制器只负责安全执行。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-01-解释",
+          "source": "assets/carousel/carousel-20.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage3.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型的半米成功均为零比十。",
+          "subtitle": [
+            "基础模型与低秩适配模型的半米成功均为零比十。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-02-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型使用完全相同的十条留出轨迹。",
+          "subtitle": [
+            "基础模型与低秩适配模型使用完全相同的十条留出轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-02-解释",
+          "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "路径效率为零并不否认闭环真实，只说明没有达到成功条件。",
+          "subtitle": [
+            "路径效率为零并不否认闭环真实，只说明没有达到成功条件。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-03-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每帧叠加动作、距离、受阻、碰撞和实时轨迹。",
+          "subtitle": [
+            "每帧叠加动作、距离、受阻、碰撞和实时轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-03-解释",
+          "source": "assets/plots/metrics-base-lora.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "域差异、深度安全门和场景几何共同影响最终结果。",
+          "subtitle": [
+            "域差异、深度安全门和场景几何共同影响最终结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-04-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "失败轨迹同样进入总体指标，不能只展示最好的一条。",
+          "subtitle": [
+            "失败轨迹同样进入总体指标，不能只展示最好的一条。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-04-解释",
+          "source": "assets/ai-diagrams/ai-04-failure-roadmap.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/05-结果分析与排障.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一结果是非官方等价适配，不是官方榜单成绩。",
+          "subtitle": [
+            "这一结果是非官方等价适配，不是官方榜单成绩。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-05-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "半米成功、路径效率、距离和碰撞都来自同一份评测结果。",
+          "subtitle": [
+            "半米成功、路径效率、距离和碰撞都来自同一份评测结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-05-解释",
+          "source": "assets/carousel/carousel-20.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage3.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型的半米成功均为零比十。",
+          "subtitle": [
+            "基础模型与低秩适配模型的半米成功均为零比十。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-06-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "模型读取头部相机并自己生成动作，控制器只负责安全执行。",
+          "subtitle": [
+            "模型读取头部相机并自己生成动作，控制器只负责安全执行。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-06-解释",
+          "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "路径效率为零并不否认闭环真实，只说明没有达到成功条件。",
+          "subtitle": [
+            "路径效率为零并不否认闭环真实，只说明没有达到成功条件。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-07-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型使用完全相同的十条留出轨迹。",
+          "subtitle": [
+            "基础模型与低秩适配模型使用完全相同的十条留出轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-07-解释",
+          "source": "assets/plots/metrics-base-lora.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "域差异、深度安全门和场景几何共同影响最终结果。",
+          "subtitle": [
+            "域差异、深度安全门和场景几何共同影响最终结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-08-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每帧叠加动作、距离、受阻、碰撞和实时轨迹。",
+          "subtitle": [
+            "每帧叠加动作、距离、受阻、碰撞和实时轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-08-解释",
+          "source": "assets/ai-diagrams/ai-04-failure-roadmap.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/05-结果分析与排障.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一结果是非官方等价适配，不是官方榜单成绩。",
+          "subtitle": [
+            "这一结果是非官方等价适配，不是官方榜单成绩。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-09-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "失败轨迹同样进入总体指标，不能只展示最好的一条。",
+          "subtitle": [
+            "失败轨迹同样进入总体指标，不能只展示最好的一条。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-09-解释",
+          "source": "assets/carousel/carousel-20.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage3.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型的半米成功均为零比十。",
+          "subtitle": [
+            "基础模型与低秩适配模型的半米成功均为零比十。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-10-实录",
+          "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "半米成功、路径效率、距离和碰撞都来自同一份评测结果。",
+          "subtitle": [
+            "半米成功、路径效率、距离和碰撞都来自同一份评测结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-10-解释",
+          "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "路径效率为零并不否认闭环真实，只说明没有达到成功条件。",
+          "subtitle": [
+            "路径效率为零并不否认闭环真实，只说明没有达到成功条件。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-11-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "模型读取头部相机并自己生成动作，控制器只负责安全执行。",
+          "subtitle": [
+            "模型读取头部相机并自己生成动作，控制器只负责安全执行。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-11-解释",
+          "source": "assets/plots/metrics-base-lora.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "域差异、深度安全门和场景几何共同影响最终结果。",
+          "subtitle": [
+            "域差异、深度安全门和场景几何共同影响最终结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-12-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型使用完全相同的十条留出轨迹。",
+          "subtitle": [
+            "基础模型与低秩适配模型使用完全相同的十条留出轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-12-解释",
+          "source": "assets/ai-diagrams/ai-04-failure-roadmap.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/05-结果分析与排障.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一结果是非官方等价适配，不是官方榜单成绩。",
+          "subtitle": [
+            "这一结果是非官方等价适配，不是官方榜单成绩。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-13-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每帧叠加动作、距离、受阻、碰撞和实时轨迹。",
+          "subtitle": [
+            "每帧叠加动作、距离、受阻、碰撞和实时轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-13-解释",
+          "source": "assets/carousel/carousel-20.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage3.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型的半米成功均为零比十。",
+          "subtitle": [
+            "基础模型与低秩适配模型的半米成功均为零比十。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-14-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "失败轨迹同样进入总体指标，不能只展示最好的一条。",
+          "subtitle": [
+            "失败轨迹同样进入总体指标，不能只展示最好的一条。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-14-解释",
+          "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "路径效率为零并不否认闭环真实，只说明没有达到成功条件。",
+          "subtitle": [
+            "路径效率为零并不否认闭环真实，只说明没有达到成功条件。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-15-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "半米成功、路径效率、距离和碰撞都来自同一份评测结果。",
+          "subtitle": [
+            "半米成功、路径效率、距离和碰撞都来自同一份评测结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-15-解释",
+          "source": "assets/plots/metrics-base-lora.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "域差异、深度安全门和场景几何共同影响最终结果。",
+          "subtitle": [
+            "域差异、深度安全门和场景几何共同影响最终结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-16-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "模型读取头部相机并自己生成动作，控制器只负责安全执行。",
+          "subtitle": [
+            "模型读取头部相机并自己生成动作，控制器只负责安全执行。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-16-解释",
+          "source": "assets/ai-diagrams/ai-04-failure-roadmap.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/05-结果分析与排障.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一结果是非官方等价适配，不是官方榜单成绩。",
+          "subtitle": [
+            "这一结果是非官方等价适配，不是官方榜单成绩。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-17-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型使用完全相同的十条留出轨迹。",
+          "subtitle": [
+            "基础模型与低秩适配模型使用完全相同的十条留出轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-17-解释",
+          "source": "assets/carousel/carousel-20.jpg",
+          "source_type": "title_card",
+          "evidence_ref": "article/series/bilibili-stage3.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "基础模型与低秩适配模型的半米成功均为零比十。",
+          "subtitle": [
+            "基础模型与低秩适配模型的半米成功均为零比十。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-18-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "每帧叠加动作、距离、受阻、碰撞和实时轨迹。",
+          "subtitle": [
+            "每帧叠加动作、距离、受阻、碰撞和实时轨迹。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-18-解释",
+          "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+          "source_type": "real_evidence",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "路径效率为零并不否认闭环真实，只说明没有达到成功条件。",
+          "subtitle": [
+            "路径效率为零并不否认闭环真实，只说明没有达到成功条件。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-19-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "失败轨迹同样进入总体指标，不能只展示最好的一条。",
+          "subtitle": [
+            "失败轨迹同样进入总体指标，不能只展示最好的一条。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-19-解释",
+          "source": "assets/plots/metrics-base-lora.png",
+          "source_type": "metric_animation",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "域差异、深度安全门和场景几何共同影响最终结果。",
+          "subtitle": [
+            "域差异、深度安全门和场景几何共同影响最终结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        },
+        {
+          "segment_id": "stage3-长片-20-实录",
+          "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+          "source_type": "real_recording",
+          "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+          "duration_s": 24,
+          "layout": "landscape",
+          "narration": "半米成功、路径效率、距离和碰撞都来自同一份评测结果。",
+          "subtitle": [
+            "半米成功、路径效率、距离和碰撞都来自同一份评测结果。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径",
+          "preserve_source_overlay": true
+        },
+        {
+          "segment_id": "stage3-长片-20-解释",
+          "source": "assets/ai-diagrams/ai-04-failure-roadmap.png",
+          "source_type": "ai_diagram",
+          "evidence_ref": "docs/05-结果分析与排障.md",
+          "duration_s": 6,
+          "layout": "landscape",
+          "narration": "这一结果是非官方等价适配，不是官方榜单成绩。",
+          "subtitle": [
+            "这一结果是非官方等价适配，不是官方榜单成绩。"
+          ],
+          "overlay": "同批十条留出轨迹，统一半米成功半径"
+        }
+      ]
+    }
+  ]
+}

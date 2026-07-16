@@ -1,4 +1,6 @@
-# STAGE0｜B 站投稿包
+# 阶段零｜B 站投稿包
+
+> 最终正片：[视频](../../assets/series/final-long/stage0/stage0.mp4) · [可关闭字幕](../../assets/series/final-long/stage0/stage0.srt) · [验收](../../content/series/final-long-acceptance.json)
 
 ## 三个标题候选
 
@@ -6,14 +8,14 @@
 2. GenieSim 控制器验收实录：为什么 blocked 后 pose 必须不变
 3. 从 W/A/S/D 到 StreamVLN 动作 ID：一套可复核的仿真控制入口
 
-## 章节时间轴（粗剪计划，正片完成后以 SRT 和成片复核为准）
+## 章节时间轴（最终成片）
 
 - 00:00 本集问题与边界
 - 01:00 场景和头部相机
-- 03:00 四动作映射
-- 05:00 两帧等待与主线程
-- 07:30 blocked 与 pose 对照
-- 10:00 验收结论
+- 02:30 四动作映射
+- 04:30 两帧等待与主线程
+- 06:30 受阻与位姿对照
+- 08:30 验收结论
 
 ## 投稿简介
 

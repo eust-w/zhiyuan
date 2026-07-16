@@ -6,7 +6,14 @@ from pathlib import Path
 
 from PIL import Image
 
-from scripts.build_series_media import overlay_image, public_path, real_recording_ratio, wrap_subtitle
+from scripts.build_series_media import (
+    episode_label,
+    overlay_image,
+    public_path,
+    real_recording_ratio,
+    video_encode_args,
+    wrap_subtitle,
+)
 
 
 class SeriesMediaTests(unittest.TestCase):
@@ -53,6 +60,18 @@ class SeriesMediaTests(unittest.TestCase):
 
         self.assertEqual(image.getpixel((960, 1000))[3], 0)
         self.assertEqual(image.getpixel((100, 80))[3], 0)
+
+    def test_hardware_profile_uses_h264_videotoolbox_with_software_fallback(self):
+        args = video_encode_args("videotoolbox")
+
+        self.assertIn("h264_videotoolbox", args)
+        self.assertIn("-allow_sw", args)
+
+    def test_episode_label_is_chinese_for_all_four_stages(self):
+        self.assertEqual(
+            [episode_label(f"stage{index}") for index in range(4)],
+            ["阶段零", "阶段一", "阶段二", "阶段三"],
+        )
 
 
 if __name__ == "__main__":

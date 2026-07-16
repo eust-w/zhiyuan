@@ -27,6 +27,9 @@
       "hook": "先别看成功率，先证明每个动作、每一帧观测和安全拒绝都可复核。",
       "source_doc": "docs/01-stage0-仿真环境验证.md",
       "narration": "content/series/narration/stage0.txt",
+      "final_long_video": "assets/series/final-long/stage0/stage0.mp4",
+      "final_long_srt": "assets/series/final-long/stage0/stage0.srt",
+      "media_acceptance": "content/series/final-long-acceptance.json",
       "evidence_images": [
         "assets/screenshots/v3/stage0-validation.png",
         "assets/screenshots/v3/stage0-forward-before.jpg",
@@ -53,6 +56,9 @@
       "hook": "数量不是数据质量；先把同步、schema、sidecar 和几何证据分开。",
       "source_doc": "docs/02-stage1-数据采集.md",
       "narration": "content/series/narration/stage1.txt",
+      "final_long_video": "assets/series/final-long/stage1/stage1.mp4",
+      "final_long_srt": "assets/series/final-long/stage1/stage1.srt",
+      "media_acceptance": "content/series/final-long-acceptance.json",
       "evidence_images": [
         "assets/screenshots/v3/stage1-validation.png",
         "assets/screenshots/v3/train-1001-start.jpg",
@@ -80,6 +86,9 @@
       "hook": "训练曲线只能证明优化发生过；adapter 重载和闭环推理要另验。",
       "source_doc": "docs/03-stage2-lora微调.md",
       "narration": "content/series/narration/stage2.txt",
+      "final_long_video": "assets/series/final-long/stage2/stage2.mp4",
+      "final_long_srt": "assets/series/final-long/stage2/stage2.srt",
+      "media_acceptance": "content/series/final-long-acceptance.json",
       "evidence_images": [
         "assets/screenshots/v3/stage2-gates.png",
         "assets/screenshots/v3/stage2-loss-curve.png",
@@ -106,6 +115,9 @@
       "hook": "同一批 10 条留出样本，base 和 LoRA 自己发动作，失败也完整公开。",
       "source_doc": "docs/04-stage3-实时推理评测.md",
       "narration": "content/series/narration/stage3.txt",
+      "final_long_video": "assets/series/final-long/stage3/stage3.mp4",
+      "final_long_srt": "assets/series/final-long/stage3/stage3.srt",
+      "media_acceptance": "content/series/final-long-acceptance.json",
       "evidence_images": [
         "assets/screenshots/v3/stage3-paired-metrics.png",
         "assets/screenshots/v3/stage3-episode-distances.png",

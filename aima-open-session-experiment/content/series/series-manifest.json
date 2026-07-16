@@ -1,6 +1,6 @@
 {
   "schema_version": "aima-vln-series/v1",
-  "status": "four_style_samples_ready_final_long_cuts_pending",
+  "status": "four_style_samples_and_final_long_cuts_ready",
   "real_ratio_target": 0.75,
   "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
   "audio": {

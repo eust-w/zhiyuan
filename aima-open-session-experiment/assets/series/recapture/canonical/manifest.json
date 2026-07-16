@@ -1,0 +1,400 @@
+{
+  "schema_version": "aima-vln-canonical-replays/v1",
+  "status": "passed",
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+  "metric_source_sha256": "50c851126c1aa1e3d80983bb98fb2deacd7f3f0b58eb8f115954b1bb438c008c",
+  "heldout_episode_ids": [
+    "eval-2001",
+    "eval-2002",
+    "eval-2003",
+    "eval-2004",
+    "eval-2005",
+    "eval-2006",
+    "eval-2007",
+    "eval-2008",
+    "eval-2009",
+    "eval-2010"
+  ],
+  "media": [
+    {
+      "episode_id": "eval-2001",
+      "variant": "base",
+      "frame_count": 67,
+      "duration_s": 33.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 3.135568016328857,
+      "min_distance_to_goal": 3.135568016328857,
+      "collisions": 2,
+      "action_counts": {
+        "stop": 1,
+        "forward": 26,
+        "left": 21,
+        "right": 18
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "sha256": "bbc4bdfff5b09ece4360e1140a1a43666aac59072d27b7ea734fef8d5ec32087"
+    },
+    {
+      "episode_id": "eval-2002",
+      "variant": "base",
+      "frame_count": 115,
+      "duration_s": 57.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 1.3986459332839853,
+      "min_distance_to_goal": 1.3986459332839853,
+      "collisions": 0,
+      "action_counts": {
+        "stop": 1,
+        "forward": 47,
+        "left": 24,
+        "right": 42
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "sha256": "be1099a56a9a1ccba35bf4b95f2f74a65e465f92208e728fc715e86d6e219ed6"
+    },
+    {
+      "episode_id": "eval-2003",
+      "variant": "base",
+      "frame_count": 42,
+      "duration_s": 21.0,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 4.41866965221421,
+      "min_distance_to_goal": 3.7323126652618948,
+      "collisions": 2,
+      "action_counts": {
+        "stop": 1,
+        "forward": 14,
+        "left": 12,
+        "right": 14
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+      "sha256": "48499ea4b51883a7e82d968648113cce0c8c16517ac39a380cc4472d5d36d0c1"
+    },
+    {
+      "episode_id": "eval-2004",
+      "variant": "base",
+      "frame_count": 201,
+      "duration_s": 100.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 4.001582413791203,
+      "min_distance_to_goal": 1.3093675665518998,
+      "collisions": 18,
+      "action_counts": {
+        "stop": 0,
+        "forward": 77,
+        "left": 73,
+        "right": 50
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+      "sha256": "c7197f1c78a0923369bd385cd57abe2f37bffa25ad3a720a91ff75b63607a58a"
+    },
+    {
+      "episode_id": "eval-2005",
+      "variant": "base",
+      "frame_count": 68,
+      "duration_s": 34.0,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 3.587421161477075,
+      "min_distance_to_goal": 3.587421161477075,
+      "collisions": 1,
+      "action_counts": {
+        "stop": 1,
+        "forward": 26,
+        "left": 20,
+        "right": 20
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+      "sha256": "2223c97f9213b8fde2ba1fc64e118cf4997da2d8f31db42ba9f27f23a4d0d364"
+    },
+    {
+      "episode_id": "eval-2006",
+      "variant": "base",
+      "frame_count": 154,
+      "duration_s": 77.0,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 6.134463959329929,
+      "min_distance_to_goal": 3.6985012444022938,
+      "collisions": 8,
+      "action_counts": {
+        "stop": 1,
+        "forward": 63,
+        "left": 28,
+        "right": 61
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+      "sha256": "b55db9ffb3da5b835a4cd52f7c20d5585c3de7deba2f9da152b4e6cb0b4df233"
+    },
+    {
+      "episode_id": "eval-2007",
+      "variant": "base",
+      "frame_count": 201,
+      "duration_s": 100.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 3.1441209069690195,
+      "min_distance_to_goal": 3.1441209069690195,
+      "collisions": 23,
+      "action_counts": {
+        "stop": 0,
+        "forward": 77,
+        "left": 38,
+        "right": 85
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+      "sha256": "7385620b5ee3683996aef3505e73793499fdce098a2f6b2c34ef7b112de35a73"
+    },
+    {
+      "episode_id": "eval-2008",
+      "variant": "base",
+      "frame_count": 121,
+      "duration_s": 60.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 1.589407675061666,
+      "min_distance_to_goal": 1.589407675061666,
+      "collisions": 5,
+      "action_counts": {
+        "stop": 1,
+        "forward": 44,
+        "left": 24,
+        "right": 51
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+      "sha256": "b32986d61f190fbfe0083383bc4d0a01e3aee860844804197b4dcd1ed8ec2be3"
+    },
+    {
+      "episode_id": "eval-2009",
+      "variant": "base",
+      "frame_count": 201,
+      "duration_s": 100.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 8.81499435910863,
+      "min_distance_to_goal": 3.5769277687748824,
+      "collisions": 44,
+      "action_counts": {
+        "stop": 0,
+        "forward": 81,
+        "left": 49,
+        "right": 70
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+      "sha256": "42cad84f058fdb36f4f02605f5aef37cfaf3ebb5fdbc79e7cbfa5eb3b0ff69bf"
+    },
+    {
+      "episode_id": "eval-2010",
+      "variant": "base",
+      "frame_count": 179,
+      "duration_s": 89.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 3.664304020058648,
+      "min_distance_to_goal": 3.664304020058648,
+      "collisions": 29,
+      "action_counts": {
+        "stop": 1,
+        "forward": 64,
+        "left": 64,
+        "right": 49
+      },
+      "output": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+      "sha256": "a7045a39c7520b98a8bb9aa0931d0c99e6e97f58b512577072d125cfa9067516"
+    },
+    {
+      "episode_id": "eval-2001",
+      "variant": "lora",
+      "frame_count": 33,
+      "duration_s": 16.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 4.485803952210057,
+      "min_distance_to_goal": 3.7901032123836935,
+      "collisions": 0,
+      "action_counts": {
+        "stop": 1,
+        "forward": 17,
+        "left": 7,
+        "right": 7
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "sha256": "8e9f51c205f79e2b93d3cde96ec12e141172657eca6228790ab653026852dfe8"
+    },
+    {
+      "episode_id": "eval-2002",
+      "variant": "lora",
+      "frame_count": 33,
+      "duration_s": 16.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 4.987080616488643,
+      "min_distance_to_goal": 3.7977465798531633,
+      "collisions": 0,
+      "action_counts": {
+        "stop": 1,
+        "forward": 15,
+        "left": 7,
+        "right": 9
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+      "sha256": "ac8f81d44c45878bf911c9068cd9b947761d17a3281994576fb35804d65c039f"
+    },
+    {
+      "episode_id": "eval-2003",
+      "variant": "lora",
+      "frame_count": 123,
+      "duration_s": 61.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 4.125054958022175,
+      "min_distance_to_goal": 3.6472472453063975,
+      "collisions": 16,
+      "action_counts": {
+        "stop": 1,
+        "forward": 59,
+        "left": 16,
+        "right": 46
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+      "sha256": "16b4d5a29d1311b90dcc6c926980de3bba404a554cd84cb9fd0584ed16ab0e46"
+    },
+    {
+      "episode_id": "eval-2004",
+      "variant": "lora",
+      "frame_count": 52,
+      "duration_s": 26.0,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 6.493025910057133,
+      "min_distance_to_goal": 3.6523326748301095,
+      "collisions": 6,
+      "action_counts": {
+        "stop": 1,
+        "forward": 26,
+        "left": 11,
+        "right": 13
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+      "sha256": "2e65eeae0d7defa08bf8f711459be48b1e0bb8d2bc7d377c743c69e725919a41"
+    },
+    {
+      "episode_id": "eval-2005",
+      "variant": "lora",
+      "frame_count": 91,
+      "duration_s": 45.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 3.5836098342923117,
+      "min_distance_to_goal": 3.3358339377622506,
+      "collisions": 8,
+      "action_counts": {
+        "stop": 1,
+        "forward": 45,
+        "left": 10,
+        "right": 34
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+      "sha256": "21fefa1a62237d71bf91b7c16f4087f7a585e4ab697c5d54248dbe4b43469d4a"
+    },
+    {
+      "episode_id": "eval-2006",
+      "variant": "lora",
+      "frame_count": 58,
+      "duration_s": 29.0,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 2.5068474654143476,
+      "min_distance_to_goal": 2.5068474654143476,
+      "collisions": 5,
+      "action_counts": {
+        "stop": 1,
+        "forward": 29,
+        "left": 14,
+        "right": 13
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+      "sha256": "da530e55b1fb59ca7f57c9976ca39cce499baef66177d53ba506dceec2758b5d"
+    },
+    {
+      "episode_id": "eval-2007",
+      "variant": "lora",
+      "frame_count": 50,
+      "duration_s": 25.0,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 6.62247220231039,
+      "min_distance_to_goal": 3.7168847594894285,
+      "collisions": 3,
+      "action_counts": {
+        "stop": 1,
+        "forward": 25,
+        "left": 3,
+        "right": 20
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+      "sha256": "a21b343cab2eaa9339e00585c03fdbfeaa6fabd76b30d65140526763fdc2145a"
+    },
+    {
+      "episode_id": "eval-2008",
+      "variant": "lora",
+      "frame_count": 17,
+      "duration_s": 8.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 3.3315114013246605,
+      "min_distance_to_goal": 3.3315114013246605,
+      "collisions": 0,
+      "action_counts": {
+        "stop": 1,
+        "forward": 9,
+        "left": 2,
+        "right": 4
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+      "sha256": "8fe0db90ed04b6b743bcafbe9a6b22a516281564bdf14ab3db7bab96dcd59814"
+    },
+    {
+      "episode_id": "eval-2009",
+      "variant": "lora",
+      "frame_count": 57,
+      "duration_s": 28.5,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 6.612953389372427,
+      "min_distance_to_goal": 3.5769277687748824,
+      "collisions": 7,
+      "action_counts": {
+        "stop": 1,
+        "forward": 28,
+        "left": 8,
+        "right": 19
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+      "sha256": "444b12eb119d6a1e61e38d879a09e7be0f3670bb678e9c0e3843ee050938e01c"
+    },
+    {
+      "episode_id": "eval-2010",
+      "variant": "lora",
+      "frame_count": 28,
+      "duration_s": 14.0,
+      "success_0_5": false,
+      "spl_0_5": 0.0,
+      "final_distance_to_goal": 4.114083280260675,
+      "min_distance_to_goal": 3.4596350067649055,
+      "collisions": 0,
+      "action_counts": {
+        "stop": 1,
+        "forward": 12,
+        "left": 8,
+        "right": 6
+      },
+      "output": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+      "sha256": "46aa8f30666ea16b66cffa97e0991cfd5253a7a1c8abedeb7bc747486e77cdcd"
+    }
+  ]
+}

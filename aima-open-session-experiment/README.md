@@ -29,20 +29,24 @@
 - [完整图文经验博客](article/博客-GenieSim-StreamVLN非官方等价闭环经验.md)
 - [知乎 / 小红书 / 抖音发布交接稿](article/平台发布稿-知乎-小红书-抖音.md)
 
-## 四期深度教程系列（当前为草稿验收态）
+## 四期深度教程系列（最终媒体已验收，平台尚未提交）
 
 - [系列设计与验收边界](docs/plans/2026-07-15-geniesim-vln-series-design.md)
 - [共享故事板与素材清单](content/series/series-manifest.json)
 - [四平台内容清单](content/series/platform-content.json)
 - [四平台文字验收报告](content/series/platform-acceptance.json)
 - [媒体验收报告](content/series/series-media-acceptance.json)
+- [四期 10 分钟最终故事板](content/series/final-long-manifest.json)
+- [四期最终长片目录](assets/series/final-long/)
+- [最终长片完整媒体验收](content/series/final-long-acceptance.json)
+- [20 条 canonical 轨迹清单](assets/series/recapture/canonical/manifest.json)
 - [音频与原始氛围音说明](assets/series/ambient-original.json)
 - [样片响度验收](content/series/audio-loudness.json)
-- [四期 10–15 分钟粗剪清单](assets/series/long-drafts/)
-- [长片粗剪规格验收](content/series/long-draft-acceptance.json)
+- [归档：四期旧循环粗剪](assets/series/long-drafts/)
+- [归档粗剪规格验收](content/series/long-draft-acceptance.json)
 - [B 站 / 知乎 / 小红书 / 抖音交付目录](article/series/README.md)
 
-样片和补录状态必须单独阅读验收报告：样片已验证编码、字幕、旁白和指标读取；四期 10–15 分钟正片、GPUFree 新补录和“真实录屏 ≥75%”在远端素材回收并通过验收前不得标记为最终成片或直接发布。
+四期最终长片均为 10 分钟、真实实录占比 80%，已通过全片解码、黑帧、响度、字幕、敏感信息和指标一致性验收。第四期使用基础模型与低秩适配模型各 10 条同批 held-out 轨迹；主指标 `success@0.5m` 均为 0/10。媒体完成不等于平台已发布：四个平台仍为 `draft_not_submitted`，登录、验证码/扫码、封面终审和最终提交由用户完成。
 
 ## 素材目录
 

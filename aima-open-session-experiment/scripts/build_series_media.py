@@ -29,6 +29,15 @@ CYAN = (77, 204, 238, 255)
 PINK = (241, 104, 177, 255)
 
 
+def episode_label(episode_id: str) -> str:
+    return {
+        "stage0": "阶段零",
+        "stage1": "阶段一",
+        "stage2": "阶段二",
+        "stage3": "阶段三",
+    }.get(episode_id, episode_id)
+
+
 def dimensions(layout: str) -> tuple[int, int]:
     if layout == "landscape":
         return 1920, 1080
@@ -132,7 +141,7 @@ def overlay_image(episode: dict[str, Any], segment: dict[str, Any], path: Path, 
     top_h = 72 if layout == "portrait" else 75
     left_w = width - 2 * margin
     draw.rounded_rectangle((margin, 40, min(width - margin, margin + int(width * 0.55)), 40 + top_h), radius=18, fill=PANEL)
-    draw.text((margin + 22, 62), f"{episode['episode'].upper()}  ·  {segment['segment_id']}", fill=accent, font=label_font)
+    draw.text((margin + 22, 62), f"{episode_label(episode['episode'])}  ·  {segment['segment_id']}", fill=accent, font=label_font)
     draw.rounded_rectangle((width - int(width * 0.34), 40, width - margin, 40 + top_h), radius=18, fill=PANEL)
     bbox = draw.textbbox((0, 0), label, font=label_font)
     draw.text((width - int(width * 0.17) - (bbox[2] - bbox[0]) // 2, 62), label, fill=accent, font=label_font)
@@ -152,7 +161,18 @@ def run_ffmpeg(args: list[str]) -> None:
     subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", *args], check=True)
 
 
-def render_segment(segment: dict[str, Any], root: Path, output: Path, overlay: Path, layout: str = "landscape") -> None:
+def video_encode_args(profile: str = "libx264") -> list[str]:
+    if profile == "videotoolbox":
+        return [
+            "-c:v", "h264_videotoolbox", "-b:v", "3500k", "-maxrate", "4500k",
+            "-bufsize", "7000k", "-allow_sw", "1",
+        ]
+    if profile == "libx264":
+        return ["-c:v", "libx264", "-preset", "medium", "-crf", "20"]
+    raise ValueError(f"unsupported encoder profile: {profile}")
+
+
+def render_segment(segment: dict[str, Any], root: Path, output: Path, overlay: Path, layout: str = "landscape", encoder_profile: str = "libx264") -> None:
     width, height = dimensions(layout)
     source = (root / segment["source"]).resolve()
     duration = float(segment["duration_s"])
@@ -191,12 +211,7 @@ def render_segment(segment: dict[str, Any], root: Path, output: Path, overlay: P
             "-r",
             str(FPS),
             "-an",
-            "-c:v",
-            "libx264",
-            "-preset",
-            "medium",
-            "-crf",
-            "20",
+            *video_encode_args(encoder_profile),
             "-movflags",
             "+faststart",
             str(output),
@@ -265,7 +280,7 @@ def mux_audio(video: Path, output: Path, voice: Path | None, music: Path | None)
     )
 
 
-def render_episode(manifest_path: Path, episode_id: str, output_dir: Path, eval_path: Path, duration: float | None = None, voice: Path | None = None, music: Path | None = None, layout: str = "landscape") -> dict[str, Any]:
+def render_episode(manifest_path: Path, episode_id: str, output_dir: Path, eval_path: Path, duration: float | None = None, voice: Path | None = None, music: Path | None = None, layout: str = "landscape", encoder_profile: str = "libx264") -> dict[str, Any]:
     manifest = load_manifest(manifest_path)
     errors = validate_manifest(manifest, manifest_path.parent.parent.parent)
     if errors:
@@ -279,7 +294,7 @@ def render_episode(manifest_path: Path, episode_id: str, output_dir: Path, eval_
             overlay = temp_dir / f"overlay-{index:03d}.png"
             clip = temp_dir / f"segment-{index:03d}.mp4"
             overlay_image(episode, segment, overlay, layout)
-            render_segment(segment, manifest_path.parent.parent.parent, clip, overlay, layout)
+            render_segment(segment, manifest_path.parent.parent.parent, clip, overlay, layout, encoder_profile)
             rendered.append(clip)
         silent = output_dir / f"{episode_id}-silent.mp4"
         concat_segments(rendered, silent, duration)
@@ -314,8 +329,9 @@ def main() -> None:
     parser.add_argument("--voice", type=Path)
     parser.add_argument("--music", type=Path)
     parser.add_argument("--layout", choices=["landscape", "portrait"], default="landscape")
+    parser.add_argument("--encoder-profile", choices=["libx264", "videotoolbox"], default="libx264")
     args = parser.parse_args()
-    result = render_episode(args.manifest.resolve(), args.episode, args.output_dir.resolve(), args.eval.resolve(), args.duration, args.voice, args.music, args.layout)
+    result = render_episode(args.manifest.resolve(), args.episode, args.output_dir.resolve(), args.eval.resolve(), args.duration, args.voice, args.music, args.layout, args.encoder_profile)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
