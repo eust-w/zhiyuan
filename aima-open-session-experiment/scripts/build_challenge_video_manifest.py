@@ -291,6 +291,20 @@ class _CanonicalAllocator:
         result: list[dict[str, Any]] = []
         attempts = 0
         while remaining > 0.001:
+            if remaining < 2 and result:
+                previous = result[-1]
+                previous_source = previous["source"]
+                previous_end = float(previous["source_out_s"])
+                extra_available = probe_duration(self.root / previous_source) - previous_end
+                if extra_available >= remaining - 0.001:
+                    previous["duration_s"] = round(
+                        float(previous["duration_s"]) + remaining,
+                        3,
+                    )
+                    previous["source_out_s"] = round(previous_end + remaining, 3)
+                    self.cursor[previous_source] = previous_end + remaining
+                    remaining = 0
+                    break
             if attempts > len(self.sources) * 3:
                 raise ValueError(f"not enough canonical footage for {chapter_id}")
             source = self.sources[self.index % len(self.sources)]
@@ -298,9 +312,23 @@ class _CanonicalAllocator:
             attempts += 1
             start = self.cursor[source]
             available = probe_duration(self.root / source) - start
-            if available <= 0.02:
+            if available < 2:
+                self.cursor[source] = probe_duration(self.root / source)
                 continue
-            take = min(remaining, available, 22.0)
+            if remaining < 2 and result:
+                deficit = 2 - remaining
+                previous = result[-1]
+                previous_duration = float(previous["duration_s"])
+                if previous_duration - deficit < 2:
+                    raise ValueError(f"cannot merge short real window for {chapter_id}")
+                previous["duration_s"] = round(previous_duration - deficit, 3)
+                previous["source_out_s"] = round(
+                    float(previous["source_out_s"]) - deficit,
+                    3,
+                )
+                take = 2.0
+            else:
+                take = min(remaining, available, 22.0)
             end = start + take
             self.cursor[source] = end
             result.append(
@@ -319,7 +347,7 @@ class _CanonicalAllocator:
                     allow_loop=False,
                 )
             )
-            remaining -= take
+            remaining = max(0, remaining - take)
         return result
 
 

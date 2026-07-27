@@ -101,6 +101,12 @@ class ChallengeVideoManifestTests(unittest.TestCase):
                 with self.subTest(source=source):
                     self.assertLessEqual(previous[1], current[0] + 0.001)
 
+    def test_real_recording_segments_do_not_flash_for_less_than_two_seconds(self):
+        for segment in self.manifest["segments"]:
+            if segment["source_type"] == "real_recording":
+                with self.subTest(segment=segment["segment_id"]):
+                    self.assertGreaterEqual(segment["duration_s"], 2)
+
     def test_stage3_uses_all_twenty_distinct_paired_replays(self):
         manifest = self.manifest
         expected_ids = [f"eval-{seed}" for seed in range(2001, 2011)]

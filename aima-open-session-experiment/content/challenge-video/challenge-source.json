@@ -691,11 +691,6 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
     },
     {
-      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
-      "source_type": "real_recording",
-      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
-    },
-    {
       "source": "assets/screenshots/v3/train-1025-mid.jpg",
       "source_type": "real_evidence",
       "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
@@ -726,7 +721,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
     {
-      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
@@ -736,7 +731,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
     {
-      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
@@ -746,7 +741,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
     {
-      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
@@ -756,7 +751,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
     {
-      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
     },
@@ -896,7 +891,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
     {
-      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
@@ -906,7 +901,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
     {
-      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
@@ -916,7 +911,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
     },
     {
-      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
@@ -926,7 +921,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
     {
-      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
@@ -936,17 +931,12 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
     {
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
       "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
-      "source_type": "real_recording",
-      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
-    },
-    {
-      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
-      "source_type": "real_recording",
-      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
-    },
-    {
-      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
@@ -956,7 +946,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
     {
-      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
@@ -966,7 +956,7 @@
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
     {
-      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
     },
