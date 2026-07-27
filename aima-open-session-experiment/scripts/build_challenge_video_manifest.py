@@ -30,14 +30,14 @@ except ModuleNotFoundError:  # Direct ``python scripts/...`` invocation.
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_VERSION = "geniesim-streamvln-challenge-video/v1"
 CHAPTER_TARGETS: dict[str, float] = {
-    "hook": 35,
-    "baseline": 45,
-    "operation": 100,
-    "data": 100,
-    "training": 120,
-    "paired_eval": 150,
-    "innovation": 70,
-    "closing": 40,
+    "hook": 65,
+    "baseline": 70,
+    "operation": 95,
+    "data": 95,
+    "training": 95,
+    "paired_eval": 115,
+    "innovation": 95,
+    "closing": 60,
 }
 CHAPTER_IDS = list(CHAPTER_TARGETS)
 REQUIRED_SEGMENT_FIELDS = {
@@ -74,16 +74,16 @@ PAIRED = [
     for variant in ("base", "lora")
 ]
 PAIR_DURATIONS: dict[int, tuple[float, float]] = {
-    2001: (9, 7),
-    2002: (7, 6),
-    2003: (6, 7),
-    2004: (9, 6),
-    2005: (6, 6),
-    2006: (7, 6),
-    2007: (9, 6),
-    2008: (7, 5),
-    2009: (9, 6),
-    2010: (6, 5),
+    2001: (6, 5),
+    2002: (5, 4),
+    2003: (4, 5),
+    2004: (6, 4),
+    2005: (4, 4),
+    2006: (5, 4),
+    2007: (6, 4),
+    2008: (5, 3),
+    2009: (6, 4),
+    2010: (8, 8),
 }
 
 EVAL_EVIDENCE = "experiments/exp02-equivalent-v3/eval_result.json"
@@ -523,7 +523,7 @@ def build_manifest(root: Path = ROOT) -> dict[str, Any]:
     real_by_chapter["hook"].extend(
         allocator.allocate(
             "hook",
-            8,
+            38,
             "opening-context",
             ["不是剪一条成功轨迹", "十条全部进入汇总"],
             "同一批未知轨迹",
@@ -553,7 +553,7 @@ def build_manifest(root: Path = ROOT) -> dict[str, Any]:
     real_by_chapter["baseline"].extend(
         allocator.allocate(
             "baseline",
-            8,
+            33,
             "closed-loop",
             ["语言、图像、动作、仿真", "闭环持续更新"],
             "指令到新观察的闭环",
@@ -562,7 +562,7 @@ def build_manifest(root: Path = ROOT) -> dict[str, Any]:
 
     real_by_chapter["operation"] = allocator.allocate(
         "operation",
-        82,
+        77,
         "operation",
         ["动作 ID、距离、blocked", "真实闭环持续运行"],
         "动作与安全门实时状态",
@@ -582,7 +582,7 @@ def build_manifest(root: Path = ROOT) -> dict[str, Any]:
     real_by_chapter["data"].extend(
         allocator.allocate(
             "data",
-            71.5,
+            66.5,
             "dataset-context",
             ["固定种子生成轨迹", "训练与评测严格分开"],
             "五十条训练与十条未知轨迹",
@@ -612,7 +612,7 @@ def build_manifest(root: Path = ROOT) -> dict[str, Any]:
     real_by_chapter["training"].extend(
         allocator.allocate(
             "training",
-            75,
+            50,
             "training-context",
             ["五十九个有效更新步", "损失下降不代表会导航"],
             "真实训练记录与闭环画面",
@@ -623,14 +623,14 @@ def build_manifest(root: Path = ROOT) -> dict[str, Any]:
     real_by_chapter["paired_eval"] = _pair_segments(root)
     real_by_chapter["innovation"] = allocator.allocate(
         "innovation",
-        54,
+        79,
         "innovation-context",
         ["从失败轨迹寻找改进点", "场景、数据、算法、评测"],
         "创新挑战从可复核对照开始",
     )
     real_by_chapter["closing"] = allocator.allocate(
         "closing",
-        31,
+        51,
         "closing",
         ["保留成功也保留失败", "下一轮继续配对验证"],
         "把失败变成可复用资产",

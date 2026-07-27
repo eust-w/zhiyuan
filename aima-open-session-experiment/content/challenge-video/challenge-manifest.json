@@ -13,17 +13,17 @@
     "closing"
   ],
   "chapter_targets_s": {
-    "hook": 35,
-    "baseline": 45,
-    "operation": 100,
-    "data": 100,
-    "training": 120,
-    "paired_eval": 150,
-    "innovation": 70,
-    "closing": 40
+    "hook": 65,
+    "baseline": 70,
+    "operation": 95,
+    "data": 95,
+    "training": 95,
+    "paired_eval": 115,
+    "innovation": 95,
+    "closing": 60
   },
-  "duration_s": 660.0,
-  "real_recording_ratio": 0.8303030303030303,
+  "duration_s": 690.0,
+  "real_recording_ratio": 0.8376811594202899,
   "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
   "training_source": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
   "paired_episode_ids": [
@@ -705,9 +705,9 @@
       "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 8,
-      "source_in_s": 9,
-      "source_out_s": 17,
+      "duration_s": 22.0,
+      "source_in_s": 6,
+      "source_out_s": 28.0,
       "narration_section": "hook",
       "subtitle": [
         "不是剪一条成功轨迹",
@@ -719,7 +719,45 @@
       "allow_loop": false
     },
     {
-      "segment_id": "006-baseline-scene-camera",
+      "segment_id": "006-hook-opening-context-02",
+      "chapter_id": "hook",
+      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 11.5,
+      "source_in_s": 5,
+      "source_out_s": 16.5,
+      "narration_section": "hook",
+      "subtitle": [
+        "不是剪一条成功轨迹",
+        "十条全部进入汇总"
+      ],
+      "overlay": "同一批未知轨迹",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "007-hook-opening-context-03",
+      "chapter_id": "hook",
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 4.5,
+      "source_in_s": 5,
+      "source_out_s": 9.5,
+      "narration_section": "hook",
+      "subtitle": [
+        "不是剪一条成功轨迹",
+        "十条全部进入汇总"
+      ],
+      "overlay": "同一批未知轨迹",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "008-baseline-scene-camera",
       "chapter_id": "baseline",
       "source": "assets/series/recapture/raw/stage0-rgb-replay.mp4",
       "source_type": "real_recording",
@@ -738,7 +776,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "007-baseline-evidence-01",
+      "segment_id": "009-baseline-evidence-01",
       "chapter_id": "baseline",
       "source": "assets/screenshots/v3/stage0-validation.png",
       "source_type": "real_evidence",
@@ -756,7 +794,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "008-baseline-action-baseline",
+      "segment_id": "010-baseline-action-baseline",
       "chapter_id": "baseline",
       "source": "assets/series/recapture/raw/stage0-blocked-replay.mp4",
       "source_type": "real_recording",
@@ -775,7 +813,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "009-baseline-evidence-02",
+      "segment_id": "011-baseline-evidence-02",
       "chapter_id": "baseline",
       "source": "assets/plots/evidence-chain.png",
       "source_type": "diagram",
@@ -793,14 +831,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "010-baseline-closed-loop-01",
+      "segment_id": "012-baseline-closed-loop-01",
       "chapter_id": "baseline",
-      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 8,
-      "source_in_s": 7,
-      "source_out_s": 15,
+      "duration_s": 12.5,
+      "source_in_s": 4,
+      "source_out_s": 16.5,
       "narration_section": "baseline",
       "subtitle": [
         "语言、图像、动作、仿真",
@@ -812,7 +850,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "011-baseline-evidence-03",
+      "segment_id": "013-baseline-evidence-03",
       "chapter_id": "baseline",
       "source": "assets/plots/action-counts.png",
       "source_type": "diagram",
@@ -830,14 +868,52 @@
       "allow_loop": false
     },
     {
-      "segment_id": "012-operation-operation-01",
+      "segment_id": "014-baseline-closed-loop-02",
+      "chapter_id": "baseline",
+      "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 17.0,
+      "source_in_s": 4,
+      "source_out_s": 21.0,
+      "narration_section": "baseline",
+      "subtitle": [
+        "语言、图像、动作、仿真",
+        "闭环持续更新"
+      ],
+      "overlay": "指令到新观察的闭环",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "015-baseline-closed-loop-03",
+      "chapter_id": "baseline",
+      "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3.5,
+      "source_in_s": 5,
+      "source_out_s": 8.5,
+      "narration_section": "baseline",
+      "subtitle": [
+        "语言、图像、动作、仿真",
+        "闭环持续更新"
+      ],
+      "overlay": "指令到新观察的闭环",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "016-operation-operation-01",
       "chapter_id": "operation",
-      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
       "duration_s": 22.0,
-      "source_in_s": 7,
-      "source_out_s": 29.0,
+      "source_in_s": 6,
+      "source_out_s": 28.0,
       "narration_section": "operation",
       "subtitle": [
         "动作 ID、距离、blocked",
@@ -849,7 +925,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "013-operation-evidence-01",
+      "segment_id": "017-operation-evidence-01",
       "chapter_id": "operation",
       "source": "assets/screenshots/v3/stage0-forward-before.jpg",
       "source_type": "real_evidence",
@@ -867,14 +943,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "014-operation-operation-02",
+      "segment_id": "018-operation-operation-02",
       "chapter_id": "operation",
-      "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 10.5,
-      "source_in_s": 6,
-      "source_out_s": 16.5,
+      "duration_s": 22.0,
+      "source_in_s": 4,
+      "source_out_s": 26.0,
       "narration_section": "operation",
       "subtitle": [
         "动作 ID、距离、blocked",
@@ -886,7 +962,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "015-operation-evidence-02",
+      "segment_id": "019-operation-evidence-02",
       "chapter_id": "operation",
       "source": "assets/screenshots/v3/stage0-forward-after.jpg",
       "source_type": "real_evidence",
@@ -904,14 +980,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "016-operation-operation-03",
+      "segment_id": "020-operation-operation-03",
       "chapter_id": "operation",
-      "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 15.0,
-      "source_in_s": 6,
-      "source_out_s": 21.0,
+      "duration_s": 22.0,
+      "source_in_s": 4,
+      "source_out_s": 26.0,
       "narration_section": "operation",
       "subtitle": [
         "动作 ID、距离、blocked",
@@ -923,7 +999,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "017-operation-evidence-03",
+      "segment_id": "021-operation-evidence-03",
       "chapter_id": "operation",
       "source": "assets/screenshots/v3/stage0-before-block.jpg",
       "source_type": "real_evidence",
@@ -941,14 +1017,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "018-operation-operation-04",
+      "segment_id": "022-operation-operation-04",
       "chapter_id": "operation",
-      "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 22.0,
-      "source_in_s": 7,
-      "source_out_s": 29.0,
+      "duration_s": 11.0,
+      "source_in_s": 4,
+      "source_out_s": 15.0,
       "narration_section": "operation",
       "subtitle": [
         "动作 ID、距离、blocked",
@@ -960,7 +1036,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "019-operation-evidence-04",
+      "segment_id": "023-operation-evidence-04",
       "chapter_id": "operation",
       "source": "assets/screenshots/v3/stage0-after-block.jpg",
       "source_type": "real_evidence",
@@ -978,26 +1054,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "020-operation-operation-05",
-      "chapter_id": "operation",
-      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
-      "source_type": "real_recording",
-      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 12.5,
-      "source_in_s": 9,
-      "source_out_s": 21.5,
-      "narration_section": "operation",
-      "subtitle": [
-        "动作 ID、距离、blocked",
-        "真实闭环持续运行"
-      ],
-      "overlay": "动作与安全门实时状态",
-      "public_label": "真实录屏",
-      "layout": "landscape",
-      "allow_loop": false
-    },
-    {
-      "segment_id": "021-operation-evidence-05",
+      "segment_id": "024-operation-evidence-05",
       "chapter_id": "operation",
       "source": "assets/plots/action-counts.png",
       "source_type": "real_evidence",
@@ -1015,7 +1072,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "022-operation-evidence-06",
+      "segment_id": "025-operation-evidence-06",
       "chapter_id": "operation",
       "source": "assets/screenshots/v3/stage0-validation.png",
       "source_type": "real_evidence",
@@ -1033,7 +1090,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "023-data-train-1001",
+      "segment_id": "026-data-train-1001",
       "chapter_id": "data",
       "source": "assets/series/recapture/raw/stage1-train1001-replay.mp4",
       "source_type": "real_recording",
@@ -1052,7 +1109,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "024-data-evidence-01",
+      "segment_id": "027-data-evidence-01",
       "chapter_id": "data",
       "source": "assets/screenshots/v3/stage1-validation.png",
       "source_type": "real_evidence",
@@ -1070,14 +1127,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "025-data-dataset-context-01",
+      "segment_id": "028-data-dataset-context-01",
       "chapter_id": "data",
-      "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 20.0,
-      "source_in_s": 6,
-      "source_out_s": 26.0,
+      "duration_s": 22.0,
+      "source_in_s": 5,
+      "source_out_s": 27.0,
       "narration_section": "data",
       "subtitle": [
         "固定种子生成轨迹",
@@ -1089,7 +1146,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "026-data-evidence-02",
+      "segment_id": "029-data-evidence-02",
       "chapter_id": "data",
       "source": "assets/plots/schema-sidecar.png",
       "source_type": "diagram",
@@ -1107,14 +1164,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "027-data-dataset-context-02",
+      "segment_id": "030-data-dataset-context-02",
       "chapter_id": "data",
-      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
       "duration_s": 22.0,
-      "source_in_s": 6,
-      "source_out_s": 28.0,
+      "source_in_s": 4,
+      "source_out_s": 26.0,
       "narration_section": "data",
       "subtitle": [
         "固定种子生成轨迹",
@@ -1126,7 +1183,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "028-data-evidence-03",
+      "segment_id": "031-data-evidence-03",
       "chapter_id": "data",
       "source": "assets/screenshots/v3/train-1001-start.jpg",
       "source_type": "real_evidence",
@@ -1144,9 +1201,9 @@
       "allow_loop": false
     },
     {
-      "segment_id": "029-data-dataset-context-03",
+      "segment_id": "032-data-dataset-context-03",
       "chapter_id": "data",
-      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
       "duration_s": 22.0,
@@ -1163,7 +1220,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "030-data-evidence-04",
+      "segment_id": "033-data-evidence-04",
       "chapter_id": "data",
       "source": "assets/screenshots/v3/train-1001-goal.jpg",
       "source_type": "real_evidence",
@@ -1181,14 +1238,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "031-data-dataset-context-04",
+      "segment_id": "034-data-dataset-context-04",
       "chapter_id": "data",
-      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 7.5,
-      "source_in_s": 7,
-      "source_out_s": 14.5,
+      "duration_s": 0.5,
+      "source_in_s": 4,
+      "source_out_s": 4.5,
       "narration_section": "data",
       "subtitle": [
         "固定种子生成轨迹",
@@ -1200,7 +1257,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "032-data-evidence-05",
+      "segment_id": "035-data-evidence-05",
       "chapter_id": "data",
       "source": "assets/screenshots/v3/train-1025-mid.jpg",
       "source_type": "real_evidence",
@@ -1218,7 +1275,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "033-data-evidence-06",
+      "segment_id": "036-data-evidence-06",
       "chapter_id": "data",
       "source": "assets/screenshots/v3/train-1050-mid.jpg",
       "source_type": "real_evidence",
@@ -1236,7 +1293,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "034-training-single-batch",
+      "segment_id": "037-training-single-batch",
       "chapter_id": "training",
       "source": "assets/series/recapture/raw/stage2-single-batch-replay.mp4",
       "source_type": "real_recording",
@@ -1255,7 +1312,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "035-training-evidence-01",
+      "segment_id": "038-training-evidence-01",
       "chapter_id": "training",
       "source": "assets/screenshots/v3/stage2-gates.png",
       "source_type": "real_evidence",
@@ -1273,7 +1330,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "036-training-adapter-reload",
+      "segment_id": "039-training-adapter-reload",
       "chapter_id": "training",
       "source": "assets/series/recapture/raw/stage2-adapter-reload-replay.mp4",
       "source_type": "real_recording",
@@ -1292,7 +1349,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "037-training-evidence-02",
+      "segment_id": "040-training-evidence-02",
       "chapter_id": "training",
       "source": "assets/plots/lora-config.png",
       "source_type": "diagram",
@@ -1310,14 +1367,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "038-training-training-context-01",
+      "segment_id": "041-training-training-context-01",
       "chapter_id": "training",
-      "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
       "duration_s": 22.0,
-      "source_in_s": 6,
-      "source_out_s": 28.0,
+      "source_in_s": 5,
+      "source_out_s": 27.0,
       "narration_section": "training",
       "subtitle": [
         "五十九个有效更新步",
@@ -1329,7 +1386,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "039-training-evidence-03",
+      "segment_id": "042-training-evidence-03",
       "chapter_id": "training",
       "source": "assets/plots/validation-gates.png",
       "source_type": "real_evidence",
@@ -1347,14 +1404,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "040-training-training-context-02",
+      "segment_id": "043-training-training-context-02",
       "chapter_id": "training",
-      "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
-      "duration_s": 22.0,
-      "source_in_s": 9,
-      "source_out_s": 31.0,
+      "duration_s": 5.5,
+      "source_in_s": 3,
+      "source_out_s": 8.5,
       "narration_section": "training",
       "subtitle": [
         "五十九个有效更新步",
@@ -1366,7 +1423,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "041-training-evidence-04",
+      "segment_id": "044-training-evidence-04",
       "chapter_id": "training",
       "source": "assets/screenshots/v3/stage2-loss-curve.png",
       "source_type": "real_evidence",
@@ -1384,14 +1441,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "042-training-training-context-03",
+      "segment_id": "045-training-training-context-03",
       "chapter_id": "training",
-      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
-      "duration_s": 19.0,
+      "duration_s": 22.0,
       "source_in_s": 6,
-      "source_out_s": 25.0,
+      "source_out_s": 28.0,
       "narration_section": "training",
       "subtitle": [
         "五十九个有效更新步",
@@ -1403,7 +1460,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "043-training-evidence-05",
+      "segment_id": "046-training-evidence-05",
       "chapter_id": "training",
       "source": "assets/plots/lora-config.png",
       "source_type": "real_evidence",
@@ -1421,14 +1478,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "044-training-training-context-04",
+      "segment_id": "047-training-training-context-04",
       "chapter_id": "training",
-      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
-      "duration_s": 12.0,
-      "source_in_s": 7,
-      "source_out_s": 19.0,
+      "duration_s": 0.5,
+      "source_in_s": 4,
+      "source_out_s": 4.5,
       "narration_section": "training",
       "subtitle": [
         "五十九个有效更新步",
@@ -1440,7 +1497,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "045-training-evidence-06",
+      "segment_id": "048-training-evidence-06",
       "chapter_id": "training",
       "source": "assets/screenshots/v3/stage2-gates.png",
       "source_type": "real_evidence",
@@ -1458,7 +1515,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "046-training-evidence-07",
+      "segment_id": "049-training-evidence-07",
       "chapter_id": "training",
       "source": "assets/screenshots/v3/stage2-loss-curve.png",
       "source_type": "real_evidence",
@@ -1476,14 +1533,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "047-paired_eval-2001-base",
+      "segment_id": "050-paired_eval-2001-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 9,
+      "duration_s": 6,
       "source_in_s": 0,
-      "source_out_s": 9,
+      "source_out_s": 6,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2001 · Base",
@@ -1497,7 +1554,7 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "048-paired_eval-evidence-01",
+      "segment_id": "051-paired_eval-evidence-01",
       "chapter_id": "paired_eval",
       "source": "assets/screenshots/v3/stage3-paired-metrics.png",
       "source_type": "real_evidence",
@@ -1515,14 +1572,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "049-paired_eval-2001-lora",
+      "segment_id": "052-paired_eval-2001-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 7,
+      "duration_s": 5,
       "source_in_s": 0,
-      "source_out_s": 7,
+      "source_out_s": 5,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2001 · LoRA",
@@ -1536,7 +1593,7 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "050-paired_eval-evidence-02",
+      "segment_id": "053-paired_eval-evidence-02",
       "chapter_id": "paired_eval",
       "source": "assets/plots/metrics-base-lora.png",
       "source_type": "real_evidence",
@@ -1554,14 +1611,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "051-paired_eval-2002-base",
+      "segment_id": "054-paired_eval-2002-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 7,
+      "duration_s": 5,
       "source_in_s": 0,
-      "source_out_s": 7,
+      "source_out_s": 5,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2002 · Base",
@@ -1575,7 +1632,7 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "052-paired_eval-evidence-03",
+      "segment_id": "055-paired_eval-evidence-03",
       "chapter_id": "paired_eval",
       "source": "assets/screenshots/v3/stage3-episode-distances.png",
       "source_type": "real_evidence",
@@ -1593,14 +1650,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "053-paired_eval-2002-lora",
+      "segment_id": "056-paired_eval-2002-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2002 · LoRA",
@@ -1614,7 +1671,7 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "054-paired_eval-evidence-04",
+      "segment_id": "057-paired_eval-evidence-04",
       "chapter_id": "paired_eval",
       "source": "assets/plots/action-counts.png",
       "source_type": "real_evidence",
@@ -1632,14 +1689,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "055-paired_eval-2003-base",
+      "segment_id": "058-paired_eval-2003-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2003 · Base",
@@ -1653,7 +1710,7 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "056-paired_eval-evidence-05",
+      "segment_id": "059-paired_eval-evidence-05",
       "chapter_id": "paired_eval",
       "source": "assets/plots/episode-distance.png",
       "source_type": "real_evidence",
@@ -1671,14 +1728,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "057-paired_eval-2003-lora",
+      "segment_id": "060-paired_eval-2003-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 7,
+      "duration_s": 5,
       "source_in_s": 0,
-      "source_out_s": 7,
+      "source_out_s": 5,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2003 · LoRA",
@@ -1692,14 +1749,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "058-paired_eval-2004-base",
+      "segment_id": "061-paired_eval-2004-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 9,
+      "duration_s": 6,
       "source_in_s": 0,
-      "source_out_s": 9,
+      "source_out_s": 6,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2004 · Base",
@@ -1713,14 +1770,14 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "059-paired_eval-2004-lora",
+      "segment_id": "062-paired_eval-2004-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2004 · LoRA",
@@ -1734,14 +1791,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "060-paired_eval-2005-base",
+      "segment_id": "063-paired_eval-2005-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2005 · Base",
@@ -1755,14 +1812,14 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "061-paired_eval-2005-lora",
+      "segment_id": "064-paired_eval-2005-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2005 · LoRA",
@@ -1776,14 +1833,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "062-paired_eval-2006-base",
+      "segment_id": "065-paired_eval-2006-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 7,
+      "duration_s": 5,
       "source_in_s": 0,
-      "source_out_s": 7,
+      "source_out_s": 5,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2006 · Base",
@@ -1797,14 +1854,14 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "063-paired_eval-2006-lora",
+      "segment_id": "066-paired_eval-2006-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2006 · LoRA",
@@ -1818,14 +1875,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "064-paired_eval-2007-base",
+      "segment_id": "067-paired_eval-2007-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 9,
+      "duration_s": 6,
       "source_in_s": 0,
-      "source_out_s": 9,
+      "source_out_s": 6,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2007 · Base",
@@ -1839,14 +1896,14 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "065-paired_eval-2007-lora",
+      "segment_id": "068-paired_eval-2007-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2007 · LoRA",
@@ -1860,14 +1917,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "066-paired_eval-2008-base",
+      "segment_id": "069-paired_eval-2008-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 7,
+      "duration_s": 5,
       "source_in_s": 0,
-      "source_out_s": 7,
+      "source_out_s": 5,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2008 · Base",
@@ -1881,14 +1938,14 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "067-paired_eval-2008-lora",
+      "segment_id": "070-paired_eval-2008-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 5,
+      "duration_s": 3,
       "source_in_s": 0,
-      "source_out_s": 5,
+      "source_out_s": 3,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2008 · LoRA",
@@ -1902,14 +1959,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "068-paired_eval-2009-base",
+      "segment_id": "071-paired_eval-2009-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 9,
+      "duration_s": 6,
       "source_in_s": 0,
-      "source_out_s": 9,
+      "source_out_s": 6,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2009 · Base",
@@ -1923,14 +1980,14 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "069-paired_eval-2009-lora",
+      "segment_id": "072-paired_eval-2009-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 4,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 4,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2009 · LoRA",
@@ -1944,14 +2001,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "070-paired_eval-2010-base",
+      "segment_id": "073-paired_eval-2010-base",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6,
+      "duration_s": 8,
       "source_in_s": 0,
-      "source_out_s": 6,
+      "source_out_s": 8,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2010 · Base",
@@ -1965,14 +2022,14 @@
       "pair_variant": "base"
     },
     {
-      "segment_id": "071-paired_eval-2010-lora",
+      "segment_id": "074-paired_eval-2010-lora",
       "chapter_id": "paired_eval",
       "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 5,
+      "duration_s": 8,
       "source_in_s": 0,
-      "source_out_s": 5,
+      "source_out_s": 8,
       "narration_section": "paired_eval",
       "subtitle": [
         "eval-2010 · LoRA",
@@ -1986,14 +2043,14 @@
       "pair_variant": "lora"
     },
     {
-      "segment_id": "072-innovation-innovation-context-01",
+      "segment_id": "075-innovation-innovation-context-01",
       "chapter_id": "innovation",
-      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 3.5,
-      "source_in_s": 5,
-      "source_out_s": 8.5,
+      "duration_s": 22.0,
+      "source_in_s": 8,
+      "source_out_s": 30.0,
       "narration_section": "innovation",
       "subtitle": [
         "从失败轨迹寻找改进点",
@@ -2005,7 +2062,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "073-innovation-evidence-01",
+      "segment_id": "076-innovation-evidence-01",
       "chapter_id": "innovation",
       "source": "assets/plots/next-roadmap.png",
       "source_type": "diagram",
@@ -2023,14 +2080,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "074-innovation-innovation-context-02",
+      "segment_id": "077-innovation-innovation-context-02",
       "chapter_id": "innovation",
-      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 22.0,
-      "source_in_s": 9,
-      "source_out_s": 31.0,
+      "duration_s": 6.0,
+      "source_in_s": 8,
+      "source_out_s": 14.0,
       "narration_section": "innovation",
       "subtitle": [
         "从失败轨迹寻找改进点",
@@ -2042,7 +2099,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "075-innovation-evidence-02",
+      "segment_id": "078-innovation-evidence-02",
       "chapter_id": "innovation",
       "source": "assets/plots/schema-sidecar.png",
       "source_type": "diagram",
@@ -2060,14 +2117,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "076-innovation-innovation-context-03",
+      "segment_id": "079-innovation-innovation-context-03",
       "chapter_id": "innovation",
-      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 22.0,
-      "source_in_s": 6,
-      "source_out_s": 28.0,
+      "duration_s": 5.5,
+      "source_in_s": 28.0,
+      "source_out_s": 33.5,
       "narration_section": "innovation",
       "subtitle": [
         "从失败轨迹寻找改进点",
@@ -2079,7 +2136,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "077-innovation-evidence-03",
+      "segment_id": "080-innovation-evidence-03",
       "chapter_id": "innovation",
       "source": "assets/plots/evidence-chain.png",
       "source_type": "diagram",
@@ -2097,14 +2154,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "078-innovation-innovation-context-04",
+      "segment_id": "081-innovation-innovation-context-04",
       "chapter_id": "innovation",
-      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 6.5,
-      "source_in_s": 6,
-      "source_out_s": 12.5,
+      "duration_s": 22.0,
+      "source_in_s": 9.5,
+      "source_out_s": 31.5,
       "narration_section": "innovation",
       "subtitle": [
         "从失败轨迹寻找改进点",
@@ -2116,7 +2173,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "079-innovation-evidence-04",
+      "segment_id": "082-innovation-evidence-04",
       "chapter_id": "innovation",
       "source": "assets/plots/metrics-base-lora.png",
       "source_type": "diagram",
@@ -2134,14 +2191,52 @@
       "allow_loop": false
     },
     {
-      "segment_id": "080-closing-closing-01",
-      "chapter_id": "closing",
-      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+      "segment_id": "083-innovation-innovation-context-05",
+      "chapter_id": "innovation",
+      "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 9.0,
-      "source_in_s": 5,
-      "source_out_s": 14.0,
+      "duration_s": 22.0,
+      "source_in_s": 8.5,
+      "source_out_s": 30.5,
+      "narration_section": "innovation",
+      "subtitle": [
+        "从失败轨迹寻找改进点",
+        "场景、数据、算法、评测"
+      ],
+      "overlay": "创新挑战从可复核对照开始",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "084-innovation-innovation-context-06",
+      "chapter_id": "innovation",
+      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 1.5,
+      "source_in_s": 28.0,
+      "source_out_s": 29.5,
+      "narration_section": "innovation",
+      "subtitle": [
+        "从失败轨迹寻找改进点",
+        "场景、数据、算法、评测"
+      ],
+      "overlay": "创新挑战从可复核对照开始",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "085-closing-closing-01",
+      "chapter_id": "closing",
+      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 8.0,
+      "source_in_s": 26.0,
+      "source_out_s": 34.0,
       "narration_section": "closing",
       "subtitle": [
         "保留成功也保留失败",
@@ -2153,7 +2248,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "081-closing-evidence-01",
+      "segment_id": "086-closing-evidence-01",
       "chapter_id": "closing",
       "source": "assets/screenshots/v3/stage3-paired-metrics.png",
       "source_type": "real_evidence",
@@ -2171,14 +2266,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "082-closing-closing-02",
+      "segment_id": "087-closing-closing-02",
       "chapter_id": "closing",
-      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 16.5,
-      "source_in_s": 17,
-      "source_out_s": 33.5,
+      "duration_s": 22.0,
+      "source_in_s": 15.0,
+      "source_out_s": 37.0,
       "narration_section": "closing",
       "subtitle": [
         "保留成功也保留失败",
@@ -2190,7 +2285,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "083-closing-evidence-02",
+      "segment_id": "088-closing-evidence-02",
       "chapter_id": "closing",
       "source": "assets/plots/next-roadmap.png",
       "source_type": "diagram",
@@ -2208,14 +2303,14 @@
       "allow_loop": false
     },
     {
-      "segment_id": "084-closing-closing-03",
+      "segment_id": "089-closing-closing-03",
       "chapter_id": "closing",
-      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
       "source_type": "real_recording",
       "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 1.5,
-      "source_in_s": 15,
-      "source_out_s": 16.5,
+      "duration_s": 21.0,
+      "source_in_s": 27.0,
+      "source_out_s": 48.0,
       "narration_section": "closing",
       "subtitle": [
         "保留成功也保留失败",
@@ -2227,7 +2322,7 @@
       "allow_loop": false
     },
     {
-      "segment_id": "085-closing-evidence-03",
+      "segment_id": "090-closing-evidence-03",
       "chapter_id": "closing",
       "source": "assets/plots/evidence-chain.png",
       "source_type": "diagram",
@@ -2241,25 +2336,6 @@
       ],
       "overlay": "让每个结果经得起复核",
       "public_label": "流程示意",
-      "layout": "landscape",
-      "allow_loop": false
-    },
-    {
-      "segment_id": "086-closing-closing-04",
-      "chapter_id": "closing",
-      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
-      "source_type": "real_recording",
-      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
-      "duration_s": 4.0,
-      "source_in_s": 29.0,
-      "source_out_s": 33.0,
-      "narration_section": "closing",
-      "subtitle": [
-        "保留成功也保留失败",
-        "下一轮继续配对验证"
-      ],
-      "overlay": "把失败变成可复用资产",
-      "public_label": "真实录屏",
       "layout": "landscape",
       "allow_loop": false
     }

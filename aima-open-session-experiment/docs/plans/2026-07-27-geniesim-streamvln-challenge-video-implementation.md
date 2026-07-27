@@ -242,14 +242,14 @@ Also test:
 - Real footage is not counted by screenshot or chart duration.
 - Source windows never exceed the real clip duration unless `allow_loop` is explicitly true.
 - Chapter totals match the approved schedule within ±5 seconds:
-  - hook: 35 seconds
-  - baseline: 45 seconds
-  - operation: 100 seconds
-  - data: 100 seconds
-  - training: 120 seconds
-  - paired evaluation: 150 seconds
-  - innovation: 70 seconds
-  - closing: 40 seconds
+  - hook: 65 seconds
+  - baseline: 70 seconds
+  - operation: 95 seconds
+  - data: 95 seconds
+  - training: 95 seconds
+  - paired evaluation: 115 seconds
+  - innovation: 95 seconds
+  - closing: 60 seconds
 
 Run:
 
