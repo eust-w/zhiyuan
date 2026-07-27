@@ -1,0 +1,17 @@
+{
+  "schema_version": "geniesim-streamvln-publishing-state/v1",
+  "asset_status": "completed",
+  "acceptance_status": "passed",
+  "platform": "bilibili",
+  "submission_status": "draft_not_submitted",
+  "public_url": null,
+  "review_required": [
+    "voice",
+    "cover",
+    "title",
+    "final_submit"
+  ],
+  "last_verified_asset": "assets/challenge-video/final/geniesim-streamvln-challenge.mp4",
+  "acceptance_report": "content/challenge-video/acceptance.json",
+  "notes": "本地发布素材已完成并通过验收；尚未登录平台、选择最终封面或执行提交。"
+}

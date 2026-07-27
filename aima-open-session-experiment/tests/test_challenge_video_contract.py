@@ -1,4 +1,5 @@
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -20,6 +21,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ChallengeVideoContractTests(unittest.TestCase):
+    PUBLISH_PACKAGE = ROOT / "content/challenge-video/publish-package.json"
+    PUBLISH_STATE = ROOT / "content/challenge-video/publishing-state.json"
+
     def test_extracts_metrics_from_authoritative_json(self):
         facts = evidence_snapshot(ROOT)
 
@@ -116,6 +120,106 @@ class ChallengeVideoContractTests(unittest.TestCase):
 
             with self.assertRaisesRegex(ValueError, "ordered held-out episode IDs"):
                 evidence_snapshot(root)
+
+    def test_publish_package_has_complete_bilibili_copy(self):
+        package = json.loads(self.PUBLISH_PACKAGE.read_text(encoding="utf-8"))
+
+        self.assertEqual(package["platform"], "bilibili")
+        self.assertEqual(len(package["titles"]), 3)
+        self.assertEqual(len(set(package["titles"])), 3)
+        chinese_characters = re.findall(r"[\u3400-\u9fff]", package["description"])
+        self.assertGreaterEqual(len(chinese_characters), 800)
+        self.assertLessEqual(len(chinese_characters), 1200)
+        self.assertEqual(len(package["tags"]), 8)
+        self.assertEqual(len(set(package["tags"])), 8)
+        self.assertTrue(package["pinned_comment"].strip())
+        self.assertEqual(len(package["faq"]), 5)
+        self.assertTrue(all(item["question"] and item["answer"] for item in package["faq"]))
+        self.assertTrue(package["dynamic_teaser"].strip())
+
+    def test_publish_package_is_safe_conditional_and_evidence_bound(self):
+        package = json.loads(self.PUBLISH_PACKAGE.read_text(encoding="utf-8"))
+        expected = evidence_snapshot(ROOT)
+        public_copy = "\n".join(
+            [
+                *package["titles"],
+                package["description"],
+                package["pinned_comment"],
+                package["dynamic_teaser"],
+                package["certificate_and_resources"],
+                *[
+                    f"{item['question']}\n{item['answer']}"
+                    for item in package["faq"]
+                ],
+            ]
+        )
+
+        self.assertEqual(scan_public_bundle(package), [])
+        self.assertEqual(validate_claims(public_copy), [])
+        self.assertEqual(
+            package["certificate_and_resources"],
+            APPROVED_CERTIFICATE_COPY,
+        )
+        facts = package["facts"]
+        self.assertEqual(facts["scene"], expected["scene"])
+        self.assertEqual(facts["robot"], expected["robot"])
+        self.assertEqual(facts["camera"], expected["camera"])
+        self.assertEqual(facts["dataset"], expected["dataset"])
+        self.assertEqual(
+            facts["lora_training"],
+            {
+                key: expected["lora_training"][key]
+                for key in (
+                    "updates",
+                    "loss_first",
+                    "loss_last",
+                    "peak_gpu_memory_gib",
+                    "nan_or_inf",
+                    "adapter_reload_passed",
+                )
+            },
+        )
+        evaluation = facts["evaluation"]
+        self.assertEqual(evaluation["heldout_episode_ids"], expected["heldout_episode_ids"])
+        self.assertTrue(evaluation["same_heldout_batch"])
+        for variant in ("base", "lora"):
+            self.assertEqual(
+                evaluation[variant],
+                {
+                    key: expected[variant][key]
+                    for key in (
+                        "episodes",
+                        "success_0_5",
+                        "success_3",
+                        "mean_spl_0_5",
+                        "mean_final_distance_to_goal",
+                        "mean_min_distance_to_goal",
+                        "collisions",
+                    )
+                },
+            )
+        self.assertEqual(
+            package["metric_source"],
+            "experiments/exp02-equivalent-v3/eval_result.json",
+        )
+        self.assertEqual(
+            package["final_sentence"],
+            "真正的挑战，不是做出一段演示，而是让每一个结果都经得起复核。",
+        )
+        self.assertNotIn("榜单", public_copy)
+
+    def test_publish_state_remains_reversible_and_has_no_invented_url(self):
+        state = json.loads(self.PUBLISH_STATE.read_text(encoding="utf-8"))
+
+        self.assertEqual(state["asset_status"], "completed")
+        self.assertEqual(state["acceptance_status"], "passed")
+        self.assertEqual(state["platform"], "bilibili")
+        self.assertEqual(state["submission_status"], "draft_not_submitted")
+        self.assertIsNone(state["public_url"])
+        self.assertEqual(
+            state["review_required"],
+            ["voice", "cover", "title", "final_submit"],
+        )
 
 
 if __name__ == "__main__":
