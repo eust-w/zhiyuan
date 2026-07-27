@@ -33,3 +33,11 @@ assets/series/**/*.mp3
 assets/series/**/*.m4a
 assets/series/**/*.wav
 assets/series/*.wav
+
+# Evidence-first navigation challenge renders. Source manifests, subtitles,
+# metadata and acceptance reports remain tracked; generated media stays local.
+assets/challenge-video/**/*.mp4
+assets/challenge-video/**/*.mp3
+assets/challenge-video/**/*.wav
+assets/challenge-video/work/
+assets/challenge-video/auditions/
