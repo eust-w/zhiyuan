@@ -110,7 +110,7 @@ The expected public metric snapshot is:
     "success_0_5": 0,
     "success_3": 1,
     "mean_spl_0_5": 0.0,
-    "mean_final_distance_to_goal": 4.685746117319207,
+    "mean_final_distance_to_goal": 4.686244300975281,
     "collisions": 45
   }
 }
