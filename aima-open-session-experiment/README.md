@@ -29,6 +29,45 @@
 - [完整图文经验博客](article/博客-GenieSim-StreamVLN非官方等价闭环经验.md)
 - [知乎 / 小红书 / 抖音发布交接稿](article/平台发布稿-知乎-小红书-抖音.md)
 
+## 导航挑战实录视频（本地完成，平台草稿未提交）
+
+这条 11 分 30 秒横屏视频在 GenieSim 中展示 StreamVLN 具身导航 baseline 的完整证据链：真实操作、数据结构、LoRA 训练、同批 Base/LoRA 配对轨迹、量化结果和四类创新挑战。主指标 `success@0.5m` 如实保留 Base 0/10、LoRA 0/10，所有数字只从评测结果文件读取。
+
+- [故事板清单](content/challenge-video/challenge-manifest.json)
+- [唯一评测指标源](experiments/exp02-equivalent-v3/eval_result.json)
+- [训练结果源](experiments/exp02-equivalent-v3/stage2_result_v2.json)
+- [成片字幕](assets/challenge-video/final/geniesim-streamvln-challenge.srt)
+- [媒体清单](assets/challenge-video/final/geniesim-streamvln-challenge-media-manifest.json)
+- [完整联系表](assets/challenge-video/preview/contact-sheet.jpg)
+- [验收报告](content/challenge-video/acceptance.json)
+- [B 站发布包](article/challenge-video-publish-package.md)
+- [发布状态](content/challenge-video/publishing-state.json)
+
+本地生成的主片位于 `assets/challenge-video/final/geniesim-streamvln-challenge.mp4`。大型 MP4、MP3、WAV 与中间渲染文件保持 Git 忽略，可用以下命令从受控故事板重新生成和验收：
+
+```bash
+python3 scripts/build_challenge_video_manifest.py \
+  --output content/challenge-video/challenge-manifest.json \
+  --source-output content/challenge-video/challenge-source.json \
+  --narration-output content/challenge-video/narration-sections.json
+
+python3 scripts/synthesize_challenge_voice.py
+python3 scripts/build_challenge_video.py
+
+python3 scripts/verify_challenge_video.py \
+  --manifest content/challenge-video/challenge-manifest.json \
+  --video assets/challenge-video/final/geniesim-streamvln-challenge.mp4 \
+  --srt assets/challenge-video/final/geniesim-streamvln-challenge.srt \
+  --media-manifest assets/challenge-video/final/geniesim-streamvln-challenge-media-manifest.json \
+  --eval experiments/exp02-equivalent-v3/eval_result.json \
+  --training-result experiments/exp02-equivalent-v3/stage2_result_v2.json \
+  --contact-sheet assets/challenge-video/preview/contact-sheet.jpg \
+  --output content/challenge-video/acceptance.json \
+  --manual-contact-sheet-reviewed
+```
+
+媒体完成不代表已经公开发布。当前状态固定为 `draft_not_submitted`；账号登录、沉稳男声试听、封面和标题终审、平台预览及最终提交均由用户确认。
+
 ## 四期深度教程系列（最终媒体已验收，平台尚未提交）
 
 - [系列设计与验收边界](docs/plans/2026-07-15-geniesim-vln-series-design.md)

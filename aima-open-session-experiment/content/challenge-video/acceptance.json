@@ -560,11 +560,11 @@
   "audio_errors": [],
   "black_frame_hits": [],
   "freeze_hits": [
-    "[Parsed_freezedetect_0 @ 0x134e784d0] lavfi.freezedetect.freeze_duration: 4.1",
-    "[Parsed_freezedetect_0 @ 0x134e784d0] lavfi.freezedetect.freeze_duration: 4.533333",
-    "[Parsed_freezedetect_0 @ 0x124e074b0] lavfi.freezedetect.freeze_duration: 4.4",
-    "[Parsed_freezedetect_0 @ 0x124e074b0] lavfi.freezedetect.freeze_duration: 4.8",
-    "[Parsed_freezedetect_0 @ 0x124e074b0] lavfi.freezedetect.freeze_duration: 6"
+    "lavfi.freezedetect.freeze_duration: 4.1",
+    "lavfi.freezedetect.freeze_duration: 4.533333",
+    "lavfi.freezedetect.freeze_duration: 4.4",
+    "lavfi.freezedetect.freeze_duration: 4.8",
+    "lavfi.freezedetect.freeze_duration: 6"
   ],
   "freeze_review": {
     "status": "informational",

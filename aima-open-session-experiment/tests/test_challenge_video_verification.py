@@ -5,6 +5,7 @@ from pathlib import Path
 
 from scripts.build_challenge_video_manifest import build_manifest
 from scripts.verify_challenge_video import (
+    _stable_ffmpeg_hits,
     acceptance_status,
     subtitle_errors,
     validate_audio_measurement,
@@ -132,6 +133,22 @@ class ChallengeVideoVerificationTests(unittest.TestCase):
             validate_audio_measurement(
                 {"integrated_lufs": -20.0, "true_peak_dbfs": -0.2}
             )
+        )
+
+    def test_ffmpeg_detector_hits_do_not_retain_process_memory_addresses(self):
+        stderr = (
+            "[Parsed_freezedetect_0 @ 0x123abc] "
+            "lavfi.freezedetect.freeze_duration: 4.1\n"
+            "[Parsed_freezedetect_0 @ 0x987def] "
+            "lavfi.freezedetect.freeze_duration: 4.5\n"
+        )
+
+        self.assertEqual(
+            _stable_ffmpeg_hits(stderr, "freeze_duration:"),
+            [
+                "lavfi.freezedetect.freeze_duration: 4.1",
+                "lavfi.freezedetect.freeze_duration: 4.5",
+            ],
         )
 
     def test_acceptance_requires_every_check_to_pass(self):

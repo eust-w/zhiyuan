@@ -247,6 +247,18 @@ def validate_audio_measurement(measurement: dict[str, float | None]) -> list[str
     return errors
 
 
+def _stable_ffmpeg_hits(stderr: str, marker: str) -> list[str]:
+    hits: list[str] = []
+    for line in stderr.splitlines():
+        if marker not in line:
+            continue
+        stable = line.strip()
+        if "] " in stable:
+            stable = stable.split("] ", 1)[1]
+        hits.append(stable)
+    return hits
+
+
 def black_frame_hits(path: Path) -> list[str]:
     result = subprocess.run(
         [
@@ -266,11 +278,7 @@ def black_frame_hits(path: Path) -> list[str]:
         text=True,
         check=False,
     )
-    return [
-        line.strip()
-        for line in result.stderr.splitlines()
-        if "black_duration:" in line
-    ]
+    return _stable_ffmpeg_hits(result.stderr, "black_duration:")
 
 
 def frozen_frame_hits(path: Path) -> list[str]:
@@ -292,11 +300,7 @@ def frozen_frame_hits(path: Path) -> list[str]:
         text=True,
         check=False,
     )
-    return [
-        line.strip()
-        for line in result.stderr.splitlines()
-        if "freeze_duration:" in line
-    ]
+    return _stable_ffmpeg_hits(result.stderr, "freeze_duration:")
 
 
 def decode_video(path: Path) -> tuple[bool, str]:
