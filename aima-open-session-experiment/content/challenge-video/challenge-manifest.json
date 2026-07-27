@@ -1,0 +1,2267 @@
+{
+  "schema_version": "geniesim-streamvln-challenge-video/v1",
+  "title": "GenieSim × StreamVLN 具身导航 baseline 与创新挑战",
+  "public_framing": "在 GenieSim 中搭建 StreamVLN 具身导航 baseline，完成数据采集、LoRA 训练和闭环评测，并探索进一步创新方向。",
+  "chapter_ids": [
+    "hook",
+    "baseline",
+    "operation",
+    "data",
+    "training",
+    "paired_eval",
+    "innovation",
+    "closing"
+  ],
+  "chapter_targets_s": {
+    "hook": 35,
+    "baseline": 45,
+    "operation": 100,
+    "data": 100,
+    "training": 120,
+    "paired_eval": 150,
+    "innovation": 70,
+    "closing": 40
+  },
+  "duration_s": 660.0,
+  "real_recording_ratio": 0.8303030303030303,
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+  "training_source": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+  "paired_episode_ids": [
+    "eval-2001",
+    "eval-2002",
+    "eval-2003",
+    "eval-2004",
+    "eval-2005",
+    "eval-2006",
+    "eval-2007",
+    "eval-2008",
+    "eval-2009",
+    "eval-2010"
+  ],
+  "paired_replays": [
+    "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+    "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+    "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4"
+  ],
+  "facts": {
+    "schema_version": "geniesim-streamvln-challenge-facts/v1",
+    "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+    "training_source": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+    "dataset_source": "experiments/exp02-equivalent-v3/dataset-validation.json",
+    "heldout_episode_ids": [
+      "eval-2001",
+      "eval-2002",
+      "eval-2003",
+      "eval-2004",
+      "eval-2005",
+      "eval-2006",
+      "eval-2007",
+      "eval-2008",
+      "eval-2009",
+      "eval-2010"
+    ],
+    "same_heldout_batch": true,
+    "scene": "market_00_g2",
+    "robot": "G2_omnipicker",
+    "camera": "/genie/head_link3/head_front_Camera",
+    "dataset": {
+      "smoke_episodes": 3,
+      "train_episodes": 50,
+      "heldout_episodes": 10
+    },
+    "lora_training": {
+      "updates": 59,
+      "loss_first": 0.4167,
+      "loss_last": 0.0823,
+      "grad_norm_max": 0.8733353018760681,
+      "peak_gpu_memory_mib": 27846,
+      "peak_gpu_memory_gib": 27.193359375,
+      "nan_or_inf": false,
+      "adapter_reload_passed": true,
+      "config": {
+        "lora_r": 8,
+        "lora_alpha": 16,
+        "lora_dropout": 0.05,
+        "epochs": 1,
+        "batch": 1,
+        "learning_rate": 2e-05,
+        "bf16": true,
+        "gradient_checkpointing": true,
+        "mm_tunable_parts": "mm_lora_layer"
+      }
+    },
+    "base": {
+      "episodes": 10,
+      "success_0_5": 0,
+      "success_3": 2,
+      "oracle_success_0_5": 0,
+      "oracle_success_3": 3,
+      "collisions": 132,
+      "mean_final_distance_to_goal": 3.9889178097623224,
+      "mean_min_distance_to_goal": 2.883657695817022,
+      "mean_path_length": 9.675,
+      "mean_spl_0_5": 0.0,
+      "mean_spl_3": 0.07483987701661328,
+      "mean_steps": 133.9,
+      "episodes_detail": [
+        {
+          "episode_id": "eval-2001",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.135568016328857,
+          "min_distance_to_goal": 3.135568016328857,
+          "path_length": 6.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 66,
+          "collisions": 2,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 26,
+            "left": 21,
+            "right": 18
+          }
+        },
+        {
+          "episode_id": "eval-2002",
+          "success_0_5": false,
+          "success_3": true,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 1.3986459332839853,
+          "min_distance_to_goal": 1.3986459332839853,
+          "path_length": 11.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.3393901399590602,
+          "steps": 114,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 47,
+            "left": 24,
+            "right": 42
+          }
+        },
+        {
+          "episode_id": "eval-2003",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.41866965221421,
+          "min_distance_to_goal": 3.7323126652618948,
+          "path_length": 3.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 41,
+          "collisions": 2,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 14,
+            "left": 12,
+            "right": 14
+          }
+        },
+        {
+          "episode_id": "eval-2004",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 4.001582413791203,
+          "min_distance_to_goal": 1.3093675665518998,
+          "path_length": 14.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 200,
+          "collisions": 18,
+          "truncated": true,
+          "action_counts": {
+            "stop": 0,
+            "forward": 77,
+            "left": 73,
+            "right": 50
+          }
+        },
+        {
+          "episode_id": "eval-2005",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.587421161477075,
+          "min_distance_to_goal": 3.587421161477075,
+          "path_length": 6.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 67,
+          "collisions": 1,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 26,
+            "left": 20,
+            "right": 20
+          }
+        },
+        {
+          "episode_id": "eval-2006",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.134463959329929,
+          "min_distance_to_goal": 3.6985012444022938,
+          "path_length": 13.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 153,
+          "collisions": 8,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 63,
+            "left": 28,
+            "right": 61
+          }
+        },
+        {
+          "episode_id": "eval-2007",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.1441209069690195,
+          "min_distance_to_goal": 3.1441209069690195,
+          "path_length": 13.5,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 200,
+          "collisions": 23,
+          "truncated": true,
+          "action_counts": {
+            "stop": 0,
+            "forward": 77,
+            "left": 38,
+            "right": 85
+          }
+        },
+        {
+          "episode_id": "eval-2008",
+          "success_0_5": false,
+          "success_3": true,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 1.589407675061666,
+          "min_distance_to_goal": 1.589407675061666,
+          "path_length": 9.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.4090086302070725,
+          "steps": 120,
+          "collisions": 5,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 44,
+            "left": 24,
+            "right": 51
+          }
+        },
+        {
+          "episode_id": "eval-2009",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 8.81499435910863,
+          "min_distance_to_goal": 3.5769277687748824,
+          "path_length": 9.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 200,
+          "collisions": 44,
+          "truncated": true,
+          "action_counts": {
+            "stop": 0,
+            "forward": 81,
+            "left": 49,
+            "right": 70
+          }
+        },
+        {
+          "episode_id": "eval-2010",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.664304020058648,
+          "min_distance_to_goal": 3.664304020058648,
+          "path_length": 8.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 178,
+          "collisions": 29,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 64,
+            "left": 64,
+            "right": 49
+          }
+        }
+      ],
+      "collisions_meaning": "安全门拦截的前进尝试"
+    },
+    "lora": {
+      "episodes": 10,
+      "success_0_5": 0,
+      "success_3": 1,
+      "oracle_success_0_5": 0,
+      "oracle_success_3": 1,
+      "collisions": 45,
+      "mean_final_distance_to_goal": 4.686244300975281,
+      "mean_min_distance_to_goal": 3.481507005190384,
+      "mean_path_length": 5.5,
+      "mean_spl_0_5": 0.0,
+      "mean_spl_3": 0.06646390240864929,
+      "mean_steps": 53.2,
+      "episodes_detail": [
+        {
+          "episode_id": "eval-2001",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.485803952210057,
+          "min_distance_to_goal": 3.7901032123836935,
+          "path_length": 4.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 32,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 17,
+            "left": 7,
+            "right": 7
+          }
+        },
+        {
+          "episode_id": "eval-2002",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.987080616488643,
+          "min_distance_to_goal": 3.7977465798531633,
+          "path_length": 3.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 32,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 15,
+            "left": 7,
+            "right": 9
+          }
+        },
+        {
+          "episode_id": "eval-2003",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.125054958022175,
+          "min_distance_to_goal": 3.6472472453063975,
+          "path_length": 10.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 122,
+          "collisions": 16,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 59,
+            "left": 16,
+            "right": 46
+          }
+        },
+        {
+          "episode_id": "eval-2004",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.493025910057133,
+          "min_distance_to_goal": 3.6523326748301095,
+          "path_length": 5.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 51,
+          "collisions": 6,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 26,
+            "left": 11,
+            "right": 13
+          }
+        },
+        {
+          "episode_id": "eval-2005",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.5836098342923117,
+          "min_distance_to_goal": 3.3358339377622506,
+          "path_length": 9.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 90,
+          "collisions": 8,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 45,
+            "left": 10,
+            "right": 34
+          }
+        },
+        {
+          "episode_id": "eval-2006",
+          "success_0_5": false,
+          "success_3": true,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 2.5068474654143476,
+          "min_distance_to_goal": 2.5068474654143476,
+          "path_length": 6.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.6646390240864929,
+          "steps": 57,
+          "collisions": 5,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 29,
+            "left": 14,
+            "right": 13
+          }
+        },
+        {
+          "episode_id": "eval-2007",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.62247220231039,
+          "min_distance_to_goal": 3.7168847594894285,
+          "path_length": 5.5,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 49,
+          "collisions": 3,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 25,
+            "left": 3,
+            "right": 20
+          }
+        },
+        {
+          "episode_id": "eval-2008",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.3315114013246605,
+          "min_distance_to_goal": 3.3315114013246605,
+          "path_length": 2.2500000000000004,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 16,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 9,
+            "left": 2,
+            "right": 4
+          }
+        },
+        {
+          "episode_id": "eval-2009",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.612953389372427,
+          "min_distance_to_goal": 3.5769277687748824,
+          "path_length": 5.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 56,
+          "collisions": 7,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 28,
+            "left": 8,
+            "right": 19
+          }
+        },
+        {
+          "episode_id": "eval-2010",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.114083280260675,
+          "min_distance_to_goal": 3.4596350067649055,
+          "path_length": 2.999999999999999,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 27,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 12,
+            "left": 8,
+            "right": 6
+          }
+        }
+      ],
+      "collisions_meaning": "安全门拦截的前进尝试"
+    }
+  },
+  "narration_sections": [
+    {
+      "chapter_id": "hook",
+      "title": "机器人动起来以后，挑战才真正开始",
+      "text": "画面里的机器人已经能在货架之间前进、转向，也能根据头部相机看到的画面输出下一步动作。但它会动，并不等于它会导航。真正要验证的是一条完整链路：语言指令进入模型，模型根据当前图像给出动作，动作驱动仿真，新的图像、深度、位姿和目标距离再回到下一轮推理，直到模型主动停止或达到步数上限。这次挑战不挑最好看的一条轨迹，而是保留同一批十条未知轨迹，把基础模型和微调模型放在完全相同的起点上比较。画面会同时展示成功、失败、绕行、过早停止和安全门拦截。重点不是把结果包装得漂亮，而是回答三个问题：链路是否真的闭合，训练是否真的发生，模型是否真的更接近目标。"
+    },
+    {
+      "chapter_id": "baseline",
+      "title": "先定义一条可以复核的闭环",
+      "text": "实验场景是 market_00_g2，机器人使用 G2 Omnipicker 和头部前向相机，目标是一块醒目的红色标记。这里采用平面刚体导航，只验证视觉语言导航链路，不把画面中的平移描述成人形步态。动作空间固定为四个离散动作：零是停止，一是向前二十五厘米，二是左转十五度，三是右转十五度。每次动作完成后至少等待两个渲染帧，再同步保存彩色图、深度、四乘四位姿、目标距离以及是否被阻挡。模型请求和仿真执行由队列隔开，所有场景操作仍留在主线程，这样不会因为网络线程抢占而制造难以复现的状态。服务只监听本机回环地址；视频中不展示地址、连接信息或机器标识。接下来每一个数字和画面，都能回到对应的结果文件。"
+    },
+    {
+      "chapter_id": "operation",
+      "title": "真实操作：动作、观察与安全门",
+      "text": "先看最基础的动作验证。机器人执行前进后，平面位移应接近二十五厘米；执行左右转后，航向增量应接近十五度；停止动作不再改变位姿。键盘阶段还保留后退用于人工排查，但训练动作空间只有停止、前进、左转和右转。更重要的是障碍验证：当前方中心深度低于安全阈值时，前进请求会被拒绝，blocked 变为真，位姿矩阵保持不变。画面里的碰撞计数实际记录的是这种安全门拦截的前进尝试，不代表机器人已经穿进货架或发生实体撞击。每一步落盘后，接口返回 step_id、彩色图路径、深度路径、位姿、目标距离、阻挡状态以及终止状态。同一个 request_id 如果重发，只返回缓存结果，不重复移动。这样既能处理网络重试，也能保证动作统计不会被重复请求污染。这部分看似只是让机器人走几步，却决定了后面采集和评测是否可信：如果动作增量、帧同步或阻挡语义不稳定，再漂亮的训练曲线也无法说明模型学会了导航。"
+    },
+    {
+      "chapter_id": "data",
+      "title": "数据结构：五十条训练与十条未知轨迹",
+      "text": "数据采集先运行三条冒烟轨迹，用来检查目录、图像解码和动作长度；通过后再使用固定种子生成五十条训练轨迹，种子从一千零一到一千零五十。评测使用另一组十条固定种子，从两千零一到两千零一十，训练阶段看不到这些轨迹。起点和目标必须处在同一可达连通区，优先选择二到六米的距离，再由带二十四个朝向的平面搜索器生成参考路径。StreamVLN 使用的 annotations.json 保存图像序列、指令和动作标签，首动作是负一，图像数量与动作数组严格一致，末尾停止动作不写进这个训练标注。完整的停止、深度、位姿轨迹、目标位置、阻挡记录和终止原因，则写入独立 sidecar。把两者分开，是为了既满足训练读取格式，又不丢失复核闭环所需的仿真细节。每条轨迹还要通过帧数、动作数、相对路径、文件边界、图像可解码和碰撞字段检查。最终五十条训练和十条评测全部有效；视频展示的是其中一条真实采集轨迹与对应目录结构，不用示意数据冒充真实样本。"
+    },
+    {
+      "chapter_id": "training",
+      "title": "训练过程：损失下降只能证明训练跑通",
+      "text": "仿真和训练使用彼此隔离的 Python 环境。仿真继续使用 Isaac 自带环境，StreamVLN 则在独立的 Python 三点九环境中加载模型，避免为了训练升级依赖后破坏场景运行。LoRA 参数固定为秩八、缩放十六、丢弃率百分之五，训练一轮，批量为一，学习率二乘十的负五次方，使用 BF16 和梯度检查点，调节部分限定为多模态 LoRA 层。正式训练之前依次通过四道门：只读取数据集，执行单批前向和反向，完成全量训练，再在新进程中重新加载适配器。单批测试得到有限且非零的损失和梯度，说明标签没有全部被掩码。完整训练记录五十九个有效更新步，首步损失零点四一六七，末步零点零八二三，最大梯度范数保持有限，峰值显存约二十七点一九 GiB，没有出现显存溢出、非数或无穷值。新进程重载通过，说明保存的适配器可以再次装载。但是损失下降只说明模型拟合了这批监督数据，重载通过只说明文件结构可用；二者都不能替代闭环导航成功率。所以训练结束后必须回到相同未知轨迹，让模型自己产生动作。"
+    },
+    {
+      "chapter_id": "paired_eval",
+      "title": "配对评测：同一批十条轨迹逐条对照",
+      "text": "现在进入最关键的配对评测。基础模型和 LoRA 都使用 eval 二零零一到二零一零这十条轨迹，每一条都从相同起点和目标开始；每次重置缓存、历史记忆和动作队列，最多执行二百步，非法输出安全转换为停止。画面按照同一个编号先放基础模型，再放 LoRA，十组轨迹全部进入汇总，不用单条较好的表现代替总体结果。二零零一可以看到两个模型都没有进入半米成功圈；随后八组采用较快节奏展示转向、前进、停止和被安全门拦截的差异；二零零九的基础模型多次尝试前进并达到步数上限，是安全拦截较集中的失败案例；最后用二零一零收束整批对照。主指标半米成功率，基础模型是零比十，LoRA 也是零比十，因此两者的半米 SPL 都是零。三米只作为辅助观察，基础模型有两条进入三米范围，LoRA 有一条。基础模型平均最终距离约三点九九米，LoRA 约四点六九米。安全门拦截的前进尝试分别为一百三十二次和四十五次。这些结果说明闭环和配对评测真实运行了，但这次微调没有在半米目标上带来提升；LoRA 动作更少、拦截更少，也可能来自更早停止，而不是更好的导航。判断改进必须同时看成功、距离、路径、步数和动作分布。"
+    },
+    {
+      "chapter_id": "innovation",
+      "title": "创新挑战：从跑通 baseline 到真正改进",
+      "text": "零比十不是故事的终点，而是下一轮创新的起点。第一条方向是场景与目标多样性：增加不同货架布局、光照、遮挡和目标外观，检查模型是否只记住红色标记和固定通道。第二条方向是数据多样性：加入更长路径、转角、死路、难负样本和指令改写，同时保持训练与评测严格隔离。第三条方向是算法：比较更长视觉记忆、显式局部地图、分层规划、动作平滑以及安全门反馈进入模型后的效果，避免模型在障碍前反复请求同一动作。第四条方向是评测：为过早停止、原地旋转、走反方向、安全门震荡和超步数建立失败分类，固定随机种子和版本，让每次改动都能与同一基线配对比较。完成 baseline 并通过实际验收后，可按活动规则申请智元认证证书；创新成果的算力、技术辅导或展示资源，以主办方实际审核和通知为准。真正有说服力的创新不是再剪一条看起来成功的视频，而是在更多未知场景上让半米成功率、SPL 和最终距离稳定改善，并且能说明改善来自哪一项设计。"
+    },
+    {
+      "chapter_id": "closing",
+      "title": "结论：把失败也变成可复用资产",
+      "text": "回看整条链路，机器人动作、观察同步、五十条训练数据、十条未知轨迹、LoRA 五十九步训练、适配器重载以及 Base 与 LoRA 配对闭环都留下了可检查证据。结果也同样明确：半米成功率都是零比十，当前微调没有提升主指标。这并不意味着前面的工作没有价值，它把问题从会不会运行推进到了为什么没有泛化，也给下一轮场景、数据、记忆和规划实验建立了稳定对照。当新的方法出现时，不需要重新发明评测口径，只要在同一批轨迹和同一套指标上重新运行，就能看到改动究竟解决了什么。真正的挑战，不是做出一段演示，而是让每一个结果都经得起复核。"
+    }
+  ],
+  "segments": [
+    {
+      "segment_id": "001-hook-opening-01",
+      "chapter_id": "hook",
+      "source": "assets/series/recapture/raw/stage23-evidence/base-one-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 10.5,
+      "source_in_s": 0,
+      "source_out_s": 10.5,
+      "narration_section": "hook",
+      "subtitle": [
+        "真实 Base/LoRA 轨迹",
+        "先看结果再拆流程"
+      ],
+      "overlay": "模型动作驱动仿真",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "002-hook-evidence-01",
+      "chapter_id": "hook",
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "hook",
+      "subtitle": [
+        "先看真实结果"
+      ],
+      "overlay": "半米成功率：0/10 对 0/10",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "003-hook-opening-02",
+      "chapter_id": "hook",
+      "source": "assets/series/recapture/raw/stage23-evidence/lora-one-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 10.5,
+      "source_in_s": 0,
+      "source_out_s": 10.5,
+      "narration_section": "hook",
+      "subtitle": [
+        "真实 Base/LoRA 轨迹",
+        "先看结果再拆流程"
+      ],
+      "overlay": "模型动作驱动仿真",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "004-hook-evidence-02",
+      "chapter_id": "hook",
+      "source": "assets/screenshots/v3/stage3-episode-distances.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "hook",
+      "subtitle": [
+        "不挑最好的一条"
+      ],
+      "overlay": "十条未知轨迹全部进入汇总",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "005-hook-opening-context-01",
+      "chapter_id": "hook",
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 8,
+      "source_in_s": 9,
+      "source_out_s": 17,
+      "narration_section": "hook",
+      "subtitle": [
+        "不是剪一条成功轨迹",
+        "十条全部进入汇总"
+      ],
+      "overlay": "同一批未知轨迹",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "006-baseline-scene-camera",
+      "chapter_id": "baseline",
+      "source": "assets/series/recapture/raw/stage0-rgb-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 12.0,
+      "source_in_s": 0,
+      "source_out_s": 12.0,
+      "narration_section": "baseline",
+      "subtitle": [
+        "market_00_g2 场景",
+        "G2 与头部相机"
+      ],
+      "overlay": "场景、机器人、相机",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "007-baseline-evidence-01",
+      "chapter_id": "baseline",
+      "source": "assets/screenshots/v3/stage0-validation.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "baseline",
+      "subtitle": [
+        "先定义闭环"
+      ],
+      "overlay": "场景、机器人、相机均已验证",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "008-baseline-action-baseline",
+      "chapter_id": "baseline",
+      "source": "assets/series/recapture/raw/stage0-blocked-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 16.0,
+      "source_in_s": 0,
+      "source_out_s": 16.0,
+      "narration_section": "baseline",
+      "subtitle": [
+        "四个离散动作",
+        "动作后同步观察"
+      ],
+      "overlay": "STOP / 前进 / 左转 / 右转",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "009-baseline-evidence-02",
+      "chapter_id": "baseline",
+      "source": "assets/plots/evidence-chain.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "baseline",
+      "subtitle": [
+        "每一步都能回查"
+      ],
+      "overlay": "指令 → 动作 → 仿真 → 新观察",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "010-baseline-closed-loop-01",
+      "chapter_id": "baseline",
+      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 8,
+      "source_in_s": 7,
+      "source_out_s": 15,
+      "narration_section": "baseline",
+      "subtitle": [
+        "语言、图像、动作、仿真",
+        "闭环持续更新"
+      ],
+      "overlay": "指令到新观察的闭环",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "011-baseline-evidence-03",
+      "chapter_id": "baseline",
+      "source": "assets/plots/action-counts.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "baseline",
+      "subtitle": [
+        "四个离散动作"
+      ],
+      "overlay": "动作空间：停止、前进、左转、右转",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "012-operation-operation-01",
+      "chapter_id": "operation",
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 22.0,
+      "source_in_s": 7,
+      "source_out_s": 29.0,
+      "narration_section": "operation",
+      "subtitle": [
+        "动作 ID、距离、blocked",
+        "真实闭环持续运行"
+      ],
+      "overlay": "动作与安全门实时状态",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "013-operation-evidence-01",
+      "chapter_id": "operation",
+      "source": "assets/screenshots/v3/stage0-forward-before.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "operation",
+      "subtitle": [
+        "记录动作前状态"
+      ],
+      "overlay": "前进前位姿",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "014-operation-operation-02",
+      "chapter_id": "operation",
+      "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 10.5,
+      "source_in_s": 6,
+      "source_out_s": 16.5,
+      "narration_section": "operation",
+      "subtitle": [
+        "动作 ID、距离、blocked",
+        "真实闭环持续运行"
+      ],
+      "overlay": "动作与安全门实时状态",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "015-operation-evidence-02",
+      "chapter_id": "operation",
+      "source": "assets/screenshots/v3/stage0-forward-after.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "operation",
+      "subtitle": [
+        "核对位移增量"
+      ],
+      "overlay": "前进约 0.25 米",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "016-operation-operation-03",
+      "chapter_id": "operation",
+      "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 15.0,
+      "source_in_s": 6,
+      "source_out_s": 21.0,
+      "narration_section": "operation",
+      "subtitle": [
+        "动作 ID、距离、blocked",
+        "真实闭环持续运行"
+      ],
+      "overlay": "动作与安全门实时状态",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "017-operation-evidence-03",
+      "chapter_id": "operation",
+      "source": "assets/screenshots/v3/stage0-before-block.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "operation",
+      "subtitle": [
+        "安全门检查深度"
+      ],
+      "overlay": "障碍前请求前进",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "018-operation-operation-04",
+      "chapter_id": "operation",
+      "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 22.0,
+      "source_in_s": 7,
+      "source_out_s": 29.0,
+      "narration_section": "operation",
+      "subtitle": [
+        "动作 ID、距离、blocked",
+        "真实闭环持续运行"
+      ],
+      "overlay": "动作与安全门实时状态",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "019-operation-evidence-04",
+      "chapter_id": "operation",
+      "source": "assets/screenshots/v3/stage0-after-block.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "operation",
+      "subtitle": [
+        "拒绝危险前进"
+      ],
+      "overlay": "blocked=true，位姿不变",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "020-operation-operation-05",
+      "chapter_id": "operation",
+      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 12.5,
+      "source_in_s": 9,
+      "source_out_s": 21.5,
+      "narration_section": "operation",
+      "subtitle": [
+        "动作 ID、距离、blocked",
+        "真实闭环持续运行"
+      ],
+      "overlay": "动作与安全门实时状态",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "021-operation-evidence-05",
+      "chapter_id": "operation",
+      "source": "assets/plots/action-counts.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "operation",
+      "subtitle": [
+        "重复请求不重复移动"
+      ],
+      "overlay": "动作计数来自实际闭环",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "022-operation-evidence-06",
+      "chapter_id": "operation",
+      "source": "assets/screenshots/v3/stage0-validation.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "operation",
+      "subtitle": [
+        "动作后等待两帧"
+      ],
+      "overlay": "RGB、depth、pose 同步",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "023-data-train-1001",
+      "chapter_id": "data",
+      "source": "assets/series/recapture/raw/stage1-train1001-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 10.5,
+      "source_in_s": 0,
+      "source_out_s": 10.5,
+      "narration_section": "data",
+      "subtitle": [
+        "单条真实数据采集",
+        "RGB / depth / pose / action"
+      ],
+      "overlay": "train-1001 数据落盘",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "024-data-evidence-01",
+      "chapter_id": "data",
+      "source": "assets/screenshots/v3/stage1-validation.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "data",
+      "subtitle": [
+        "固定种子拆分"
+      ],
+      "overlay": "50 条训练 + 10 条评测",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "025-data-dataset-context-01",
+      "chapter_id": "data",
+      "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 20.0,
+      "source_in_s": 6,
+      "source_out_s": 26.0,
+      "narration_section": "data",
+      "subtitle": [
+        "固定种子生成轨迹",
+        "训练与评测严格分开"
+      ],
+      "overlay": "五十条训练与十条未知轨迹",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "026-data-evidence-02",
+      "chapter_id": "data",
+      "source": "assets/plots/schema-sidecar.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "data",
+      "subtitle": [
+        "两种结构各司其职"
+      ],
+      "overlay": "训练标注与完整 sidecar 分离",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "027-data-dataset-context-02",
+      "chapter_id": "data",
+      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 22.0,
+      "source_in_s": 6,
+      "source_out_s": 28.0,
+      "narration_section": "data",
+      "subtitle": [
+        "固定种子生成轨迹",
+        "训练与评测严格分开"
+      ],
+      "overlay": "五十条训练与十条未知轨迹",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "028-data-evidence-03",
+      "chapter_id": "data",
+      "source": "assets/screenshots/v3/train-1001-start.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "data",
+      "subtitle": [
+        "真实采集帧"
+      ],
+      "overlay": "训练轨迹起点",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "029-data-dataset-context-03",
+      "chapter_id": "data",
+      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 22.0,
+      "source_in_s": 6,
+      "source_out_s": 28.0,
+      "narration_section": "data",
+      "subtitle": [
+        "固定种子生成轨迹",
+        "训练与评测严格分开"
+      ],
+      "overlay": "五十条训练与十条未知轨迹",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "030-data-evidence-04",
+      "chapter_id": "data",
+      "source": "assets/screenshots/v3/train-1001-goal.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "data",
+      "subtitle": [
+        "目标可见且可达"
+      ],
+      "overlay": "红色目标标记",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "031-data-dataset-context-04",
+      "chapter_id": "data",
+      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 7.5,
+      "source_in_s": 7,
+      "source_out_s": 14.5,
+      "narration_section": "data",
+      "subtitle": [
+        "固定种子生成轨迹",
+        "训练与评测严格分开"
+      ],
+      "overlay": "五十条训练与十条未知轨迹",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "032-data-evidence-05",
+      "chapter_id": "data",
+      "source": "assets/screenshots/v3/train-1025-mid.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "data",
+      "subtitle": [
+        "检查图像与动作"
+      ],
+      "overlay": "中段轨迹抽查",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "033-data-evidence-06",
+      "chapter_id": "data",
+      "source": "assets/screenshots/v3/train-1050-mid.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "data",
+      "subtitle": [
+        "全部样本通过检查"
+      ],
+      "overlay": "第 50 条训练轨迹抽查",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "034-training-single-batch",
+      "chapter_id": "training",
+      "source": "assets/series/recapture/raw/stage2-single-batch-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 12.0,
+      "source_in_s": 0,
+      "source_out_s": 12.0,
+      "narration_section": "training",
+      "subtitle": [
+        "单批前向与反向",
+        "损失、梯度均有效"
+      ],
+      "overlay": "训练前单批验证",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "035-training-evidence-01",
+      "chapter_id": "training",
+      "source": "assets/screenshots/v3/stage2-gates.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "training",
+      "subtitle": [
+        "数据、前后向、训练、重载"
+      ],
+      "overlay": "四道训练验证门",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "036-training-adapter-reload",
+      "chapter_id": "training",
+      "source": "assets/series/recapture/raw/stage2-adapter-reload-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 12.0,
+      "source_in_s": 0,
+      "source_out_s": 12.0,
+      "narration_section": "training",
+      "subtitle": [
+        "新进程重新加载",
+        "适配器文件可用"
+      ],
+      "overlay": "LoRA adapter 重载",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "037-training-evidence-02",
+      "chapter_id": "training",
+      "source": "assets/plots/lora-config.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "training",
+      "subtitle": [
+        "参数固定可复核"
+      ],
+      "overlay": "LoRA：r=8，alpha=16",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "038-training-training-context-01",
+      "chapter_id": "training",
+      "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 22.0,
+      "source_in_s": 6,
+      "source_out_s": 28.0,
+      "narration_section": "training",
+      "subtitle": [
+        "五十九个有效更新步",
+        "损失下降不代表会导航"
+      ],
+      "overlay": "真实训练记录与闭环画面",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "039-training-evidence-03",
+      "chapter_id": "training",
+      "source": "assets/plots/validation-gates.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "training",
+      "subtitle": [
+        "先证明标签有效"
+      ],
+      "overlay": "单批损失与梯度均非零",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "040-training-training-context-02",
+      "chapter_id": "training",
+      "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 22.0,
+      "source_in_s": 9,
+      "source_out_s": 31.0,
+      "narration_section": "training",
+      "subtitle": [
+        "五十九个有效更新步",
+        "损失下降不代表会导航"
+      ],
+      "overlay": "真实训练记录与闭环画面",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "041-training-evidence-04",
+      "chapter_id": "training",
+      "source": "assets/screenshots/v3/stage2-loss-curve.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "training",
+      "subtitle": [
+        "训练确实发生"
+      ],
+      "overlay": "59 步：0.4167 → 0.0823",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "042-training-training-context-03",
+      "chapter_id": "training",
+      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 19.0,
+      "source_in_s": 6,
+      "source_out_s": 25.0,
+      "narration_section": "training",
+      "subtitle": [
+        "五十九个有效更新步",
+        "损失下降不代表会导航"
+      ],
+      "overlay": "真实训练记录与闭环画面",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "043-training-evidence-05",
+      "chapter_id": "training",
+      "source": "assets/plots/lora-config.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "training",
+      "subtitle": [
+        "没有非数或无穷"
+      ],
+      "overlay": "峰值显存约 27.19 GiB",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "044-training-training-context-04",
+      "chapter_id": "training",
+      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 12.0,
+      "source_in_s": 7,
+      "source_out_s": 19.0,
+      "narration_section": "training",
+      "subtitle": [
+        "五十九个有效更新步",
+        "损失下降不代表会导航"
+      ],
+      "overlay": "真实训练记录与闭环画面",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "045-training-evidence-06",
+      "chapter_id": "training",
+      "source": "assets/screenshots/v3/stage2-gates.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "training",
+      "subtitle": [
+        "文件可以再次装载"
+      ],
+      "overlay": "新进程适配器重载通过",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "046-training-evidence-07",
+      "chapter_id": "training",
+      "source": "assets/screenshots/v3/stage2-loss-curve.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "training",
+      "subtitle": [
+        "必须回到闭环评测"
+      ],
+      "overlay": "损失下降不等于导航成功",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "047-paired_eval-2001-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 9,
+      "source_in_s": 0,
+      "source_out_s": 9,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2001 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2001 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2001",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "048-paired_eval-evidence-01",
+      "chapter_id": "paired_eval",
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "配对而不是挑样本"
+      ],
+      "overlay": "Base 与 LoRA 使用同一批十条",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "049-paired_eval-2001-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 7,
+      "source_in_s": 0,
+      "source_out_s": 7,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2001 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2001 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2001",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "050-paired_eval-evidence-02",
+      "chapter_id": "paired_eval",
+      "source": "assets/plots/metrics-base-lora.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "主指标没有提升"
+      ],
+      "overlay": "半米成功率均为 0/10",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "051-paired_eval-2002-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 7,
+      "source_in_s": 0,
+      "source_out_s": 7,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2002 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2002 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2002",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "052-paired_eval-evidence-03",
+      "chapter_id": "paired_eval",
+      "source": "assets/screenshots/v3/stage3-episode-distances.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "失败也进入汇总"
+      ],
+      "overlay": "逐条最终距离",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "053-paired_eval-2002-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2002 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2002 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2002",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "054-paired_eval-evidence-04",
+      "chapter_id": "paired_eval",
+      "source": "assets/plots/action-counts.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "不是实体撞击"
+      ],
+      "overlay": "安全拦截：132 对 45",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "055-paired_eval-2003-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2003 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2003 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2003",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "056-paired_eval-evidence-05",
+      "chapter_id": "paired_eval",
+      "source": "assets/plots/episode-distance.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "同时观察距离与动作"
+      ],
+      "overlay": "平均最终距离：3.99 米对 4.69 米",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "057-paired_eval-2003-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 7,
+      "source_in_s": 0,
+      "source_out_s": 7,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2003 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2003 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2003",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "058-paired_eval-2004-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 9,
+      "source_in_s": 0,
+      "source_out_s": 9,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2004 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2004 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2004",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "059-paired_eval-2004-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2004 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2004 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2004",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "060-paired_eval-2005-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2005 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2005 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2005",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "061-paired_eval-2005-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2005 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2005 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2005",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "062-paired_eval-2006-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 7,
+      "source_in_s": 0,
+      "source_out_s": 7,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2006 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2006 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2006",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "063-paired_eval-2006-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2006 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2006 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2006",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "064-paired_eval-2007-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 9,
+      "source_in_s": 0,
+      "source_out_s": 9,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2007 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2007 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2007",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "065-paired_eval-2007-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2007 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2007 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2007",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "066-paired_eval-2008-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 7,
+      "source_in_s": 0,
+      "source_out_s": 7,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2008 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2008 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2008",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "067-paired_eval-2008-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 5,
+      "source_in_s": 0,
+      "source_out_s": 5,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2008 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2008 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2008",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "068-paired_eval-2009-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 9,
+      "source_in_s": 0,
+      "source_out_s": 9,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2009 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2009 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2009",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "069-paired_eval-2009-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2009 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2009 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2009",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "070-paired_eval-2010-base",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6,
+      "source_in_s": 0,
+      "source_out_s": 6,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2010 · Base",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2010 · Base",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2010",
+      "pair_variant": "base"
+    },
+    {
+      "segment_id": "071-paired_eval-2010-lora",
+      "chapter_id": "paired_eval",
+      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 5,
+      "source_in_s": 0,
+      "source_out_s": 5,
+      "narration_section": "paired_eval",
+      "subtitle": [
+        "eval-2010 · LoRA",
+        "模型自己产生动作"
+      ],
+      "overlay": "配对轨迹 2010 · LoRA",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false,
+      "pair_episode_id": "eval-2010",
+      "pair_variant": "lora"
+    },
+    {
+      "segment_id": "072-innovation-innovation-context-01",
+      "chapter_id": "innovation",
+      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3.5,
+      "source_in_s": 5,
+      "source_out_s": 8.5,
+      "narration_section": "innovation",
+      "subtitle": [
+        "从失败轨迹寻找改进点",
+        "场景、数据、算法、评测"
+      ],
+      "overlay": "创新挑战从可复核对照开始",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "073-innovation-evidence-01",
+      "chapter_id": "innovation",
+      "source": "assets/plots/next-roadmap.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 4,
+      "source_in_s": 0,
+      "source_out_s": 4,
+      "narration_section": "innovation",
+      "subtitle": [
+        "检验视觉泛化"
+      ],
+      "overlay": "方向一：场景与目标多样性",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "074-innovation-innovation-context-02",
+      "chapter_id": "innovation",
+      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 22.0,
+      "source_in_s": 9,
+      "source_out_s": 31.0,
+      "narration_section": "innovation",
+      "subtitle": [
+        "从失败轨迹寻找改进点",
+        "场景、数据、算法、评测"
+      ],
+      "overlay": "创新挑战从可复核对照开始",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "075-innovation-evidence-02",
+      "chapter_id": "innovation",
+      "source": "assets/plots/schema-sidecar.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json",
+      "duration_s": 4,
+      "source_in_s": 0,
+      "source_out_s": 4,
+      "narration_section": "innovation",
+      "subtitle": [
+        "严格隔离训练评测"
+      ],
+      "overlay": "方向二：数据与难负样本",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "076-innovation-innovation-context-03",
+      "chapter_id": "innovation",
+      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 22.0,
+      "source_in_s": 6,
+      "source_out_s": 28.0,
+      "narration_section": "innovation",
+      "subtitle": [
+        "从失败轨迹寻找改进点",
+        "场景、数据、算法、评测"
+      ],
+      "overlay": "创新挑战从可复核对照开始",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "077-innovation-evidence-03",
+      "chapter_id": "innovation",
+      "source": "assets/plots/evidence-chain.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 4,
+      "source_in_s": 0,
+      "source_out_s": 4,
+      "narration_section": "innovation",
+      "subtitle": [
+        "减少重复无效动作"
+      ],
+      "overlay": "方向三：记忆、规划与安全反馈",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "078-innovation-innovation-context-04",
+      "chapter_id": "innovation",
+      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 6.5,
+      "source_in_s": 6,
+      "source_out_s": 12.5,
+      "narration_section": "innovation",
+      "subtitle": [
+        "从失败轨迹寻找改进点",
+        "场景、数据、算法、评测"
+      ],
+      "overlay": "创新挑战从可复核对照开始",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "079-innovation-evidence-04",
+      "chapter_id": "innovation",
+      "source": "assets/plots/metrics-base-lora.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 4,
+      "source_in_s": 0,
+      "source_out_s": 4,
+      "narration_section": "innovation",
+      "subtitle": [
+        "用指标证明改进"
+      ],
+      "overlay": "方向四：配对评测与失败分类",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "080-closing-closing-01",
+      "chapter_id": "closing",
+      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 9.0,
+      "source_in_s": 5,
+      "source_out_s": 14.0,
+      "narration_section": "closing",
+      "subtitle": [
+        "保留成功也保留失败",
+        "下一轮继续配对验证"
+      ],
+      "overlay": "把失败变成可复用资产",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "081-closing-evidence-01",
+      "chapter_id": "closing",
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "closing",
+      "subtitle": [
+        "诚实记录当前结果"
+      ],
+      "overlay": "闭环完成，主指标仍为 0/10",
+      "public_label": "真实结果",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "082-closing-closing-02",
+      "chapter_id": "closing",
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 16.5,
+      "source_in_s": 17,
+      "source_out_s": 33.5,
+      "narration_section": "closing",
+      "subtitle": [
+        "保留成功也保留失败",
+        "下一轮继续配对验证"
+      ],
+      "overlay": "把失败变成可复用资产",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "083-closing-evidence-02",
+      "chapter_id": "closing",
+      "source": "assets/plots/next-roadmap.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "closing",
+      "subtitle": [
+        "建立稳定对照"
+      ],
+      "overlay": "下一轮从失败分类开始",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "084-closing-closing-03",
+      "chapter_id": "closing",
+      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 1.5,
+      "source_in_s": 15,
+      "source_out_s": 16.5,
+      "narration_section": "closing",
+      "subtitle": [
+        "保留成功也保留失败",
+        "下一轮继续配对验证"
+      ],
+      "overlay": "把失败变成可复用资产",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "085-closing-evidence-03",
+      "chapter_id": "closing",
+      "source": "assets/plots/evidence-chain.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 3,
+      "source_in_s": 0,
+      "source_out_s": 3,
+      "narration_section": "closing",
+      "subtitle": [
+        "证据链闭合"
+      ],
+      "overlay": "让每个结果经得起复核",
+      "public_label": "流程示意",
+      "layout": "landscape",
+      "allow_loop": false
+    },
+    {
+      "segment_id": "086-closing-closing-04",
+      "chapter_id": "closing",
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json",
+      "duration_s": 4.0,
+      "source_in_s": 29.0,
+      "source_out_s": 33.0,
+      "narration_section": "closing",
+      "subtitle": [
+        "保留成功也保留失败",
+        "下一轮继续配对验证"
+      ],
+      "overlay": "把失败变成可复用资产",
+      "public_label": "真实录屏",
+      "layout": "landscape",
+      "allow_loop": false
+    }
+  ]
+}

@@ -1,0 +1,959 @@
+{
+  "schema_version": "geniesim-streamvln-challenge-source/v1",
+  "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+  "training_source": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+  "facts": {
+    "schema_version": "geniesim-streamvln-challenge-facts/v1",
+    "metric_source": "experiments/exp02-equivalent-v3/eval_result.json",
+    "training_source": "experiments/exp02-equivalent-v3/stage2_result_v2.json",
+    "dataset_source": "experiments/exp02-equivalent-v3/dataset-validation.json",
+    "heldout_episode_ids": [
+      "eval-2001",
+      "eval-2002",
+      "eval-2003",
+      "eval-2004",
+      "eval-2005",
+      "eval-2006",
+      "eval-2007",
+      "eval-2008",
+      "eval-2009",
+      "eval-2010"
+    ],
+    "same_heldout_batch": true,
+    "scene": "market_00_g2",
+    "robot": "G2_omnipicker",
+    "camera": "/genie/head_link3/head_front_Camera",
+    "dataset": {
+      "smoke_episodes": 3,
+      "train_episodes": 50,
+      "heldout_episodes": 10
+    },
+    "lora_training": {
+      "updates": 59,
+      "loss_first": 0.4167,
+      "loss_last": 0.0823,
+      "grad_norm_max": 0.8733353018760681,
+      "peak_gpu_memory_mib": 27846,
+      "peak_gpu_memory_gib": 27.193359375,
+      "nan_or_inf": false,
+      "adapter_reload_passed": true,
+      "config": {
+        "lora_r": 8,
+        "lora_alpha": 16,
+        "lora_dropout": 0.05,
+        "epochs": 1,
+        "batch": 1,
+        "learning_rate": 2e-05,
+        "bf16": true,
+        "gradient_checkpointing": true,
+        "mm_tunable_parts": "mm_lora_layer"
+      }
+    },
+    "base": {
+      "episodes": 10,
+      "success_0_5": 0,
+      "success_3": 2,
+      "oracle_success_0_5": 0,
+      "oracle_success_3": 3,
+      "collisions": 132,
+      "mean_final_distance_to_goal": 3.9889178097623224,
+      "mean_min_distance_to_goal": 2.883657695817022,
+      "mean_path_length": 9.675,
+      "mean_spl_0_5": 0.0,
+      "mean_spl_3": 0.07483987701661328,
+      "mean_steps": 133.9,
+      "episodes_detail": [
+        {
+          "episode_id": "eval-2001",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.135568016328857,
+          "min_distance_to_goal": 3.135568016328857,
+          "path_length": 6.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 66,
+          "collisions": 2,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 26,
+            "left": 21,
+            "right": 18
+          }
+        },
+        {
+          "episode_id": "eval-2002",
+          "success_0_5": false,
+          "success_3": true,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 1.3986459332839853,
+          "min_distance_to_goal": 1.3986459332839853,
+          "path_length": 11.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.3393901399590602,
+          "steps": 114,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 47,
+            "left": 24,
+            "right": 42
+          }
+        },
+        {
+          "episode_id": "eval-2003",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.41866965221421,
+          "min_distance_to_goal": 3.7323126652618948,
+          "path_length": 3.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 41,
+          "collisions": 2,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 14,
+            "left": 12,
+            "right": 14
+          }
+        },
+        {
+          "episode_id": "eval-2004",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 4.001582413791203,
+          "min_distance_to_goal": 1.3093675665518998,
+          "path_length": 14.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 200,
+          "collisions": 18,
+          "truncated": true,
+          "action_counts": {
+            "stop": 0,
+            "forward": 77,
+            "left": 73,
+            "right": 50
+          }
+        },
+        {
+          "episode_id": "eval-2005",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.587421161477075,
+          "min_distance_to_goal": 3.587421161477075,
+          "path_length": 6.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 67,
+          "collisions": 1,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 26,
+            "left": 20,
+            "right": 20
+          }
+        },
+        {
+          "episode_id": "eval-2006",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.134463959329929,
+          "min_distance_to_goal": 3.6985012444022938,
+          "path_length": 13.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 153,
+          "collisions": 8,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 63,
+            "left": 28,
+            "right": 61
+          }
+        },
+        {
+          "episode_id": "eval-2007",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.1441209069690195,
+          "min_distance_to_goal": 3.1441209069690195,
+          "path_length": 13.5,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 200,
+          "collisions": 23,
+          "truncated": true,
+          "action_counts": {
+            "stop": 0,
+            "forward": 77,
+            "left": 38,
+            "right": 85
+          }
+        },
+        {
+          "episode_id": "eval-2008",
+          "success_0_5": false,
+          "success_3": true,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 1.589407675061666,
+          "min_distance_to_goal": 1.589407675061666,
+          "path_length": 9.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.4090086302070725,
+          "steps": 120,
+          "collisions": 5,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 44,
+            "left": 24,
+            "right": 51
+          }
+        },
+        {
+          "episode_id": "eval-2009",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 8.81499435910863,
+          "min_distance_to_goal": 3.5769277687748824,
+          "path_length": 9.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 200,
+          "collisions": 44,
+          "truncated": true,
+          "action_counts": {
+            "stop": 0,
+            "forward": 81,
+            "left": 49,
+            "right": 70
+          }
+        },
+        {
+          "episode_id": "eval-2010",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.664304020058648,
+          "min_distance_to_goal": 3.664304020058648,
+          "path_length": 8.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 178,
+          "collisions": 29,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 64,
+            "left": 64,
+            "right": 49
+          }
+        }
+      ],
+      "collisions_meaning": "安全门拦截的前进尝试"
+    },
+    "lora": {
+      "episodes": 10,
+      "success_0_5": 0,
+      "success_3": 1,
+      "oracle_success_0_5": 0,
+      "oracle_success_3": 1,
+      "collisions": 45,
+      "mean_final_distance_to_goal": 4.686244300975281,
+      "mean_min_distance_to_goal": 3.481507005190384,
+      "mean_path_length": 5.5,
+      "mean_spl_0_5": 0.0,
+      "mean_spl_3": 0.06646390240864929,
+      "mean_steps": 53.2,
+      "episodes_detail": [
+        {
+          "episode_id": "eval-2001",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.485803952210057,
+          "min_distance_to_goal": 3.7901032123836935,
+          "path_length": 4.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 32,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 17,
+            "left": 7,
+            "right": 7
+          }
+        },
+        {
+          "episode_id": "eval-2002",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.987080616488643,
+          "min_distance_to_goal": 3.7977465798531633,
+          "path_length": 3.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 32,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 15,
+            "left": 7,
+            "right": 9
+          }
+        },
+        {
+          "episode_id": "eval-2003",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.125054958022175,
+          "min_distance_to_goal": 3.6472472453063975,
+          "path_length": 10.75,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 122,
+          "collisions": 16,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 59,
+            "left": 16,
+            "right": 46
+          }
+        },
+        {
+          "episode_id": "eval-2004",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.493025910057133,
+          "min_distance_to_goal": 3.6523326748301095,
+          "path_length": 5.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 51,
+          "collisions": 6,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 26,
+            "left": 11,
+            "right": 13
+          }
+        },
+        {
+          "episode_id": "eval-2005",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.5836098342923117,
+          "min_distance_to_goal": 3.3358339377622506,
+          "path_length": 9.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 90,
+          "collisions": 8,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 45,
+            "left": 10,
+            "right": 34
+          }
+        },
+        {
+          "episode_id": "eval-2006",
+          "success_0_5": false,
+          "success_3": true,
+          "oracle_success_0_5": false,
+          "oracle_success_3": true,
+          "final_distance_to_goal": 2.5068474654143476,
+          "min_distance_to_goal": 2.5068474654143476,
+          "path_length": 6.0,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.6646390240864929,
+          "steps": 57,
+          "collisions": 5,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 29,
+            "left": 14,
+            "right": 13
+          }
+        },
+        {
+          "episode_id": "eval-2007",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.62247220231039,
+          "min_distance_to_goal": 3.7168847594894285,
+          "path_length": 5.5,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 49,
+          "collisions": 3,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 25,
+            "left": 3,
+            "right": 20
+          }
+        },
+        {
+          "episode_id": "eval-2008",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 3.3315114013246605,
+          "min_distance_to_goal": 3.3315114013246605,
+          "path_length": 2.2500000000000004,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 16,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 9,
+            "left": 2,
+            "right": 4
+          }
+        },
+        {
+          "episode_id": "eval-2009",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 6.612953389372427,
+          "min_distance_to_goal": 3.5769277687748824,
+          "path_length": 5.25,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 56,
+          "collisions": 7,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 28,
+            "left": 8,
+            "right": 19
+          }
+        },
+        {
+          "episode_id": "eval-2010",
+          "success_0_5": false,
+          "success_3": false,
+          "oracle_success_0_5": false,
+          "oracle_success_3": false,
+          "final_distance_to_goal": 4.114083280260675,
+          "min_distance_to_goal": 3.4596350067649055,
+          "path_length": 2.999999999999999,
+          "shortest_path_length": 3.987834144518957,
+          "spl_0_5": 0.0,
+          "spl_3": 0.0,
+          "steps": 27,
+          "collisions": 0,
+          "truncated": false,
+          "action_counts": {
+            "stop": 1,
+            "forward": 12,
+            "left": 8,
+            "right": 6
+          }
+        }
+      ],
+      "collisions_meaning": "安全门拦截的前进尝试"
+    }
+  },
+  "sources": [
+    {
+      "source": "assets/series/recapture/raw/stage23-evidence/base-one-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/raw/stage23-evidence/lora-one-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage3-episode-distances.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/raw/stage0-rgb-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage0-validation.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/series/recapture/raw/stage0-blocked-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/plots/evidence-chain.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/action-counts.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage0-forward-before.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage0-forward-after.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage0-before-block.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage0-after-block.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/action-counts.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage0-validation.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage0-forward-check.json"
+    },
+    {
+      "source": "assets/series/recapture/raw/stage1-train1001-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage1-validation.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/schema-sidecar.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/train-1001-start.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/train-1001-goal.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/train-1025-mid.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/screenshots/v3/train-1050-mid.jpg",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/series/recapture/raw/stage2-single-batch-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage2-gates.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/series/recapture/raw/stage2-adapter-reload-replay.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/plots/lora-config.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/plots/validation-gates.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage2-loss-curve.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/plots/lora-config.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage2-gates.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage2-loss-curve.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/stage2_result_v2.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/metrics-base-lora.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage3-episode-distances.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/action-counts.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/episode-distance.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2003-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2004-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2005-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2006-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2007-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2008-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/next-roadmap.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/schema-sidecar.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/dataset-validation.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2009-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/evidence-chain.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/metrics-base-lora.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2010-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/screenshots/v3/stage3-paired-metrics.png",
+      "source_type": "real_evidence",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/next-roadmap.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/lora-eval-2001-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/plots/evidence-chain.png",
+      "source_type": "diagram",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    },
+    {
+      "source": "assets/series/recapture/canonical/base-eval-2002-annotated.mp4",
+      "source_type": "real_recording",
+      "evidence_ref": "experiments/exp02-equivalent-v3/eval_result.json"
+    }
+  ]
+}
