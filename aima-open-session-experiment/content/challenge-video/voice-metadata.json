@@ -1,0 +1,89 @@
+{
+  "schema_version": "geniesim-streamvln-challenge-voice/v1",
+  "provider": "edge-tts",
+  "language": "zh-CN",
+  "style": "自然沉稳男声",
+  "voice": "zh-CN-YunjianNeural",
+  "rate": "-6%",
+  "pitch": "-6Hz",
+  "selection": "preferred",
+  "custom_ssml": false,
+  "pause_method": "ffmpeg_silence_between_chunks",
+  "generated_at_utc": "2026-07-27T07:18:53.548951+00:00",
+  "narration": "content/challenge-video/narration-sections.json",
+  "narration_sha256": "ed59ffd8323f8cecb866ef9206edc315b0b30312ede85fa0668e91a956412238",
+  "section_count": 8,
+  "sections": [
+    {
+      "chapter_id": "hook",
+      "output": "assets/challenge-video/audio/hook.mp3",
+      "duration_s": 65.472,
+      "sha256": "38e8f098b50b43637b573887fbaf18a3d7dddddca5a51deaa65d2e79f53e5c6a"
+    },
+    {
+      "chapter_id": "baseline",
+      "output": "assets/challenge-video/audio/baseline.mp3",
+      "duration_s": 70.476,
+      "sha256": "f46b902f27bbc53d2e513d27dea43cb02f51eb39b1688c8480f5704f2c192510"
+    },
+    {
+      "chapter_id": "operation",
+      "output": "assets/challenge-video/audio/operation.mp3",
+      "duration_s": 92.312,
+      "sha256": "fa2f8a4184d856ee9f313069384086cd9541a1ca006fc3a9bdcb190d51ceed0a"
+    },
+    {
+      "chapter_id": "data",
+      "output": "assets/challenge-video/audio/data.mp3",
+      "duration_s": 94.64,
+      "sha256": "7592176e2a0bb4e8b226fbc640b51e3949747a9f78095f71be18b2d5ffa75e39"
+    },
+    {
+      "chapter_id": "training",
+      "output": "assets/challenge-video/audio/training.mp3",
+      "duration_s": 95.02,
+      "sha256": "714f1735dade88f19103e133ad80283a144538b232e7a054a9acb89717c406f2"
+    },
+    {
+      "chapter_id": "paired_eval",
+      "output": "assets/challenge-video/audio/paired_eval.mp3",
+      "duration_s": 113.572,
+      "sha256": "146c64f8d98a164f6962277bbb77eac991bed1ccdd29bb8e95542befe1cb98eb"
+    },
+    {
+      "chapter_id": "innovation",
+      "output": "assets/challenge-video/audio/innovation.mp3",
+      "duration_s": 92.1,
+      "sha256": "8b34b1be5dba794490868195041dae401445a4e37f1c01d6b4aaf37d8ed7741f"
+    },
+    {
+      "chapter_id": "closing",
+      "output": "assets/challenge-video/audio/closing.mp3",
+      "duration_s": 57.328,
+      "sha256": "b5174b700ae466f9acb3558b63c15be7384c8bc5bdbef0c18f603b48ad768230"
+    }
+  ],
+  "auditions": [
+    {
+      "voice": "zh-CN-YunjianNeural",
+      "output": "assets/challenge-video/auditions/zh-CN-YunjianNeural.mp3",
+      "duration_s": 17.976,
+      "sha256": "c8c085cb4e22a7c126a130e71244f2f3696db2e38543ee95c997b9e1b5dd2309"
+    },
+    {
+      "voice": "zh-CN-YunxiNeural",
+      "output": "assets/challenge-video/auditions/zh-CN-YunxiNeural.mp3",
+      "duration_s": 18.504,
+      "sha256": "d647ea163d337441decf1b12ec7cdd9a3972c2d79780cb0bc546630f66d93149"
+    },
+    {
+      "voice": "zh-CN-YunyangNeural",
+      "output": "assets/challenge-video/auditions/zh-CN-YunyangNeural.mp3",
+      "duration_s": 17.424,
+      "sha256": "8ed6e070c11c73f7290af2ab9b5d718fb70faf331ded9b244265eb9629bc1894"
+    }
+  ],
+  "output": "assets/challenge-video/audio/challenge-voice.mp3",
+  "duration_s": 688.12,
+  "sha256": "d8349d88bb7dee7cf1127b2be8ef55359d1271cfdd44f51da58059e56ac2e19d"
+}
