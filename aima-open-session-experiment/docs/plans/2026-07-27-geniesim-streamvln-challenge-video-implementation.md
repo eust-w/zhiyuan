@@ -362,7 +362,7 @@ Mock the Edge TTS subprocess or communicator. Test:
 ```python
 self.assertEqual(split_sections(source)[0]["chapter_id"], "hook")
 self.assertTrue(all(len(chunk["text"]) <= 260 for chunk in chunks))
-self.assertEqual(build_ssml_pause("第一句。第二句。").count("break"), 2)
+self.assertEqual(pause_schedule("第一句。第二句。"), [320, 320])
 self.assertEqual(metadata["section_count"], 8)
 self.assertIn("sha256", metadata["sections"][0])
 self.assertEqual(scan_public_bundle(metadata), [])
@@ -398,7 +398,7 @@ Use three audition candidates:
 
 Do not assume availability. Query Edge TTS voices first and remove unavailable candidates. Generate the same 20–25 second audition copy for each available voice. Select `zh-CN-YunjianNeural` by default if it is available; otherwise use the first available male Mandarin candidate and record the fallback in metadata.
 
-Synthesize by chapter and by chunks of no more than 260 Chinese characters. Add natural pauses:
+Synthesize by chapter and by chunks of no more than 260 Chinese characters. Current `edge-tts` no longer supports arbitrary custom SSML, so insert deterministic FFmpeg-generated silence clips between synthesized chunks instead of sending `<break>` tags. Add natural pauses:
 
 - clause pause: 120–180 ms;
 - sentence pause: 260–360 ms;
