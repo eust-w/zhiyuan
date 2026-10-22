@@ -1,4 +1,5 @@
 .secrets/
+.DS_Store
 *.pem
 *.key
 *.env
@@ -33,6 +34,7 @@ assets/series/**/*.mp3
 assets/series/**/*.m4a
 assets/series/**/*.wav
 assets/series/*.wav
+assets/series/智元实验.zip
 
 # Evidence-first navigation challenge renders. Source manifests, subtitles,
 # metadata and acceptance reports remain tracked; generated media stays local.
