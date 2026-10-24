@@ -1,110 +1,51 @@
-# 智元精灵工坊 AIMA：GenieSim + StreamVLN 实验档案
+# GenieSim × StreamVLN 实验目录
 
-本目录记录依据《智元精灵工坊 AIMA 技术开发指南》制作的非官方 GenieSim × StreamVLN 适配实验，以及面向被宣传者的抖音素材。
+[返回项目首页](../README.md) · [MIT 许可证](../LICENSE) · [第三方许可与素材边界](../THIRD_PARTY_NOTICES.md)
 
-> 重要声明：流程参考 AIMA 指南，但未使用课程私有适配包；导航后端是碰撞感知的刚体 G2 代理，不代表真实人形步态，也不是 AgiBot 官方集成。
+这里保存仿真适配器、数据与训练工具、配对评测结果，以及阶段文档和媒体归档。首次访问请先看项目首页；它集中说明了用途、快速检查、真实结果和复现限制。
 
-## 当前状态
+## 结果与证据
 
-- GPUFree L40 48GB、100GB 持久盘、SSH 公钥登录与 Isaac Sim 5.1/Genie Sim 3.0 已验证。
-- Stage 0 已验证 W/S/A/D/Space、0.25m 前进、15° 转向、RGB/depth 和 head-depth 近障碍拒绝；危险前进被拒绝后位姿保持不变。新增的等价 `market-aabb-proxy.usda` 已在 Isaac/PXR 进程中完成 10 个 Cube → 5cm 栅格 → footprint + 5cm 膨胀投影（8322 原始格、30478 膨胀格）；完整视觉 HTTP 进程仍受预装市场 mesh 的 Kit 提前退出影响，详见 AABB 探针证据。
-- Stage 1 已完成 3 条冒烟、50 条训练、10 条固定 held-out；严格校验为 50/50 与 10/10，公开 RGB 无全黑帧。1762 帧带标定 RGB-D 另生成 20 万点的等价 PLY/USDA/USDZ，并在新 Isaac 进程打开。
-- Stage 2 已纠正上游 `qwen` 模板静默回退导致的假 0-loss 训练；最终 59 个真实更新步，loss `0.4167→0.0823`、峰值显存 27.19GiB、无 NaN/Inf，adapter 新进程重载通过。
-- Stage 3 已完成真正的 StreamVLN base/LoRA → GenieSim 模型闭环；相同 `eval-2001…2010` 上两者 success@0.5m 都是 0/10。base 平均最终距离 3.989m、碰撞尝试 132 次；LoRA 4.686m、45 次。结果见唯一指标源 [`eval_result.json`](experiments/exp02-equivalent-v3/eval_result.json)，不能把控制器结果冒充模型成绩。
-- 本轮按透明的“非官方等价适配失败复盘”交付；不提交 AgiBot Open Session 榜单。
+主评测：[exp02-equivalent-v3/eval_result.json](experiments/exp02-equivalent-v3/eval_result.json)。Base 与 LoRA 在同一批 `eval-2001…eval-2010` 上的 success@0.5m 均为 **0/10**；同文件中的控制器轨迹验证为 10/10，不能当作模型成绩。
 
-## 导航
+| 需要查看的证据 | 文件 |
+| --- | --- |
+| 版本、配置及历史验收记录 | [run-manifest.json](experiments/exp02-equivalent-v3/run-manifest.json) |
+| 数据结构验证记录 | [dataset-validation.json](experiments/exp02-equivalent-v3/dataset-validation.json) |
+| 59 步训练与 adapter 重载 | [stage2_result_v2.json](experiments/exp02-equivalent-v3/stage2_result_v2.json) |
+| 原始训练输出 | [stage2-train.stdout.log](experiments/exp02-equivalent-v3/logs/stage2-train.stdout.log) |
+| 动作与安全门演示 | [Stage 0 GIF](assets/media/v3/stage0-keyboard-and-guard.gif) |
+| 单条采集轨迹 | [Stage 1 GIF](assets/media/v3/stage1-train-1001.gif) |
+| 单条模型轨迹 | [Base eval-2004 GIF](assets/media/v3/stage3-base-2004.gif) |
 
-- [实施计划](docs/plans/2026-07-13-aima-vln-experiment.md)
-- [00：准备、资源与安全](docs/00-准备-资源与安全.md)
-- [01：Stage 0 仿真验证](docs/01-stage0-仿真环境验证.md)
-- [02：Stage 1 数据采集](docs/02-stage1-数据采集.md)
-- [03：Stage 2 LoRA 微调](docs/03-stage2-lora微调.md)
-- [04：Stage 3 实时推理评测](docs/04-stage3-实时推理评测.md)
-- [05：结果分析与排障](docs/05-结果分析与排障.md)
-- [06：课程资产检索与阻塞记录](docs/06-课程资产检索与阻塞记录.md)
-- [07：PDF 逐项验收与等价说明](docs/07-PDF逐项验收与等价说明.md)
-- [实验运行日志](runs/2026-07-13/session-log.md)
-- [抖音布道文章](article/抖音-智元布道师图文稿.md)
-- [完整图文经验博客](article/博客-GenieSim-StreamVLN非官方等价闭环经验.md)
-- [知乎 / 小红书 / 抖音发布交接稿](article/平台发布稿-知乎-小红书-抖音.md)
+`collisions` 是前进安全门拦截计数；SPL 使用初始直线距离代理，不是标准 geodesic SPL。历史模型评测采用 head-depth 安全门，不能把独立 AABB 探针的结果当成同一次完整场景评测的能力。图像文件非空检查也不等于解码验证。详见[首页的限制说明](../README.md#当前已知限制)。
 
-## 导航挑战实录视频（本地完成，平台草稿未提交）
+## 代码入口
 
-这条 11 分 30 秒横屏视频在 GenieSim 中展示 StreamVLN 具身导航 baseline 的完整证据链：真实操作、数据结构、LoRA 训练、同批 Base/LoRA 配对轨迹、量化结果和四类创新挑战。主指标 `success@0.5m` 如实保留 Base 0/10、LoRA 0/10，所有数字只从评测结果文件读取。
+以下模块功能不同，不可相互替代：
 
-- [故事板清单](content/challenge-video/challenge-manifest.json)
-- [唯一评测指标源](experiments/exp02-equivalent-v3/eval_result.json)
-- [训练结果源](experiments/exp02-equivalent-v3/stage2_result_v2.json)
-- [成片字幕](assets/challenge-video/final/geniesim-streamvln-challenge.srt)
-- [媒体清单](assets/challenge-video/final/geniesim-streamvln-challenge-media-manifest.json)
-- [完整联系表](assets/challenge-video/preview/contact-sheet.jpg)
-- [验收报告](content/challenge-video/acceptance.json)
-- [B 站发布包](article/challenge-video-publish-package.md)
-- [发布状态](content/challenge-video/publishing-state.json)
+| 模块 | 用途 | 额外前提 |
+| --- | --- | --- |
+| `adapter.vln_app` | 启动仿真与本机 HTTP 服务 | Isaac Python、GenieSim、场景与机器人资产 |
+| `adapter.collect_dataset` | 执行控制器采集并写入数据 | 已启动的服务、可写实验目录 |
+| `adapter.stage2_preflight` | 数据/训练检查与兼容补丁 | 独立 StreamVLN checkout、模型环境、数据和权重 |
+| `adapter.reload_adapter` | 新进程挂载 LoRA adapter | 基座、视觉塔、adapter 和模型依赖 |
+| `adapter.model_closed_loop_eval` | 模型生成动作并驱动仿真 | 上述模型与服务、held-out sidecar |
+| `adapter.evaluate_sidecars` | 汇总控制器轨迹 | 已存在的 sidecar；不执行模型推理 |
+| `adapter.assemble_eval_result` | 组装并核对已有结果 | 已存在的评测 JSON；不执行模型推理 |
 
-本地生成的主片位于 `assets/challenge-video/final/geniesim-streamvln-challenge.mp4`。大型 MP4、MP3、WAV 与中间渲染文件保持 Git 忽略，可用以下命令从受控故事板重新生成和验收：
+协议、动作空间和运行约束见 [adapter/README.md](adapter/README.md)。不要直接运行历史启动脚本中的固定路径；先检查 `PROJECT_ROOT`、`RUN_DIR`、`GENIE_SIM_ROOT`、Isaac Python 路径及场景配置。
 
-```bash
-python3 scripts/build_challenge_video_manifest.py \
-  --output content/challenge-video/challenge-manifest.json \
-  --source-output content/challenge-video/challenge-source.json \
-  --narration-output content/challenge-video/narration-sections.json
+## 阶段文档
 
-python3 scripts/synthesize_challenge_voice.py
-python3 scripts/build_challenge_video.py
+- [Stage 0：仿真与动作验证](docs/01-stage0-仿真环境验证.md)
+- [Stage 1：数据采集](docs/02-stage1-数据采集.md)
+- [Stage 2：LoRA 微调](docs/03-stage2-lora微调.md)
+- [Stage 3：模型闭环评测](docs/04-stage3-实时推理评测.md)
+- [结果分析与排障](docs/05-结果分析与排障.md)
 
-python3 scripts/verify_challenge_video.py \
-  --manifest content/challenge-video/challenge-manifest.json \
-  --video assets/challenge-video/final/geniesim-streamvln-challenge.mp4 \
-  --srt assets/challenge-video/final/geniesim-streamvln-challenge.srt \
-  --media-manifest assets/challenge-video/final/geniesim-streamvln-challenge-media-manifest.json \
-  --eval experiments/exp02-equivalent-v3/eval_result.json \
-  --training-result experiments/exp02-equivalent-v3/stage2_result_v2.json \
-  --contact-sheet assets/challenge-video/preview/contact-sheet.jpg \
-  --output content/challenge-video/acceptance.json \
-  --manual-contact-sheet-reviewed
-```
+## 媒体归档
 
-媒体完成不代表已经公开发布。当前状态固定为 `draft_not_submitted`；账号登录、沉稳男声试听、封面和标题终审、平台预览及最终提交均由用户确认。
+[导航挑战故事板](content/challenge-video/challenge-manifest.json)、[媒体清单](assets/challenge-video/final/geniesim-streamvln-challenge-media-manifest.json)、[字幕](assets/challenge-video/final/geniesim-streamvln-challenge.srt)、[验收记录](content/challenge-video/acceptance.json) 与 [系列文案索引](article/series/README.md) 用于追溯历史制作过程，不是项目运行依赖。
 
-## 四期深度教程系列（最终媒体已验收，平台尚未提交）
-
-- [系列设计与验收边界](docs/plans/2026-07-15-geniesim-vln-series-design.md)
-- [共享故事板与素材清单](content/series/series-manifest.json)
-- [四平台内容清单](content/series/platform-content.json)
-- [四平台文字验收报告](content/series/platform-acceptance.json)
-- [媒体验收报告](content/series/series-media-acceptance.json)
-- [四期 10 分钟最终故事板](content/series/final-long-manifest.json)
-- [四期最终长片目录](assets/series/final-long/)
-- [最终长片完整媒体验收](content/series/final-long-acceptance.json)
-- [20 条 canonical 轨迹清单](assets/series/recapture/canonical/manifest.json)
-- [音频与原始氛围音说明](assets/series/ambient-original.json)
-- [样片响度验收](content/series/audio-loudness.json)
-- [归档：四期旧循环粗剪](assets/series/long-drafts/)
-- [归档粗剪规格验收](content/series/long-draft-acceptance.json)
-- [B 站 / 知乎 / 小红书 / 抖音交付目录](article/series/README.md)
-
-四期最终长片均为 10 分钟、真实实录占比 80%，已通过全片解码、黑帧、响度、字幕、敏感信息和指标一致性验收。第四期使用基础模型与低秩适配模型各 10 条同批 held-out 轨迹；主指标 `success@0.5m` 均为 0/10。媒体完成不等于平台已发布：四个平台仍为 `draft_not_submitted`，登录、验证码/扫码、封面终审和最终提交由用户完成。
-
-## 素材目录
-
-- `assets/screenshots/`：关键界面、命令和结果截图。
-- `assets/gifs/`：短动作、数据采集与推理过程动图。
-- `assets/videos/`：原始录屏和完整导航视频。
-- `assets/plots/`：训练曲线、轨迹图和评测可视化。
-
-## 本轮真实素材
-
-- [Stage 0 键盘与近障碍安全门 GIF](assets/media/v3/stage0-keyboard-and-guard.gif)
-- [Stage 1 真实采集轨迹 GIF](assets/media/v3/stage1-train-1001.gif)
-- [Stage 2 训练证据 GIF](assets/media/v3/stage2-training-evidence.gif)
-- [Stage 3 真实模型轨迹 GIF](assets/media/v3/stage3-base-2004.gif)
-- [20 张抖音轮播图](assets/carousel/)
-- [55 秒竖屏 H.264 无音轨底片](assets/videos/douyin-vln-retrospective-55s.mp4)
-- [55 秒竖屏 H.264 + AAC 沉稳男声成片](assets/videos/douyin-vln-retrospective-55s-voiceover.mp4)
-- [沉稳男声文案与字幕](assets/audio/douyin-vln-voiceover-55s.txt)
-
-## 安全边界
-
-账号密码、身份证信息、SSH 私钥、实例密码、Cookie、Token、UUID、Tunnel Endpoint、IP、实例 ID 和连接命令不得进入本目录或 Git 历史。公开截图和视频引用前必须完成裁剪或打码。StreamVLN 仓库、checkpoint 与 adapter 的授权边界没有在本轮完成独立法律核验，因此基础权重与 adapter 只留在持久盘。本目录只作非商业研究演示。
+长视频、原始数据和外部权重不能假定随 clone 获取。媒体生成脚本需要额外素材、字体、音频服务或编码工具；历史验收通过也不代表平台已经发布，发布记录见 [publishing-state.json](content/challenge-video/publishing-state.json)。媒体和场景衍生物不包含在自有代码的 MIT 许可内。

@@ -95,6 +95,11 @@ def _qwen_compat_checkpoint(checkpoint: Path) -> Path:
 
 
 def _patch_qwen_tokenizer(repo: Path) -> dict[str, str]:
+    # Licensing: the original wrapper is MIT; upstream matching/adapted source
+    # fragments retain their applicable Apache-2.0 / CC-BY-NC-SA-4.0 terms.
+    # Sources: StreamVLN e48f6ff7e9201d93aae003e8f64b04c00cec13bc,
+    # streamvln/streamvln_train.py and streamvln/dataset/vln_action_dataset.py.
+    # See the repository-root THIRD_PARTY_NOTICES.md for attribution and changes.
     """Apply the smallest runtime compatibility patch required by Transformers.
 
     The pinned StreamVLN source calls the Qwen tokenizer with the fast-tokenizer
