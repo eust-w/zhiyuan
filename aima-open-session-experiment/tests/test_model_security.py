@@ -247,9 +247,24 @@ class ModelLoadingIntegrationTests(unittest.TestCase):
             self.assertNotIn("No module named 'torch'", result.stderr)
 
     def test_owned_model_loaders_disable_unsafe_and_remote_loading(self):
-        for filename in ("reload_adapter.py", "model_closed_loop_eval.py"):
+        expected_loaders = {
+            "reload_adapter.py": {"StreamVLNForCausalLM", "PeftModel"},
+            "model_closed_loop_eval.py": {"AutoTokenizer", "StreamVLNForCausalLM", "PeftModel"},
+        }
+        for filename, expected in expected_loaders.items():
             tree = ast.parse((ROOT / "adapter" / filename).read_text())
-            found = 0
+            found = set()
+            named_calls = {node.func.id: node for node in ast.walk(tree)
+                           if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)}
+            helper = named_calls.get("load_streamvln_config")
+            self.assertIsNotNone(helper, filename)
+            self.assertGreater(helper.lineno, named_calls["prepare_checkout"].lineno, filename)
+            self.assertGreater(named_calls["prepare_checkout"].lineno,
+                               named_calls["validate_model_directory"].lineno, filename)
+            helper_import = next(node for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)
+                                 and node.module == "llava.model.language_model.llava_qwen"
+                                 and any(item.name == "load_streamvln_config" for item in node.names))
+            self.assertGreater(helper_import.lineno, named_calls["prepare_checkout"].lineno, filename)
             for node in ast.walk(tree):
                 if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
                     continue
@@ -258,13 +273,13 @@ class ModelLoadingIntegrationTests(unittest.TestCase):
                 name = node.func.value.id
                 kwargs = {kw.arg: kw.value for kw in node.keywords}
                 if name in {"AutoConfig", "AutoTokenizer", "StreamVLNForCausalLM", "PeftModel"}:
-                    found += 1
+                    found.add(name)
                     self.assertIs(getattr(kwargs.get("local_files_only"), "value", None), True, filename)
                 if name in {"AutoConfig", "AutoTokenizer", "StreamVLNForCausalLM"}:
                     self.assertIs(getattr(kwargs.get("trust_remote_code"), "value", None), False, filename)
                 if name == "StreamVLNForCausalLM":
                     self.assertIs(getattr(kwargs.get("use_safetensors"), "value", None), True, filename)
-            self.assertGreaterEqual(found, 3)
+            self.assertEqual(found, expected, filename)
 
     def test_numpy_depth_load_explicitly_disables_pickle(self):
         tree = ast.parse((ROOT / "adapter/model_closed_loop_eval.py").read_text())

@@ -7,10 +7,10 @@
 ## 进程与运行约束
 
 - 仿真进程使用 Isaac Sim 自带 Python；历史 GPUFree 路径为 `/isaac-sim/python.sh`。
-- StreamVLN / PEFT 使用独立模型环境；历史实验为 Python 3.9。不要混装两个环境。
+- StreamVLN / PEFT 使用独立模型环境；历史实验为 Python 3.9，新限定模型 CPU profile 使用 Python 3.12。安装和本地小模型复查见[迁移说明](../../security/model-stack-migration-2026-10-25.md)；CUDA 与真实 checkpoint 尚未复测。不要混装两个环境。
 - HTTP 服务只监听 `127.0.0.1:5802`。HTTP 线程提交请求，主线程执行 Isaac/USD 操作；动作后等待渲染再记录观测。
 - 实验根目录需要可写，RGB、depth、pose 与 sidecar 写入该目录。文件路径必须仍处于实验根目录内。
-- `stage2_preflight` 会对传入的 StreamVLN checkout 应用兼容补丁；请使用独立副本并保存上游 revision。该模块中的上游片段另有许可，见仓库根目录第三方声明。
+- `stage2_preflight`、`reload_adapter`、`model_closed_loop_eval` 在安全预检后使用 `streamvln_compat.prepare_checkout` 检查并应用固定源码补丁；仅接受固定原版或完全匹配的本项目补丁，不自动重置未知修改。请使用独立副本。旧 `_patch_qwen_tokenizer` 只保留作历史参考，不再被入口执行。上游片段另有许可，见仓库根目录第三方声明。
 
 ## 动作空间
 

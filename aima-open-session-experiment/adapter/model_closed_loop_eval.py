@@ -29,9 +29,11 @@ from PIL import Image
 try:
     from .metrics import summarize_episode, summarize_runs
     from .model_security import resolve_vision_directory, validate_adapter_directory, validate_model_directory, vision_model_name
+    from .streamvln_compat import prepare_checkout
 except ImportError:  # pragma: no cover - direct script execution on GPUFree
     from adapter.metrics import summarize_episode, summarize_runs
     from adapter.model_security import resolve_vision_directory, validate_adapter_directory, validate_model_directory, vision_model_name
+    from adapter.streamvln_compat import prepare_checkout
 
 
 def request_json(base_url: str, path: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -74,13 +76,15 @@ class StreamVLNRunner:
         if adapter is not None:
             validate_adapter_directory(adapter)
         vision_name = vision_model_name(vision)
+        self.compatibility = prepare_checkout(repo)
         os.environ["HF_HUB_OFFLINE"] = "1"
         os.environ["TRANSFORMERS_OFFLINE"] = "1"
         sys.path.insert(0, str(repo))
         sys.path.insert(0, str(repo / "streamvln"))
         import torch
         from peft import PeftModel
-        from transformers import AutoConfig, AutoTokenizer
+        from transformers import AutoTokenizer
+        from llava.model.language_model.llava_qwen import load_streamvln_config, restore_streamvln_vision_weights
         import streamvln.model.stream_video_vln as stream_video_vln
         from streamvln.model.stream_video_vln import StreamVLNForCausalLM
         from streamvln.utils.utils import (
@@ -96,7 +100,9 @@ class StreamVLNRunner:
             raise RuntimeError("StreamVLN model evaluation requires CUDA; refusing CPU fallback")
 
         print(json.dumps({"event": "model_load_start", "base": str(base), "vision": vision_name, "adapter": str(adapter) if adapter else None}), flush=True)
-        config = AutoConfig.from_pretrained(str(base), local_files_only=True, trust_remote_code=False)
+        # Legacy checkpoint metadata says "llava" but its top-level fields
+        # describe Qwen. Avoid AutoConfig constructing a default Llama decoder.
+        config = load_streamvln_config(base)
         config.num_future_steps = 4
         config.num_history = 8
         config.mm_tunable_parts = "mm_lora_layer"
@@ -109,8 +115,7 @@ class StreamVLNRunner:
             str(base),
             config=config,
             attn_implementation="sdpa",
-            torch_dtype=torch.bfloat16,
-            low_cpu_mem_usage=False,
+            dtype=torch.bfloat16,
             use_safetensors=True,
             local_files_only=True,
             trust_remote_code=False,
@@ -141,7 +146,7 @@ class StreamVLNRunner:
             model = PeftModel.from_pretrained(model, str(adapter), is_trainable=False, local_files_only=True)
 
         tokenizer = AutoTokenizer.from_pretrained(
-            str(base), model_max_length=max_length, padding_side="right", use_fast=False,
+            str(base), model_max_length=max_length, padding_side="right",
             local_files_only=True, trust_remote_code=False,
         )
         model_args = SimpleNamespace(
@@ -155,9 +160,11 @@ class StreamVLNRunner:
             model.config.vocab_size = int(model.lm_head.out_features)
             model.vocab_size = int(model.lm_head.out_features)
 
+        # Attach PEFT before materializing the tower so language-target LoRA
+        # does not also wrap vision projections. Then restore the base model's
+        # own visual weights rather than silently retaining standalone SigLIP.
+        self.vision_weights = restore_streamvln_vision_weights(model, base)
         vision_tower = model.get_vision_tower()
-        if not getattr(vision_tower, "is_loaded", False):
-            vision_tower.load_model()
         # PEFT forwards most methods but does not preserve instance-level
         # monkey patches, so install the compatibility shim on the actual
         # StreamVLN base model for both plain and LoRA variants.
@@ -217,6 +224,7 @@ class StreamVLNRunner:
             "utils_image_token_index": int(IMAGE_TOKEN_INDEX),
             "utils_memory_token_index": int(MEMORY_TOKEN_INDEX),
             "decoder": self.decoder,
+            "vision_weights": self.vision_weights,
         }), flush=True)
 
     def _prompt_ids(self, instruction: str, step_id: int):
@@ -229,7 +237,7 @@ class StreamVLNRunner:
         if step_id > 0:
             content += f" Historical observations are available as {self.memory_token}."
         messages = [{"role": "user", "content": content}, {"role": "assistant", "content": ""}]
-        ids = self.tokenizer.apply_chat_template(messages, return_tensors="pt")
+        ids = self.tokenizer.apply_chat_template(messages, return_tensors="pt", return_dict=False)
         image_id = self.tokenizer.convert_tokens_to_ids(self.image_token)
         memory_id = self.tokenizer.convert_tokens_to_ids(self.memory_token)
         ids[ids == image_id] = self.image_token_index
@@ -378,7 +386,6 @@ class StreamVLNRunner:
                     max_new_tokens=16,
                     use_cache=True,
                     return_dict_in_generate=True,
-                    return_legacy_cache=True,
                 )
                 decoded = self.tokenizer.batch_decode(outputs.sequences, skip_special_tokens=False)[0]
                 actions = self.parse_actions(decoded)
@@ -562,6 +569,8 @@ def main() -> None:
             "vision": str(vision),
             "adapter": str(adapter) if adapter else None,
             "streamvln_repo": str(args.repo.expanduser().resolve()),
+            "compatibility": runner.compatibility,
+            "vision_weights": runner.vision_weights,
         },
     }
     output.parent.mkdir(parents=True, exist_ok=True)

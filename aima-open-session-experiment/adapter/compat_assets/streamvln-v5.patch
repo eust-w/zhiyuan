@@ -1,0 +1,1339 @@
+diff --git a/llava/__init__.py b/llava/__init__.py
+index 4d1f016..2dfd401 100755
+--- a/llava/__init__.py
++++ b/llava/__init__.py
+@@ -1 +1 @@
+-from .model import LlavaLlamaForCausalLM
++from .model import LlavaQwenForCausalLM
+diff --git a/llava/model/__init__.py b/llava/model/__init__.py
+index 1abf0b3..785cc4d 100755
+--- a/llava/model/__init__.py
++++ b/llava/model/__init__.py
+@@ -1,16 +1,2 @@
+-import os
+-
+-AVAILABLE_MODELS = {
+-    "llava_llama": "LlavaLlamaForCausalLM, LlavaConfig",
+-    "llava_qwen": "LlavaQwenForCausalLM, LlavaQwenConfig",
+-    "llava_mistral": "LlavaMistralForCausalLM, LlavaMistralConfig",
+-    "llava_mixtral": "LlavaMixtralForCausalLM, LlavaMixtralConfig",
+-    # "llava_qwen_moe": "LlavaQwenMoeForCausalLM, LlavaQwenMoeConfig",    
+-    # Add other models as needed
+-}
+-
+-for model_name, model_classes in AVAILABLE_MODELS.items():
+-    try:
+-        exec(f"from .language_model.{model_name} import {model_classes}")
+-    except Exception as e:
+-        print(f"Failed to import {model_name} from llava.language_model.{model_name}. Error: {e}")
++# Scoped compatibility overlay: Qwen only; keep other architectures isolated.
++from .language_model.llava_qwen import LlavaQwenForCausalLM, LlavaQwenConfig
+diff --git a/llava/model/language_model/llava_qwen.py b/llava/model/language_model/llava_qwen.py
+index c194747..515832f 100755
+--- a/llava/model/language_model/llava_qwen.py
++++ b/llava/model/language_model/llava_qwen.py
+@@ -13,6 +13,8 @@
+ #    limitations under the License.
+ 
+ 
++import json
++from pathlib import Path
+ from typing import List, Optional, Tuple, Union, Dict
+ import torch
+ import torch.nn as nn
+@@ -36,6 +38,139 @@ class LlavaQwenConfig(Qwen2Config):
+     model_type = "llava_qwen"
+ 
+ 
++def load_streamvln_config(path) -> LlavaQwenConfig:
++    """Read a local native or legacy flat-Qwen StreamVLN configuration.
++
++    The published legacy checkpoint is labelled ``llava`` but stores the real
++    Qwen parameters at the top level. Its nested default Llama/CLIP configs are
++    not the trained architecture and must never override those flat values.
++    This function does not fetch remote metadata, execute auto_map code, or
++    infer/resize vocabulary dimensions from tokenizer metadata.
++    """
++    config_path = Path(path).expanduser()
++    if config_path.is_dir():
++        config_path = config_path / "config.json"
++    try:
++        with config_path.open(encoding="utf-8") as stream:
++            values = json.load(stream)
++    except (OSError, json.JSONDecodeError) as error:
++        raise ValueError("a readable local StreamVLN config.json is required") from error
++    if not isinstance(values, dict):
++        raise ValueError("StreamVLN configuration must be a JSON object")
++    model_type = values.get("model_type")
++    if not isinstance(model_type, str) or model_type not in ("llava_qwen", "llava"):
++        raise ValueError("unsupported StreamVLN configuration model_type")
++    architectures = values.get("architectures")
++    supported = ("StreamVLNForCausalLM", "LlavaQwenForCausalLM")
++    if (architectures is not None and
++            (not isinstance(architectures, list) or not architectures or
++             any(not isinstance(name, str) or name not in supported for name in architectures))):
++        raise ValueError("unsupported StreamVLN configuration architecture")
++    if model_type == "llava" and architectures is None:
++        raise ValueError("legacy llava configuration must identify its Qwen architecture")
++    dimensions = ("vocab_size", "hidden_size", "intermediate_size", "num_hidden_layers",
++                  "num_attention_heads", "num_key_value_heads", "max_position_embeddings")
++    for name in dimensions:
++        if type(values.get(name)) is not int or values[name] <= 0:
++            raise ValueError(f"missing or invalid top-level Qwen dimension: {name}")
++    if (values["hidden_size"] % values["num_attention_heads"] or
++            values["num_attention_heads"] % values["num_key_value_heads"]):
++        raise ValueError("incompatible top-level Qwen attention dimensions")
++    for name in ("model_type", "text_config", "vision_config"):
++        values.pop(name, None)
++    return LlavaQwenConfig.from_dict(values)
++
++
++def restore_streamvln_vision_weights(model, base_path) -> dict:
++    """Restore embedded base vision parameters after language-only PEFT setup.
++
++    Delayed SigLIP construction prevents PEFT's language projection names from
++    matching vision layers, but it also makes from_pretrained skip the embedded
++    vision tensors. Restore them explicitly; external SigLIP is architecture
++    initialization only, never a successful fallback for missing base weights.
++    All shard paths/headers and the complete vision state are checked before
++    copying parameters. Only vision tensors, not language tensors, are read.
++    """
++    from safetensors import safe_open
++
++    root = Path(base_path).expanduser().resolve()
++    if not root.is_dir():
++        raise ValueError("a local base model directory is required")
++
++    def local_file(name, *, safetensors=False):
++        if (not isinstance(name, str) or not name or "\\" in name or
++                Path(name).is_absolute() or ".." in Path(name).parts or
++                (safetensors and not name.endswith(".safetensors"))):
++            raise ValueError("invalid local safetensors file reference")
++        candidate = (root / name).resolve()
++        if (not candidate.is_relative_to(root) or not candidate.is_file() or
++                candidate.stat().st_size == 0):
++            raise ValueError("safetensors file is missing, empty, or outside the base directory")
++        return candidate
++
++    single = root / "model.safetensors"
++    index = root / "model.safetensors.index.json"
++    single_present = single.exists() or single.is_symlink()
++    index_present = index.exists() or index.is_symlink()
++    if single_present == index_present:
++        raise ValueError("exactly one single-file or indexed base safetensors layout is required")
++    mapping = None
++    if single_present:
++        shards = {local_file(single.name, safetensors=True)}
++    else:
++        with local_file(index.name).open(encoding="utf-8") as stream:
++            metadata = json.load(stream)
++        mapping = metadata.get("weight_map") if isinstance(metadata, dict) else None
++        if not isinstance(mapping, dict) or not mapping:
++            raise ValueError("safetensors index requires a non-empty weight_map")
++        if any(not isinstance(key, str) or not key for key in mapping):
++            raise ValueError("safetensors index tensor names must be non-empty strings")
++        mapping = {key: local_file(name, safetensors=True) for key, name in mapping.items()}
++        shards = set(mapping.values())
++
++    prefix = "model.vision_tower."
++    sources = {}
++    for shard in sorted(shards):
++        with safe_open(str(shard), framework="pt", device="cpu") as reader:
++            for key in reader.keys():
++                if not key.startswith(prefix):
++                    continue
++                if key in sources:
++                    raise ValueError("duplicate embedded vision tensor across safetensors shards")
++                if mapping is not None and mapping.get(key) != shard:
++                    raise ValueError("embedded vision tensor disagrees with safetensors index")
++                sources[key] = shard
++    if not sources:
++        raise ValueError("base checkpoint is missing embedded vision weights; no external fallback is permitted")
++    if mapping is not None and set(sources) != {key for key in mapping if key.startswith(prefix)}:
++        raise ValueError("safetensors index references missing embedded vision tensors")
++
++    tower = model.get_vision_tower()
++    if tower is None:
++        raise ValueError("the scoped model requires a SigLIP vision tower")
++    if not tower.is_loaded:
++        tower.load_model()
++    expected = tower.state_dict()
++    if any("lora_" in key for key in expected):
++        raise ValueError("vision LoRA is outside the language-only adapter profile")
++    if set(sources) != {prefix + key for key in expected}:
++        raise ValueError("base checkpoint must contain the complete, exact embedded vision state")
++
++    restored = {}
++    for shard in sorted(set(sources.values())):
++        with safe_open(str(shard), framework="pt", device="cpu") as reader:
++            for key, source in sources.items():
++                if source != shard:
++                    continue
++                name = key[len(prefix):]
++                if tuple(reader.get_slice(key).get_shape()) != tuple(expected[name].shape):
++                    raise ValueError(f"embedded vision tensor shape mismatch: {name}")
++                restored[name] = reader.get_tensor(key)
++    tower.load_state_dict(restored, strict=True)
++    return {"status": "restored", "tensor_count": len(restored), "prefix": prefix,
++            "shards": [str(shard.relative_to(root)) for shard in sorted(set(sources.values()))]}
++
++
+ class LlavaQwenModel(LlavaMetaModel, Qwen2Model):
+     config_class = LlavaQwenConfig
+ 
+@@ -50,7 +185,6 @@ class LlavaQwenForCausalLM(Qwen2ForCausalLM, LlavaMetaForCausalLM):
+         # super(Qwen2ForCausalLM, self).__init__(config)
+         Qwen2ForCausalLM.__init__(self, config)
+         config.model_type = "llava_qwen"
+-        config.rope_scaling = None
+ 
+         self.model = LlavaQwenModel(config)
+         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
+diff --git a/llava/model/multimodal_encoder/builder.py b/llava/model/multimodal_encoder/builder.py
+index 5e3a27f..10881d7 100755
+--- a/llava/model/multimodal_encoder/builder.py
++++ b/llava/model/multimodal_encoder/builder.py
+@@ -1,41 +1,12 @@
+-import os
+-from .clip_encoder import CLIPVisionTower
+-from .imagebind import ImageBindWrapper
+-from .open_clip_encoder import OpenCLIPVisionTower
+-from .hf_vision import HFVisionTower
+-from .siglip_encoder import SigLipVisionTower
+-from .clip_encoder import CLIPVisionTower, CLIPVisionTowerS2
+-from .mlcd_encoder import MLCDVisionTower, MLCDVisionTowerS2
+-# from .eva_clip.eva_clip_encoder import EvaClipVisionTower
+-# from .dev_eva_clip.eva_vit import EvaViTWrapper
++"""Scoped Qwen/SigLIP profile; unsupported towers fail before optional imports."""
++from pathlib import Path
+ 
+ 
+ def build_vision_tower(vision_tower_cfg, **kwargs):
+-    vision_tower = getattr(vision_tower_cfg, "mm_vision_tower", getattr(vision_tower_cfg, "vision_tower", None))
+-    is_absolute_path_exists = os.path.exists(vision_tower)
+-    use_s2 = getattr(vision_tower_cfg, "s2", False)
+-    if vision_tower.startswith("openai") or vision_tower.startswith("laion") or "ShareGPT4V" in vision_tower:
+-        if use_s2:
+-            return CLIPVisionTowerS2(vision_tower, args=vision_tower_cfg, **kwargs)
+-        else:
+-            return CLIPVisionTower(vision_tower, args=vision_tower_cfg, **kwargs)
+-    elif "siglip" in vision_tower:
+-        return SigLipVisionTower(vision_tower, vision_tower_cfg=vision_tower_cfg, **kwargs)
+-    elif vision_tower.startswith("hf:"):
+-        return HFVisionTower(vision_tower, args=vision_tower_cfg, **kwargs)
+-    elif vision_tower in ["imagebind_huge"]:
+-        return ImageBindWrapper(vision_tower, args=vision_tower_cfg, **kwargs)
+-    elif vision_tower.startswith("open_clip_hub"):
+-        return OpenCLIPVisionTower(vision_tower, args=vision_tower_cfg, **kwargs)
+-    elif "mlcd-vit-bigG-patch14" in vision_tower:
+-        if use_s2:
+-            return MLCDVisionTowerS2(vision_tower, args=vision_tower_cfg, **kwargs)
+-        else:
+-            return MLCDVisionTower(vision_tower, args=vision_tower_cfg, **kwargs)
+-
+-    # elif "internal-eva" in vision_tower.lower() or "eva02" in vision_tower.lower():
+-    #     return EvaClipVisionTower(vision_tower, args=vision_tower_cfg, **kwargs)
+-    # elif vision_tower in ["EVA-CLIP-8B", "EVA-CLIP-8B-plus"]:
+-    #     return EvaViTWrapper(vision_tower, args=vision_tower_cfg, **kwargs)
+-
+-    raise ValueError(f"Unknown vision tower: {vision_tower}")
++    name = getattr(vision_tower_cfg, "mm_vision_tower", getattr(vision_tower_cfg, "vision_tower", None))
++    if not isinstance(name, str) or "siglip" not in name.lower() or not Path(name).is_dir():
++        raise ValueError("scoped model profile requires a local SigLIP vision tower")
++    if getattr(vision_tower_cfg, "s2", False):
++        raise ValueError("S2 vision towers are outside the scoped model profile")
++    from .siglip_encoder import SigLipVisionTower
++    return SigLipVisionTower(name, vision_tower_cfg=vision_tower_cfg, **kwargs)
+diff --git a/llava/model/multimodal_encoder/siglip_encoder.py b/llava/model/multimodal_encoder/siglip_encoder.py
+index f1e101a..e50676d 100755
+--- a/llava/model/multimodal_encoder/siglip_encoder.py
++++ b/llava/model/multimodal_encoder/siglip_encoder.py
+@@ -101,7 +101,6 @@ class SigLipVisionConfig(PretrainedConfig):
+ 
+     @classmethod
+     def from_pretrained(cls, pretrained_model_name_or_path: Union[str, os.PathLike], **kwargs) -> "PretrainedConfig":
+-        cls._set_token_in_kwargs(kwargs)
+ 
+         config_dict, kwargs = cls.get_config_dict(pretrained_model_name_or_path, **kwargs)
+ 
+@@ -541,7 +540,7 @@ class SigLipVisionTower(nn.Module):
+ 
+         self.is_loaded = False
+ 
+-        self.config = SigLipVisionConfig()
++        self.config = SigLipVisionConfig.from_pretrained(vision_tower, local_files_only=True)
+ 
+         self.vision_tower_name = vision_tower
+ 
+@@ -565,7 +564,7 @@ class SigLipVisionTower(nn.Module):
+             rank0_print("{} is already loaded, `load_model` called again, skipping.".format(self.vision_tower_name))
+             return
+ 
+-        self.vision_tower = SigLipVisionModel.from_pretrained(self.vision_tower_name, device_map=device_map)
++        self.vision_tower = SigLipVisionModel.from_pretrained(self.vision_tower_name, device_map=device_map, local_files_only=True, use_safetensors=True, trust_remote_code=False)
+ 
+         del self.vision_tower.vision_model.encoder.layers[-1:]
+         self.vision_tower.vision_model.head = nn.Identity()
+@@ -579,12 +578,12 @@ class SigLipVisionTower(nn.Module):
+             for image in images:
+                 image_forward_out = self.vision_tower(image.to(device=self.device, dtype=self.dtype).unsqueeze(0), output_hidden_states=True)
+                 image_feature = image_forward_out.hidden_states[-1].to(image.dtype)
+-                assert image_features.shape[-2] == 729
++                assert image_feature.shape[-2] == self.num_patches
+                 image_features.append(image_feature)
+         else:
+             image_forward_outs = self.vision_tower(images.to(device=self.device, dtype=self.dtype), output_hidden_states=True)
+             image_features = image_forward_outs.hidden_states[-1].to(images.dtype)
+-            assert image_features.shape[-2] == 729
++            assert image_features.shape[-2] == self.num_patches
+ 
+         return image_features
+ 
+diff --git a/llava/model/multimodal_resampler/builder.py b/llava/model/multimodal_resampler/builder.py
+index 7a4b207..ab36911 100755
+--- a/llava/model/multimodal_resampler/builder.py
++++ b/llava/model/multimodal_resampler/builder.py
+@@ -1,15 +1,8 @@
++"""Scoped profile uses identity resampling; do not import legacy Qformer."""
+ import torch
+ 
+-from .masked_drop import MaskedDrop
+-from .spatial_pool import SpatialPool
+-from .perceiver import PerceiverResampler
+-from .qformer import Qformer
+-
+ 
+ class IdentityMap(torch.nn.Module):
+-    def __init__(self):
+-        super().__init__()
+-
+     def forward(self, x, *args, **kwargs):
+         return x
+ 
+@@ -19,16 +12,6 @@ class IdentityMap(torch.nn.Module):
+ 
+ 
+ def build_vision_resampler(model_args, delay_load=False, **kwargs):
+-    resampler_type = getattr(model_args, "mm_resampler_type", None)
+-    if resampler_type == "masked_drop":
+-        return MaskedDrop(model_args)
+-    elif resampler_type == "spatial_pool":
+-        return SpatialPool(model_args, **kwargs)
+-    elif resampler_type == "perceiver":
+-        return PerceiverResampler(model_args, **kwargs)
+-    elif resampler_type == "qformer":
+-        return Qformer(model_args, **kwargs)
+-    elif resampler_type is None:
+-        return IdentityMap()
+-
+-    raise ValueError(f"Unknown resampler type: {resampler_type}")
++    if getattr(model_args, "mm_resampler_type", None) is not None:
++        raise ValueError("only identity vision resampling is supported by this scoped profile")
++    return IdentityMap()
+diff --git a/llava/train/llava_trainer.py b/llava/train/llava_trainer.py
+index 9501e83..95f39b2 100755
+--- a/llava/train/llava_trainer.py
++++ b/llava/train/llava_trainer.py
+@@ -1,566 +1,33 @@
+-import os
+-import torch
+-import torch.nn as nn
+-import datetime
+-
+-from accelerate import Accelerator
+-from accelerate.utils import InitProcessGroupKwargs, GradientAccumulationPlugin
+-from torch.utils.data import Dataset, Sampler, DataLoader
+-
+-from trl.trainer import DPOTrainer
+-from trl.trainer.utils import DPODataCollatorWithPadding
++"""Supervised-only compatibility layer over the maintained Transformers Trainer.
+ 
++The pinned upstream trainer includes DPO/ZeRO and copies obsolete Accelerator
++internals. This scoped replacement supports only this project's single-device
++supervised LoRA path. Unsupported modes raise rather than silently degrade.
++Upstream project terms and attribution: see THIRD_PARTY_NOTICES.md in zhiyuan.
++"""
+ from transformers import Trainer
+-from transformers.trainer import is_sagemaker_mp_enabled, get_parameter_names, has_length, ALL_LAYERNORM_LAYERS, logger, is_accelerate_available, is_datasets_available, GradientAccumulationPlugin
+-from transformers.trainer_utils import seed_worker
+-from transformers.trainer_pt_utils import get_length_grouped_indices as get_length_grouped_indices_hf
+-from transformers.trainer_pt_utils import AcceleratorConfig
+-from typing import List, Optional
+-from datetime import timedelta
+-
+-if is_accelerate_available():
+-    from accelerate import Accelerator, skip_first_batches, InitProcessGroupKwargs
+-
+-if is_datasets_available():
+-    import datasets
+-
+-from llava.utils import rank0_print
+-
+-
+-def maybe_zero_3(param, ignore_status=False, name=None):
+-    from deepspeed import zero
+-    from deepspeed.runtime.zero.partition_parameters import ZeroParamStatus
+-
+-    if hasattr(param, "ds_id"):
+-        if param.ds_status == ZeroParamStatus.NOT_AVAILABLE:
+-            if not ignore_status:
+-                print(name, "no ignore status")
+-        with zero.GatheredParameters([param]):
+-            param = param.data.detach().cpu().clone()
+-    else:
+-        param = param.detach().cpu().clone()
+-    return param
+-
+-
+-def get_mm_adapter_state_maybe_zero_3(named_params, keys_to_match):
+-    to_return = {k: t for k, t in named_params if any(key_match in k for key_match in keys_to_match)}
+-    to_return = {k: maybe_zero_3(v, ignore_status=True, name=k).cpu() for k, v in to_return.items()}
+-    return to_return
+-
+-
+-def split_to_even_chunks(indices, lengths, num_chunks):
+-    """
+-    Split a list of indices into `chunks` chunks of roughly equal lengths.
+-    """
+-
+-    if len(indices) % num_chunks != 0:
+-        return [indices[i::num_chunks] for i in range(num_chunks)]
+-
+-    num_indices_per_chunk = len(indices) // num_chunks
+-
+-    chunks = [[] for _ in range(num_chunks)]
+-    chunks_lengths = [0 for _ in range(num_chunks)]
+-    for index in indices:
+-        shortest_chunk = chunks_lengths.index(min(chunks_lengths))
+-        chunks[shortest_chunk].append(index)
+-        chunks_lengths[shortest_chunk] += lengths[index]
+-        if len(chunks[shortest_chunk]) == num_indices_per_chunk:
+-            chunks_lengths[shortest_chunk] = float("inf")
+-
+-    return chunks
+-
+-
+-def get_variable_length_grouped_indices(lengths, batch_size, world_size, megabatch_mult=8, generator=None):
+-    # We need to use torch for the random part as a distributed sampler will set the random seed for torch.
+-    indices = torch.randperm(len(lengths), generator=generator)
+-    sorted_indices = sorted(range(len(lengths)), key=lambda i: lengths[i], reverse=True)
+-    megabatch_size = world_size * batch_size * megabatch_mult
+-    megabatches = [sorted_indices[i : i + megabatch_size] for i in range(0, len(lengths), megabatch_size)]
+-    megabatches = [sorted(megabatch, key=lambda i: indices[i], reverse=True) for megabatch in megabatches]
+-    shuffled_indices = [i for megabatch in megabatches for i in megabatch]
+-    world_batch_size = world_size * batch_size
+-    batches = [shuffled_indices[i : i + world_batch_size] for i in range(0, len(lengths), world_batch_size)]
+-    batch_indices = torch.randperm(len(batches), generator=generator)
+-    batches = [batches[i] for i in batch_indices]
+-
+-    return [i for batch in batches for i in batch]
+-
+-
+-def get_modality_length_grouped_indices(lengths, batch_size, world_size, generator=None):
+-    """
+-    Return a list of indices so that each slice of `batch_size` consecutive indices correspond to elements of similar
+-    lengths. To do this, the indices are:
+-
+-    - randomly permuted
+-    - grouped in mega-batches of size `mega_batch_mult * batch_size`
+-    - reorder by length in each mega-batch
+-
+-    The result is the concatenation of all mega-batches, with the batch of `batch_size` containing the element of
+-    maximum length placed first, so that an OOM happens sooner rather than later.
+-    """
+-
+-    # We need to use torch for the random part as a distributed sampler will set the random seed for torch.
+-    assert all(l != 0 for l in lengths), "Should not have zero length."
+-    if all(l > 0 for l in lengths) or all(l < 0 for l in lengths):
+-        # all samples are in the same modality
+-        return get_length_grouped_indices(lengths, batch_size, world_size, generator=generator)
+-    mm_indices, mm_lengths = zip(*[(i, l) for i, l in enumerate(lengths) if l > 0])
+-    lang_indices, lang_lengths = zip(*[(i, -l) for i, l in enumerate(lengths) if l < 0])
+-
+-    mm_shuffle = [mm_indices[i] for i in get_length_grouped_indices(mm_lengths, batch_size, world_size, generator=None)]
+-    lang_shuffle = [lang_indices[i] for i in get_length_grouped_indices(lang_lengths, batch_size, world_size, generator=None)]
+-    megabatch_size = world_size * batch_size
+-    mm_megabatches = [mm_shuffle[i : i + megabatch_size] for i in range(0, len(mm_shuffle), megabatch_size)]
+-    lang_megabatches = [lang_shuffle[i : i + megabatch_size] for i in range(0, len(lang_shuffle), megabatch_size)]
+-
+-    last_mm = mm_megabatches[-1]
+-    last_lang = lang_megabatches[-1]
+-    additional_batch = last_mm + last_lang
+-    megabatches = mm_megabatches[:-1] + lang_megabatches[:-1]
+-    megabatch_indices = torch.randperm(len(megabatches), generator=generator)
+-    megabatches = [megabatches[i] for i in megabatch_indices]
+-
+-    if len(additional_batch) > 0:
+-        megabatches.append(sorted(additional_batch))
+-
+-    return [i for megabatch in megabatches for i in megabatch]
+-
+-def get_task_length_grouped_indices(lengths, batch_size, world_size, generator=None):
+-
+-    # We need to use torch for the random part as a distributed sampler will set the random seed for torch.
+-    assert all(l != 0 for l in lengths), "Should not have zero length."
+-    from collections import defaultdict
+-    task_indices, task_lengths = defaultdict(list), defaultdict(list)
+-    for i, (task_id, l) in enumerate(lengths):
+-        task_indices[task_id].append(i)
+-        task_lengths[task_id].append(l)
+-    
+-    task_ids = list(task_indices.keys())
+-    task_shuffle = {}
+-    for task_id in task_ids:
+-        task_shuffle[task_id] = [task_indices[task_id][i] for i in get_length_grouped_indices(task_lengths[task_id], batch_size, world_size, generator=None)]
+-
+-    megabatch_size = world_size * batch_size
+-    task_megabatches = {}
+-    for task_id in task_ids:
+-        task_megabatches[task_id] = [task_shuffle[task_id][i: i + megabatch_size] for i in range(0, len(task_shuffle[task_id]), megabatch_size)]
+-
+-    megabatches = []
+-    for task_id in task_ids:
+-        megabatches.extend(task_megabatches[task_id][:-1])
+-    megabatch_indices = torch.randperm(len(megabatches), generator=generator)
+-    megabatches = [megabatches[i] for i in megabatch_indices]
+-
+-    return [i for megabatch in megabatches for i in megabatch]
+-
+-def get_length_grouped_indices(lengths, batch_size, world_size, generator=None, merge=True):
+-    """
+-    Return a list of indices so that each slice of `batch_size` consecutive indices correspond to elements of similar
+-    lengths. To do this, the indices are:
+-
+-    - randomly permuted
+-    - grouped in mega-batches of size `mega_batch_mult * batch_size`
+-    - reorder by length in each mega-batch
+-
+-    The result is the concatenation of all mega-batches, with the batch of `batch_size` containing the element of
+-    maximum length placed first, so that an OOM happens sooner rather than later.
+-    """
+-
+-    # We need to use torch for the random part as a distributed sampler will set the random seed for torch.
+-    indices = torch.randperm(len(lengths), generator=generator)
+-    megabatch_size = world_size * batch_size
+-    megabatches = [indices[i : i + megabatch_size].tolist() for i in range(0, len(lengths), megabatch_size)]
+-    megabatches = [sorted(megabatch, key=lambda i: lengths[i], reverse=True) for megabatch in megabatches]
+-    megabatches = [split_to_even_chunks(megabatch, lengths, world_size) for megabatch in megabatches]
+-
+-    return [i for megabatch in megabatches for batch in megabatch for i in batch]
+-
+-
+-def get_length_grouped_indices_auto_single(lengths, batch_size, world_size, generator=None):
+-    indices = get_length_grouped_indices_hf(lengths, batch_size * world_size, generator=generator)
+-
+-    megabatch_size = world_size * batch_size
+-    megabatches = [indices[i : i + megabatch_size] for i in range(0, len(lengths), megabatch_size)]
+-    megabatches = [sorted(megabatch, key=lambda i: lengths[i], reverse=True) for megabatch in megabatches]
+-    megabatches = [split_to_even_chunks(megabatch, lengths, world_size) for megabatch in megabatches]
+-
+-    # We need to use torch for the random part as a distributed sampler will set the random seed for torch.
+-    batch_indices = torch.randperm(len(megabatches), generator=generator)
+-    megabatches = [megabatches[i] for i in batch_indices]
+-
+-    return [i for megabatch in megabatches for batch in megabatch for i in batch]
+-
+-
+-def get_modality_length_grouped_indices_auto(lengths, batch_size, world_size, generator=None):
+-    # We need to use torch for the random part as a distributed sampler will set the random seed for torch.
+-    assert all(l != 0 for l in lengths), "Should not have zero length."
+-    if all(l > 0 for l in lengths) or all(l < 0 for l in lengths):
+-        # all samples are in the same modality
+-        return get_length_grouped_indices_auto_single(lengths, batch_size, world_size, generator=generator)
+-    mm_indices, mm_lengths = zip(*[(i, l) for i, l in enumerate(lengths) if l > 0])
+-    lang_indices, lang_lengths = zip(*[(i, -l) for i, l in enumerate(lengths) if l < 0])
+-
+-    mm_shuffle = [mm_indices[i] for i in get_length_grouped_indices_auto_single(mm_lengths, batch_size, world_size, generator=None)]
+-    lang_shuffle = [lang_indices[i] for i in get_length_grouped_indices_auto_single(lang_lengths, batch_size, world_size, generator=None)]
+-    megabatch_size = world_size * batch_size
+-    mm_megabatches = [mm_shuffle[i : i + megabatch_size] for i in range(0, len(mm_shuffle), megabatch_size)]
+-    lang_megabatches = [lang_shuffle[i : i + megabatch_size] for i in range(0, len(lang_shuffle), megabatch_size)]
+-
+-    last_mm = mm_megabatches[-1]
+-    last_lang = lang_megabatches[-1]
+-    additional_batch = last_mm + last_lang
+-    megabatches = mm_megabatches[:-1] + lang_megabatches[:-1]
+-    megabatch_indices = torch.randperm(len(megabatches), generator=generator)
+-    megabatches = [megabatches[i] for i in megabatch_indices]
+-
+-    # FIXME: Hard code to avoid last batch mixed with different modalities
+-    # if len(additional_batch) > 0:
+-    #     megabatches.append(sorted(additional_batch))
+-
+-    return [i for megabatch in megabatches for i in megabatch]
+-
+-
+-class LengthGroupedSampler(Sampler):
+-    r"""
+-    Sampler that samples indices in a way that groups together features of the dataset of roughly the same length while
+-    keeping a bit of randomness.
+-    """
+-
+-    def __init__(
+-        self,
+-        batch_size: int,
+-        world_size: int,
+-        lengths: Optional[List[int]] = None,
+-        generator=None,
+-        variable_length: bool = False,
+-        group_by_modality: bool = False,
+-        group_by_modality_auto: bool = False,
+-        group_by_task: bool = False,
+-    ):
+-        if lengths is None:
+-            raise ValueError("Lengths must be provided.")
+-
+-        self.batch_size = batch_size
+-        self.world_size = world_size
+-        self.lengths = lengths
+-        self.generator = generator
+-        self.variable_length = variable_length
+-        self.group_by_modality = group_by_modality
+-        self.group_by_modality_auto = group_by_modality_auto
+-        self.group_by_task = group_by_task
+-
+-    def __len__(self):
+-        return len(self.lengths)
+-
+-    def __iter__(self):
+-        if self.variable_length:
+-            assert not self.group_by_modality, "Variable length grouping is not supported with modality grouping."
+-            indices = get_variable_length_grouped_indices(self.lengths, self.batch_size, self.world_size, generator=self.generator)
+-        else:
+-            if self.group_by_task:
+-                indices = get_task_length_grouped_indices(self.lengths, self.batch_size, self.world_size, generator=self.generator)
+-            elif self.group_by_modality:
+-                indices = get_modality_length_grouped_indices(self.lengths, self.batch_size, self.world_size, generator=self.generator)
+-            elif self.group_by_modality_auto:
+-                indices = get_modality_length_grouped_indices_auto(self.lengths, self.batch_size, self.world_size, generator=self.generator)
+-            else:
+-                indices = get_length_grouped_indices_auto_single(self.lengths, self.batch_size, self.world_size, generator=self.generator)
+-        return iter(indices)
+ 
+ 
+ class LLaVATrainer(Trainer):
+-
+-    def create_accelerator_and_postprocess(self):
+-        grad_acc_kwargs = {"num_steps": self.args.gradient_accumulation_steps}
+-        grad_acc_kwargs["sync_with_dataloader"] = False
+-        gradient_accumulation_plugin = GradientAccumulationPlugin(**grad_acc_kwargs)
+-
+-        accelerator_kwargs = InitProcessGroupKwargs(timeout=timedelta(weeks=52))
+-        rank0_print("Setting NCCL timeout to INF to avoid running errors.")
+-
+-        # create accelerator object
+-        self.accelerator = Accelerator(
+-            dispatch_batches=self.args.dispatch_batches, split_batches=self.args.split_batches, deepspeed_plugin=self.args.deepspeed_plugin, gradient_accumulation_plugin=gradient_accumulation_plugin, kwargs_handlers=[accelerator_kwargs]
+-        )
+-        # some Trainer classes need to use `gather` instead of `gather_for_metrics`, thus we store a flag
+-        self.gather_function = self.accelerator.gather_for_metrics
+-
+-        # deepspeed and accelerate flags covering both trainer args and accelerate launcher
+-        self.is_deepspeed_enabled = getattr(self.accelerator.state, "deepspeed_plugin", None) is not None
+-        self.is_fsdp_enabled = getattr(self.accelerator.state, "fsdp_plugin", None) is not None
+-
+-        # post accelerator creation setup
+-        if self.is_fsdp_enabled:
+-            fsdp_plugin = self.accelerator.state.fsdp_plugin
+-            fsdp_plugin.limit_all_gathers = self.args.fsdp_config.get("limit_all_gathers", fsdp_plugin.limit_all_gathers)
+-            if is_accelerate_available("0.23.0"):
+-                fsdp_plugin.activation_checkpointing = self.args.fsdp_config.get("activation_checkpointing", fsdp_plugin.activation_checkpointing)
+-                if fsdp_plugin.activation_checkpointing and self.args.gradient_checkpointing:
+-                    raise ValueError("The activation_checkpointing in FSDP config and the gradient_checkpointing in training arg " "can't be set to True simultaneously. Please use FSDP's activation_checkpointing logic " "when using FSDP.")
+-
+-        if self.is_deepspeed_enabled and getattr(self.args, "hf_deepspeed_config", None) is None:
+-            self.propagate_args_to_deepspeed()
+-
+-    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+-        if self.train_dataset is None or not has_length(self.train_dataset):
+-            return None
+-
+-        if self.args.group_by_length:
+-            lengths = self.train_dataset.lengths
+-            return LengthGroupedSampler(
+-                # self.args.train_batch_size * self.args.gradient_accumulation_steps, # TODO: seems that we should not have gradient_accumulation_steps
+-                self.args.train_batch_size,
+-                # world_size=self.args.world_size,
+-                world_size=self.args.world_size * self.args.gradient_accumulation_steps,  # TODO: seems that this may work?
+-                lengths=lengths,
+-            )
+-        elif self.args.group_by_modality_length:
+-            lengths = self.train_dataset.modality_lengths
+-            return LengthGroupedSampler(
+-                # self.args.train_batch_size * self.args.gradient_accumulation_steps, # TODO: seems that we should not have gradient_accumulation_steps
+-                self.args.train_batch_size,
+-                # world_size=self.args.world_size,
+-                world_size=self.args.world_size * self.args.gradient_accumulation_steps,  # TODO: seems that this may work?
+-                lengths=lengths,
+-                group_by_modality=True,
+-            )
+-        elif self.args.group_by_modality_length_auto:
+-            lengths = self.train_dataset.modality_lengths
+-            return LengthGroupedSampler(
+-                # self.args.train_batch_size * self.args.gradient_accumulation_steps, # TODO: seems that we should not have gradient_accumulation_steps
+-                self.args.train_batch_size,
+-                # world_size=self.args.world_size,
+-                world_size=self.args.world_size * self.args.gradient_accumulation_steps,  # TODO: seems that this may work?
+-                lengths=lengths,
+-                group_by_modality_auto=True,
+-            )
+-        elif self.args.group_by_varlen:
+-            lengths = self.train_dataset.lengths
+-            return LengthGroupedSampler(
+-                self.args.train_batch_size * self.args.gradient_accumulation_steps,
+-                # self.args.train_batch_size, # TODO: seems that we should have gradient_accumulation_steps
+-                # world_size=self.args.world_size,
+-                world_size=self.args.world_size * self.args.gradient_accumulation_steps,  # TODO: seems that this may work?
+-                lengths=lengths,
+-                variable_length=True,
+-            )
+-        elif self.args.group_by_task:
+-            lengths = self.train_dataset.task_lengths
+-            return LengthGroupedSampler(
+-                self.args.train_batch_size,
+-                world_size=self.args.world_size * self.args.gradient_accumulation_steps, 
+-                lengths=lengths,
+-                group_by_task=True,
+-            )
+-        else:
+-            return super()._get_train_sampler()
+-
+-    def get_train_dataloader(self) -> DataLoader:
+-        """
+-        Returns the training [`~torch.utils.data.DataLoader`].
+-
+-        Will use no sampler if `train_dataset` does not implement `__len__`, a random sampler (adapted to distributed
+-        training if necessary) otherwise.
+-
+-        Subclass and override this method if you want to inject some custom behavior.
+-        """
+-        if self.train_dataset is None:
+-            raise ValueError("Trainer: training requires a train_dataset.")
+-
+-        train_dataset = self.train_dataset
+-        data_collator = self.data_collator
+-        if is_datasets_available() and isinstance(train_dataset, datasets.Dataset):
+-            train_dataset = self._remove_unused_columns(train_dataset, description="training")
+-        else:
+-            data_collator = self._get_collator_with_removed_columns(data_collator, description="training")
+-
+-        dataloader_params = {
+-            "batch_size": self._train_batch_size,
+-            "collate_fn": data_collator,
+-            "num_workers": self.args.dataloader_num_workers,
+-            "pin_memory": self.args.dataloader_pin_memory,
+-            "persistent_workers": self.args.dataloader_persistent_workers,
+-        }
+-
+-        if not isinstance(train_dataset, torch.utils.data.IterableDataset):
+-            dataloader_params["sampler"] = self._get_train_sampler()
+-            dataloader_params["drop_last"] = self.args.dataloader_drop_last
+-            dataloader_params["worker_init_fn"] = seed_worker
+-            dataloader_params["prefetch_factor"] = self.args.dataloader_num_workers * 2 if self.args.dataloader_num_workers != 0 else None
+-
+-        dataloader = self.accelerator.prepare(DataLoader(train_dataset, **dataloader_params))
+-
+-        return dataloader
+-
+-    def create_optimizer(self):
+-        """
+-        Setup the optimizer.
+-
+-        We provide a reasonable default that works well. If you want to use something else, you can pass a tuple in the
+-        Trainer's init through `optimizers`, or subclass and override this method in a subclass.
+-        """
+-        if is_sagemaker_mp_enabled():
+-            return super().create_optimizer()
+-
+-        opt_model = self.model
+-
+-        if self.optimizer is None:
+-            decay_parameters = get_parameter_names(opt_model, ALL_LAYERNORM_LAYERS)
+-            decay_parameters = [name for name in decay_parameters if "bias" not in name]
+-            lr_mapper = {}
+-            if self.args.mm_projector_lr is not None:
+-                lr_mapper["mm_projector"] = self.args.mm_projector_lr
+-            if self.args.mm_vision_tower_lr is not None:
+-                lr_mapper["vision_tower"] = self.args.mm_vision_tower_lr
+-            if len(lr_mapper) > 0:
+-                special_lr_parameters = [name for name, _ in opt_model.named_parameters() if any(module_keyword in name for module_keyword in lr_mapper)]
+-                optimizer_grouped_parameters = [
+-                    {
+-                        "params": [p for n, p in opt_model.named_parameters() if (n in decay_parameters and n not in special_lr_parameters and p.requires_grad)],
+-                        "weight_decay": self.args.weight_decay,
+-                    },
+-                    {
+-                        "params": [p for n, p in opt_model.named_parameters() if (n not in decay_parameters and n not in special_lr_parameters and p.requires_grad)],
+-                        "weight_decay": 0.0,
+-                    },
+-                ]
+-                for module_keyword, lr in lr_mapper.items():
+-                    module_parameters = [name for name, _ in opt_model.named_parameters() if module_keyword in name]
+-                    optimizer_grouped_parameters.extend(
+-                        [
+-                            {
+-                                "params": [p for n, p in opt_model.named_parameters() if (n in decay_parameters and n in module_parameters and p.requires_grad)],
+-                                "weight_decay": self.args.weight_decay,
+-                                "lr": lr,
+-                            },
+-                            {
+-                                "params": [p for n, p in opt_model.named_parameters() if (n not in decay_parameters and n in module_parameters and p.requires_grad)],
+-                                "weight_decay": 0.0,
+-                                "lr": lr,
+-                            },
+-                        ]
+-                    )
+-            else:
+-                optimizer_grouped_parameters = [
+-                    {
+-                        "params": [p for n, p in opt_model.named_parameters() if (n in decay_parameters and p.requires_grad)],
+-                        "weight_decay": self.args.weight_decay,
+-                    },
+-                    {
+-                        "params": [p for n, p in opt_model.named_parameters() if (n not in decay_parameters and p.requires_grad)],
+-                        "weight_decay": 0.0,
+-                    },
+-                ]
+-
+-            optimizer_cls, optimizer_kwargs = Trainer.get_optimizer_cls_and_kwargs(self.args)
+-
+-            self.optimizer = optimizer_cls(optimizer_grouped_parameters, **optimizer_kwargs)
+-            if optimizer_cls.__name__ == "Adam8bit":
+-                import bitsandbytes
+-
+-                manager = bitsandbytes.optim.GlobalOptimManager.get_instance()
+-
+-                skipped = 0
+-                for module in opt_model.modules():
+-                    if isinstance(module, nn.Embedding):
+-                        skipped += sum({p.data_ptr(): p.numel() for p in module.parameters()}.values())
+-                        logger.info(f"skipped {module}: {skipped/2**20}M params")
+-                        manager.register_module_override(module, "weight", {"optim_bits": 32})
+-                        logger.debug(f"bitsandbytes: will optimize {module} in fp32")
+-                logger.info(f"skipped: {skipped/2**20}M params")
+-
+-        return self.optimizer
+-
+-    def _save_checkpoint(self, model, trial, metrics=None):
+-        if getattr(self.args, "tune_mm_mlp_adapter", False) or (
+-            hasattr(self.args, "mm_tunable_parts") and (len(self.args.mm_tunable_parts.split(",")) == 1 and ("mm_mlp_adapter" in self.args.mm_tunable_parts or "mm_vision_resampler" in self.args.mm_tunable_parts))
+-        ):
+-            from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
+-
+-            checkpoint_folder = f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
+-
+-            run_dir = self._get_output_dir(trial=trial)
+-            output_dir = os.path.join(run_dir, checkpoint_folder)
+-
+-            # Only save Adapter
+-            keys_to_match = ["mm_projector", "vision_resampler"]
+-            if getattr(self.args, "use_im_start_end", False):
+-                keys_to_match.extend(["embed_tokens", "embed_in"])
+-
+-            weight_to_save = get_mm_adapter_state_maybe_zero_3(self.model.named_parameters(), keys_to_match)
+-
+-            if self.args.local_rank == 0 or self.args.local_rank == -1:
+-                self.model.config.save_pretrained(output_dir)
+-                torch.save(weight_to_save, os.path.join(output_dir, f"mm_projector.bin"))
+-        else:
+-            super(LLaVATrainer, self)._save_checkpoint(model, trial, metrics)
+-
+-    def _save(self, output_dir: Optional[str] = None, state_dict=None):
+-        if getattr(self.args, "tune_mm_mlp_adapter", False):
+-            pass
+-        else:
+-            super(LLaVATrainer, self)._save(output_dir, state_dict)
+-
+-
+-class LLaVADPOTrainer(DPOTrainer):
+-    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+-        if self.train_dataset is None or not has_length(self.train_dataset):
+-            return None
+-
+-        if self.args.group_by_modality_length:
+-            lengths = self.train_dataset.modality_lengths
+-            return LengthGroupedSampler(
+-                # self.args.train_batch_size * self.args.gradient_accumulation_steps, # TODO: seems that we should not have gradient_accumulation_steps
+-                self.args.train_batch_size,
+-                world_size=self.args.world_size,
+-                lengths=lengths,
+-                group_by_modality=True,
+-            )
+-        else:
+-            return super()._get_train_sampler()
+-
+-    def _save_checkpoint(self, model, trial, metrics=None):
+-        if getattr(self.args, "tune_mm_mlp_adapter", False) or (
+-            hasattr(self.args, "mm_tunable_parts") and (len(self.args.mm_tunable_parts.split(",")) == 1 and ("mm_mlp_adapter" in self.args.mm_tunable_parts or "mm_vision_resampler" in self.args.mm_tunable_parts))
+-        ):
+-            from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
+-
+-            checkpoint_folder = f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
+-
+-            run_dir = self._get_output_dir(trial=trial)
+-            output_dir = os.path.join(run_dir, checkpoint_folder)
+-
+-            # Only save Adapter
+-            keys_to_match = ["mm_projector", "vision_resampler"]
+-            if getattr(self.args, "use_im_start_end", False):
+-                keys_to_match.extend(["embed_tokens", "embed_in"])
+-
+-            weight_to_save = get_mm_adapter_state_maybe_zero_3(self.model.named_parameters(), keys_to_match)
+-
+-            if self.args.local_rank == 0 or self.args.local_rank == -1:
+-                self.model.config.save_pretrained(output_dir)
+-                torch.save(weight_to_save, os.path.join(output_dir, f"mm_projector.bin"))
+-        else:
+-            # super(LLaVADPOTrainer, self)._save_checkpoint(model, trial, metrics)
+-            # print(type(model))
+-            # from transformers.modeling_utils import unwrap_model
+-            # print(type(unwrap_model(model)))
+-            # print(unwrap_model(model).config)
+-            if self.args.lora_enable:
+-                from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
+-
+-                checkpoint_folder = f"{PREFIX_CHECKPOINT_DIR}-{self.state.global_step}"
+-                run_dir = self._get_output_dir(trial=trial)
+-                output_dir = os.path.join(run_dir, checkpoint_folder)
+-                from transformers.modeling_utils import unwrap_model
+-
+-                unwrapped_model = unwrap_model(model)
+-                self.save_my_lora_ckpt(output_dir, self.args, unwrapped_model)
+-            else:
+-                super(LLaVADPOTrainer, self)._save_checkpoint(model, trial, metrics)
+-
+-    def _save(self, output_dir: Optional[str] = None, state_dict=None):
+-        if getattr(self.args, "tune_mm_mlp_adapter", False):
+-            pass
+-        else:
+-            super(LLaVADPOTrainer, self)._save(output_dir, state_dict)
++    def __init__(self, *args, **kwargs):
++        training_args = kwargs.get("args")
++        if training_args is None and len(args) > 1:
++            training_args = args[1]
++        if training_args is not None:
++            unsupported = ("deepspeed", "fsdp", "group_by_varlen",
++                           "group_by_modality_length", "group_by_modality_length_auto",
++                           "group_by_task")
++            for name in unsupported:
++                if getattr(training_args, name, None):
++                    raise ValueError(f"{name} is outside the single-device supervised profile")
++            for name in ("mm_projector_lr", "mm_vision_tower_lr"):
++                if getattr(training_args, name, None) is not None:
++                    raise ValueError(f"{name} is outside the single-device supervised profile")
++            if getattr(training_args, "world_size", 1) != 1:
++                raise ValueError("distributed training is outside the scoped profile")
++        super().__init__(*args, **kwargs)
++
++
++class LLaVADPOTrainer:
++    def __init__(self, *args, **kwargs):
++        raise ValueError("DPO is outside the scoped supervised model profile")
+diff --git a/streamvln/dataset/vln_action_dataset.py b/streamvln/dataset/vln_action_dataset.py
+index 743f8cc..063dfc5 100644
+--- a/streamvln/dataset/vln_action_dataset.py
++++ b/streamvln/dataset/vln_action_dataset.py
+@@ -242,7 +242,8 @@ def preprocess_qwen(sources, tokenizer: transformers.PreTrainedTokenizer, has_im
+     memory_token_index = tokenizer.convert_tokens_to_ids("<memory>")
+     # stop_token_index = tokenizer.convert_tokens_to_ids("Ġstop")
+ 
+-    im_start, im_end = tokenizer.additional_special_tokens_ids
++    im_start = tokenizer.convert_tokens_to_ids("<|im_start|>")
++    im_end = tokenizer.convert_tokens_to_ids("<|im_end|>")
+     # unmask_tokens = ["<|im_start|>", "<|im_start|>", "\n"]
+     unmask_tokens_idx =  [198, im_start, im_end]
+     nl_tokens = tokenizer("\n").input_ids
+@@ -265,7 +266,7 @@ def preprocess_qwen(sources, tokenizer: transformers.PreTrainedTokenizer, has_im
+ 
+         # New version, use apply chat template
+         # Build system message for each sentence
+-        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}])
++        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}], return_dict=False)
+         target += [IGNORE_INDEX] * len(input_id)
+ 
+         for conv in source:
+@@ -280,7 +281,7 @@ def preprocess_qwen(sources, tokenizer: transformers.PreTrainedTokenizer, has_im
+             role =  roles.get(role, role)
+             
+             conv = [{"role" : role, "content" : content}]
+-            encode_id = tokenizer.apply_chat_template(conv)
++            encode_id = tokenizer.apply_chat_template(conv, return_dict=False)
+             input_id += encode_id
+             if role in ["user", "system"]:
+                 target += [IGNORE_INDEX] * len(encode_id)
+@@ -351,7 +352,7 @@ def preprocess_llama3(
+ 
+         # New version, use apply chat template
+         # Build system message for each sentence
+-        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}])
++        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}], return_dict=False)
+         target += [IGNORE_INDEX] * len(input_id)
+ 
+         for conv in source:
+@@ -367,7 +368,7 @@ def preprocess_llama3(
+             
+             conv = [{"role" : role, "content" : content}]
+             # First is bos token we don't need here
+-            encode_id = tokenizer.apply_chat_template(conv)[1:]
++            encode_id = tokenizer.apply_chat_template(conv, return_dict=False)[1:]
+             input_id += encode_id
+             if role in ["user", "system"]:
+                 target += [IGNORE_INDEX] * len(encode_id)
+@@ -452,7 +453,7 @@ def preprocess_v1(sources, tokenizer: transformers.PreTrainedTokenizer, has_imag
+                 round_len = len(tokenizer(rou).input_ids)
+                 instruction_len = len(tokenizer(parts[0]).input_ids) - 2
+ 
+-            if i != 0 and not tokenizer.legacy and IS_TOKENIZER_GREATER_THAN_0_14:
++            if i != 0 and not getattr(tokenizer, "legacy", False) and IS_TOKENIZER_GREATER_THAN_0_14:
+                 round_len -= 1
+                 instruction_len -= 1
+ 
+@@ -583,6 +584,8 @@ def preprocess(sources: Sequence[str], tokenizer: transformers.PreTrainedTokeniz
+     3. Tokenize the concatenated conversation;
+     4. Make a deepcopy as the target. Mask human words with IGNORE_INDEX.
+     """
++    if conversation_lib.default_conversation.version == "qwen":
++        return preprocess_qwen(sources, tokenizer, has_image=has_image)
+     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.PLAIN:
+         return preprocess_plain(sources, tokenizer)
+     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:
+diff --git a/streamvln/model/stream_video_vln.py b/streamvln/model/stream_video_vln.py
+index b6c4822..34a1852 100644
+--- a/streamvln/model/stream_video_vln.py
++++ b/streamvln/model/stream_video_vln.py
+@@ -9,7 +9,7 @@ from transformers.generation.utils import GenerateOutput
+ from transformers import Qwen2ForCausalLM
+ from llava.model.language_model.llava_qwen import LlavaQwenModel
+ from llava.model.llava_arch import LlavaMetaForCausalLM
+-from utils.utils import IGNORE_INDEX, IMAGE_TOKEN_INDEX, MEMORY_TOKEN_INDEX
++from streamvln.utils.utils import IGNORE_INDEX, IMAGE_TOKEN_INDEX, MEMORY_TOKEN_INDEX
+ 
+ class StreamVLNModel(LlavaQwenModel):
+     def __init__(
+@@ -37,7 +37,6 @@ class StreamVLNForCausalLM(Qwen2ForCausalLM, LlavaMetaForCausalLM):
+     ):
+         super(Qwen2ForCausalLM, self).__init__(config)
+         config.model_type = "llava_qwen"
+-        config.rope_scaling = None
+         config.delay_load = True
+         
+         self.model = StreamVLNModel(config, **kwargs)
+@@ -310,6 +309,8 @@ class StreamVLNForCausalLM(Qwen2ForCausalLM, LlavaMetaForCausalLM):
+         modalities: Optional[List[str]] = ["image"],
+         **kwargs
+     ) -> Union[Tuple, CausalLMOutputWithPast]:
++        num_items_in_batch = kwargs.get("num_items_in_batch", None)
++        logits_to_keep = kwargs.get("logits_to_keep", 0)
+         tokenizer = kwargs.get("tokenizer", None)
+         input_ids_ = input_ids
+         time_ids = kwargs.get("time_ids", None)
+@@ -347,7 +348,9 @@ class StreamVLNForCausalLM(Qwen2ForCausalLM, LlavaMetaForCausalLM):
+             use_cache=use_cache,
+             output_attentions=output_attentions,
+             output_hidden_states=output_hidden_states,
+-            return_dict=return_dict
++            return_dict=return_dict,
++            num_items_in_batch=num_items_in_batch,
++            logits_to_keep=logits_to_keep,
+         )
+     
+     @torch.no_grad()
+@@ -406,74 +409,18 @@ class StreamVLNForCausalLM(Qwen2ForCausalLM, LlavaMetaForCausalLM):
+             **kwargs
+         )
+     
+-    def prepare_inputs_for_generation(
+-        self,
+-        input_ids,
+-        past_key_values=None,
+-        attention_mask=None,
+-        inputs_embeds=None,
+-        cache_position=None,
+-        position_ids=None,
+-        use_cache=True,
+-        num_logits_to_keep=None,
+-        **kwargs,
+-    ):
+-        images = kwargs.pop("images", None)
+-        image_sizes = kwargs.pop("image_sizes", None)
+-        # If we have cache: let's slice `input_ids` through `cache_position`, to keep only the unprocessed tokens
+-        # Exception 1: when passing input_embeds, input_ids may be missing entries
+-        # Exception 2: some generation methods do special slicing of input_ids, so we don't need to do it here
+-        # print('inputs_embeds', inputs_embeds.shape)
+-        # print('input_ids', input_ids, cache_position)
+-        if past_key_values is not None:
+-            if inputs_embeds is not None:  # Exception 1
+-                input_ids = input_ids[:, -cache_position.shape[0] :]
+-            elif input_ids.shape[1] != cache_position.shape[0]:  # Default case (the "else", a no op, is Exception 2)
+-                input_ids = input_ids[:, cache_position]
+-        # print('input_ids', input_ids, cache_position, cache_position.shape)
++    def prepare_inputs_for_generation(self, input_ids, past_key_values=None,
++                                      attention_mask=None, inputs_embeds=None, **kwargs):
++        # Delegate cache slicing/prefill selection to the current Qwen contract.
++        # The multimodal prompt has already been converted into inputs_embeds.
++        return super().prepare_inputs_for_generation(
++            input_ids, past_key_values=past_key_values, attention_mask=attention_mask,
++            inputs_embeds=inputs_embeds, **kwargs)
+ 
+-        if attention_mask is not None and position_ids is None:
+-            # create position_ids on the fly for batch generation
+-            position_ids = attention_mask.long().cumsum(-1) - 1
+-            position_ids.masked_fill_(attention_mask == 0, 1)
+-            if past_key_values:
+-                position_ids = position_ids[:, -input_ids.shape[1] :]
+-
+-                # This `clone` call is needed to avoid recapturing cuda graphs with `torch.compile`'s  `mode="reduce-overhead`, as otherwise the input `position_ids` would have various stride during the decoding. Here, simply using `.contiguous()` is not sufficient as in the batch size = 1 case, `position_ids` is already contiguous but with varying stride which retriggers a capture.
+-                position_ids = position_ids.clone(memory_format=torch.contiguous_format)
+-
+-        # print('cache_position_prepare:', cache_position, len(cache_position))
+-        # if `inputs_embeds` are passed, we only want to use them in the 1st generation step
+-        if inputs_embeds is not None and cache_position[0] == 0:
+-            model_inputs = {"inputs_embeds": inputs_embeds, "input_ids": None}
+-        elif inputs_embeds is not None and len(cache_position) > 1:
+-            model_inputs = {"inputs_embeds": inputs_embeds[:, -len(cache_position):], "input_ids": None}
+-        else:
+-            # The clone here is for the same reason as for `position_ids`.
+-            model_inputs = {"input_ids": input_ids.clone(memory_format=torch.contiguous_format), "inputs_embeds": None}
+-
+-        if num_logits_to_keep is not None:
+-            model_inputs["num_logits_to_keep"] = num_logits_to_keep
+-
+-        model_inputs.update(
+-            {
+-                "position_ids": None, #position_ids,
+-                "cache_position": cache_position,
+-                "past_key_values": past_key_values,
+-                "use_cache": use_cache,
+-                "attention_mask": attention_mask,
+-            }
+-        )
+-        if images is not None:
+-            model_inputs['images'] = images
+-        if image_sizes is not None:
+-            model_inputs['image_sizes'] = image_sizes
+-        return model_inputs
+-    
+     def reset(self, env_num):
+         self.curr_t = [0] * env_num
+-        self.cache = [dict()] * env_num
++        self.cache = [dict() for _ in range(env_num)]
+     
+     def reset_for_env(self, env_idx):
+         self.curr_t[env_idx] = 0
+-        self.cache[env_idx] = dict()
+\ No newline at end of file
++        self.cache[env_idx] = dict()
+diff --git a/streamvln/streamvln_train.py b/streamvln/streamvln_train.py
+index ec5bdc6..abb858b 100644
+--- a/streamvln/streamvln_train.py
++++ b/streamvln/streamvln_train.py
+@@ -42,13 +42,13 @@ from torchvision.transforms import v2
+ import transformers
+ import tokenizers
+ 
+-from transformers import AutoConfig
+ from torch.utils.data import Dataset
+ from llava.constants import IGNORE_INDEX, DEFAULT_IMAGE_TOKEN, DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN, IMAGE_TOKEN_INDEX
+ from llava.train.llava_trainer import LLaVATrainer
+ 
+ from llava import conversation as conversation_lib
+ from llava.model import *
++from llava.model.language_model.llava_qwen import load_streamvln_config, restore_streamvln_vision_weights
+ from llava.mm_utils import process_highres_image, process_anyres_image, process_highres_image_crop_split, tokenizer_image_token
+ from llava.utils import rank0_print, process_video_with_pyav, process_video_with_decord
+ 
+@@ -73,18 +73,9 @@ except ImportError:
+     print("Please install petrel_client to Client.")
+ 
+ def maybe_zero_3(param, ignore_status=False, name=None):
+-    from deepspeed import zero
+-    from deepspeed.runtime.zero.partition_parameters import ZeroParamStatus
+-
+     if hasattr(param, "ds_id"):
+-        if param.ds_status == ZeroParamStatus.NOT_AVAILABLE:
+-            if not ignore_status:
+-                logging.warning(f"{name}: param.ds_status != ZeroParamStatus.NOT_AVAILABLE: {param.ds_status}")
+-        with zero.GatheredParameters([param]):
+-            param = param.data.detach().cpu().clone()
+-    else:
+-        param = param.detach().cpu().clone()
+-    return param
++        raise ValueError("ZeRO parameters are outside the scoped single-device profile")
++    return param.detach().cpu().clone()
+ 
+ 
+ # Borrowed from peft.utils.get_peft_model_state_dict
+@@ -498,7 +489,8 @@ def preprocess_qwen(sources, tokenizer: transformers.PreTrainedTokenizer, has_im
+         tokenizer.add_tokens(["<image>"], special_tokens=True)
+ 
+     image_token_index = tokenizer.convert_tokens_to_ids("<image>")
+-    im_start, im_end = tokenizer.additional_special_tokens_ids
++    im_start = tokenizer.convert_tokens_to_ids("<|im_start|>")
++    im_end = tokenizer.convert_tokens_to_ids("<|im_end|>")
+     # unmask_tokens = ["<|im_start|>", "<|im_start|>", "\n"]
+     unmask_tokens_idx =  [198, im_start, im_end]
+     nl_tokens = tokenizer("\n").input_ids
+@@ -521,7 +513,7 @@ def preprocess_qwen(sources, tokenizer: transformers.PreTrainedTokenizer, has_im
+ 
+         # New version, use apply chat template
+         # Build system message for each sentence
+-        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}])
++        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}], return_dict=False)
+         target += [IGNORE_INDEX] * len(input_id)
+ 
+         for conv in source:
+@@ -536,7 +528,7 @@ def preprocess_qwen(sources, tokenizer: transformers.PreTrainedTokenizer, has_im
+             role =  roles.get(role, role)
+             
+             conv = [{"role" : role, "content" : content}]
+-            encode_id = tokenizer.apply_chat_template(conv)
++            encode_id = tokenizer.apply_chat_template(conv, return_dict=False)
+             input_id += encode_id
+             if role in ["user", "system"]:
+                 target += [IGNORE_INDEX] * len(encode_id)
+@@ -624,7 +616,7 @@ def preprocess_llama3(
+ 
+         # New version, use apply chat template
+         # Build system message for each sentence
+-        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}])
++        input_id += tokenizer.apply_chat_template([{"role" : "system", "content" : system_message}], return_dict=False)
+         target += [IGNORE_INDEX] * len(input_id)
+ 
+         for conv in source:
+@@ -640,7 +632,7 @@ def preprocess_llama3(
+             
+             conv = [{"role" : role, "content" : content}]
+             # First is bos token we don't need here
+-            encode_id = tokenizer.apply_chat_template(conv)[1:]
++            encode_id = tokenizer.apply_chat_template(conv, return_dict=False)[1:]
+             input_id += encode_id
+             if role in ["user", "system"]:
+                 target += [IGNORE_INDEX] * len(encode_id)
+@@ -725,7 +717,7 @@ def preprocess_v1(sources, tokenizer: transformers.PreTrainedTokenizer, has_imag
+                 round_len = len(tokenizer(rou).input_ids)
+                 instruction_len = len(tokenizer(parts[0]).input_ids) - 2
+ 
+-            if i != 0 and not tokenizer.legacy and IS_TOKENIZER_GREATER_THAN_0_14:
++            if i != 0 and not getattr(tokenizer, "legacy", False) and IS_TOKENIZER_GREATER_THAN_0_14:
+                 round_len -= 1
+                 instruction_len -= 1
+ 
+@@ -856,6 +848,8 @@ def preprocess(sources: Sequence[str], tokenizer: transformers.PreTrainedTokeniz
+     3. Tokenize the concatenated conversation;
+     4. Make a deepcopy as the target. Mask human words with IGNORE_INDEX.
+     """
++    if conversation_lib.default_conversation.version == "qwen":
++        return preprocess_qwen(sources, tokenizer, has_image=has_image)
+     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.PLAIN:
+         return preprocess_plain(sources, tokenizer)
+     if conversation_lib.default_conversation.sep_style == conversation_lib.SeparatorStyle.LLAMA_2:
+@@ -1471,20 +1465,10 @@ def get_model(model_args, training_args, data_args, bnb_model_from_pretrained_ar
+ 
+     customized_kwargs = dict()
+     customized_kwargs.update(bnb_model_from_pretrained_args)
+-    cfg_pretrained = None
++    cfg_pretrained = load_streamvln_config(model_args.model_name_or_path)
++    customized_kwargs["config"] = cfg_pretrained
+ 
+     overwrite_config = {}
+-    if any(
+-        [
+-            model_args.rope_scaling_factor is not None,
+-            model_args.rope_scaling_type is not None,
+-            model_args.mm_spatial_pool_stride is not None,
+-            model_args.mm_spatial_pool_out_channels is not None,
+-            model_args.mm_spatial_pool_mode is not None,
+-            model_args.mm_resampler_type is not None,
+-        ]
+-    ):
+-        cfg_pretrained = AutoConfig.from_pretrained(model_args.model_name_or_path)
+ 
+     # import ipdb; ipdb.set_trace()
+     if model_args.use_pos_skipping is not None and model_args.pos_skipping_range is not None:
+@@ -1538,11 +1522,16 @@ def get_model(model_args, training_args, data_args, bnb_model_from_pretrained_ar
+                 model_args.model_name_or_path,
+                 cache_dir=training_args.cache_dir,
+                 attn_implementation=training_args.attn_implementation,
+-                torch_dtype=(torch.bfloat16 if training_args.bf16 else None),
+-                low_cpu_mem_usage=False,
++                dtype=(torch.bfloat16 if training_args.bf16 else torch.float32),
++                local_files_only=True,
++                trust_remote_code=False,
++                use_safetensors=True,
+                 **customized_kwargs,
+                 )
+     
++    if hasattr(model, "lm_head"):
++        model.config.vocab_size = int(model.lm_head.out_features)
++        model.vocab_size = int(model.lm_head.out_features)
+     return model
+ 
+ 
+@@ -1551,6 +1540,15 @@ def train(attn_implementation=None):
+     
+     parser = transformers.HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
+     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
++    # CPU FP32 is an explicit offline verification mode, not a GPU fallback.
++    if (training_args.bits != 16 or not training_args.lora_enable or training_args.fp16
++            or (not training_args.bf16 and not training_args.use_cpu)
++            or model_args.mm_tunable_parts != "mm_lora_layer" or model_args.version != "qwen_2"):
++        raise ValueError("scoped training requires Qwen, 16-bit LoRA, mm_lora_layer, and BF16 (explicit CPU verification may use FP32)")
++    if ("qwen" not in model_args.model_name_or_path.lower() or data_args.multi_task_training
++            or model_args.pretrain_mm_mlp_adapter or model_args.mm_resampler_type
++            or training_args.deepspeed or training_args.fsdp or training_args.world_size != 1):
++        raise ValueError("unsupported architecture, multi-task, pretrained projector, or distributed mode")
+ 
+     if training_args.verbose_logging:
+         rank0_print(f"Inspecting experiment hyperparameters:\n")
+@@ -1634,7 +1632,7 @@ def train(attn_implementation=None):
+     if "mistral" in model_args.model_name_or_path.lower() or "mixtral" in model_args.model_name_or_path.lower() or "zephyr" in model_args.model_name_or_path.lower():
+         tokenizer = transformers.AutoTokenizer.from_pretrained(model_args.model_name_or_path, cache_dir=training_args.cache_dir, model_max_length=training_args.model_max_length, padding_side="left")
+     elif "qwen" in model_args.model_name_or_path.lower():
+-        tokenizer = transformers.AutoTokenizer.from_pretrained(model_args.model_name_or_path, cache_dir=training_args.cache_dir, model_max_length=training_args.model_max_length, padding_side="right")
++        tokenizer = transformers.AutoTokenizer.from_pretrained(model_args.model_name_or_path, cache_dir=training_args.cache_dir, model_max_length=training_args.model_max_length, padding_side="right", local_files_only=True, trust_remote_code=False)
+     elif (
+         "wizardlm-2" in model_args.model_name_or_path.lower()
+         or "vicuna" in model_args.model_name_or_path.lower()
+@@ -1672,9 +1670,11 @@ def train(attn_implementation=None):
+     
+     if model_args.vision_tower is not None:
+         model.get_model().initialize_vision_modules(model_args=model_args, fsdp=None)
++        vision_restore = restore_streamvln_vision_weights(model, model_args.model_name_or_path)
++        rank0_print(f"Embedded base vision restoration: {vision_restore}")
+ 
+         vision_tower = model.get_vision_tower()
+-        vision_tower.to(dtype=torch.bfloat16 if training_args.bf16 else torch.float16, device=training_args.device)
++        vision_tower.to(dtype=compute_dtype, device=training_args.device)
+ 
+         data_args.image_processor = vision_tower.image_processor
+         data_args.is_multimodal = True
+@@ -1785,6 +1785,8 @@ def train(attn_implementation=None):
+         training_args.use_im_start_end = model_args.mm_use_im_start_end
+         model.config.mm_use_im_patch_token = model_args.mm_use_im_patch_token
+         model.initialize_vision_tokenizer(model_args, tokenizer=tokenizer)
++        model.config.vocab_size = int(model.lm_head.out_features)
++        model.vocab_size = int(model.lm_head.out_features)
+ 
+     if training_args.bits in [4, 8]:
+         from peft.tuners.lora import LoraLayer
+@@ -1846,7 +1848,7 @@ def train(attn_implementation=None):
+                 return wrap_func
+             FSDP.__init__ = patch_FSDP_use_orig_params(FSDP.__init__)
+     
+-    trainer = LLaVATrainer(model=model, tokenizer=tokenizer, args=training_args, **data_module)
++    trainer = LLaVATrainer(model=model, processing_class=tokenizer, args=training_args, **data_module)
+     # print(list(model.get_model().vision_resampler.parameters())[0])
+     # import ipdb; ipdb.set_trace()
+     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
+@@ -1866,8 +1868,9 @@ def train(attn_implementation=None):
+                 model.config.save_pretrained(training_args.output_dir)
+             if hasattr(model, "generation_config"):
+                 model.generation_config.save_pretrained(training_args.output_dir)
+-            model.save_pretrained(training_args.output_dir, state_dict=state_dict)
+-            torch.save(non_lora_state_dict, os.path.join(training_args.output_dir, "non_lora_trainables.bin"))
++            model.save_pretrained(training_args.output_dir, state_dict=state_dict, safe_serialization=True)
++            if non_lora_state_dict:
++                raise ValueError("non-LoRA trainable weights are outside the scoped mm_lora_layer profile")
+     else:
+         # safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
+         if training_args.fsdp:

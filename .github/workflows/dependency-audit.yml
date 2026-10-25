@@ -1,4 +1,4 @@
-name: CPU dependency audit (not GPU certification)
+name: Dependency audit and CPU model migration (not GPU certification)
 
 on:
   pull_request:
@@ -43,7 +43,7 @@ jobs:
             tests.test_protocol tests.test_dataset tests.test_metrics \
             tests.test_manifest tests.test_occupancy tests.test_service \
             tests.test_assemble_eval_result tests.test_stage2_preflight \
-            tests.test_model_security tests.test_model_closed_loop_eval \
+            tests.test_model_security tests.test_model_closed_loop_eval tests.test_reload_adapter \
             tests.test_isaac_backend tests.test_equivalent_assets \
             tests.test_canonical_replays tests.test_closed_loop_replay \
             tests.test_series_manifest tests.test_series_media \
@@ -52,5 +52,62 @@ jobs:
             tests.test_challenge_voice tests.test_original_bgm -v
       - name: State remaining scope explicitly
         run: |
-          echo 'This job does not clear the vulnerable historical StreamVLN stack, CUDA, Isaac, FFmpeg or archived media acceptance.' >> "$GITHUB_STEP_SUMMARY"
-          echo 'See SECURITY.md and security/audit-2026-10-25.md. No CVE ignore list is used.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Historical environments remain vulnerable. This job does not certify CUDA, Isaac, FFmpeg or archived media acceptance.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'See SECURITY.md and the separate model CPU migration job. No CVE ignore list is used.' >> "$GITHUB_STEP_SUMMARY"
+
+  model-cpu-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      CUDA_VISIBLE_DEVICES: ''
+      ACCELERATE_USE_CPU: 'true'
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Checkout the exact upstream source, without weights or datasets
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: InternRobotics/StreamVLN
+          ref: e48f6ff7e9201d93aae003e8f64b04c00cec13bc
+          path: .upstream/StreamVLN
+          persist-credentials: false
+          sparse-checkout: |
+            llava
+            streamvln
+      - name: Install hash-locked auditor separately
+        run: |
+          python -m venv .venv-audit
+          .venv-audit/bin/python -m pip install --require-hashes -r requirements/audit.txt
+      - name: Audit full model graphs, without suppressing CPU build versions
+        # PyPI has no torch==...+cpu JSON endpoint. OSV understands the local
+        # version suffix. pip install below verifies downloaded wheel hashes;
+        # OSV's --require-hashes alone checks presence, not hash authenticity.
+        run: |
+          .venv-audit/bin/pip-audit --strict --disable-pip --require-hashes -r requirements/model-macos-arm64.txt
+          .venv-audit/bin/pip-audit --strict --disable-pip --require-hashes --vulnerability-service osv -r requirements/model-linux-cpu.txt
+      - name: Install CPU-only model wheels with exact hashes
+        run: |
+          python -m venv .venv-model
+          .venv-model/bin/python -m pip install --require-hashes --only-binary=:all: --extra-index-url https://download.pytorch.org/whl/cpu -r requirements/model-linux-cpu.txt
+          .venv-model/bin/python -m pip check
+      - name: Verify pinned overlay and real tiny model training and generation
+        working-directory: aima-open-session-experiment
+        env:
+          STREAMVLN_REPO: ${{ github.workspace }}/.upstream/StreamVLN
+        run: |
+          ../.venv-model/bin/python -m unittest tests.test_streamvln_compat tests.test_model_stack_integration -v
+      - name: State model verification boundary
+        run: |
+          echo 'This is CPU testing of tiny random Qwen/SigLIP models, real training and adapter serialization; no pretrained weights are downloaded.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'CUDA/BF16 kernels, the real checkpoint, original dataset and live GenieSim model loop have NOT been revalidated.' >> "$GITHUB_STEP_SUMMARY"

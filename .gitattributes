@@ -1,0 +1,4 @@
+# Unified-diff context intentionally contains single-space blank lines from the
+# pinned upstream. Preserve those exact bytes; the overlay verifies its hash
+# and git apply --check validates the patch before any source modification.
+aima-open-session-experiment/adapter/compat_assets/streamvln-v5.patch -whitespace

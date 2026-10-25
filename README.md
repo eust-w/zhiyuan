@@ -8,7 +8,7 @@
 
 [快速检查](#快速检查无需-gpu) · [实验结果](#实验结果) · [运行与复现边界](#运行与复现边界) · [安全与依赖](SECURITY.md) · [文档](#文档与目录) · [许可证](#许可证与上游项目)
 
-> 安全状态：CPU/媒体工具已有 Python 3.12 哈希锁与依赖审计；历史 GPU 模型栈仍有已知漏洞，不能按旧版本直接部署。详见 [审计报告与剩余问题](security/audit-2026-10-25.md)。CI 通过不等于整个 GPU 栈已安全迁移。
+> 安全状态：CPU/媒体工具与限定的 Qwen＋SigLIP＋LoRA 模型 CPU profile 已有 Python 3.12 哈希锁和依赖审计，并提供 Transformers 5 兼容补丁。详见 [模型栈迁移与验证边界](security/model-stack-migration-2026-10-25.md)。历史 GPU 环境仍有漏洞，真实 checkpoint、CUDA 和 GenieSim 闭环尚未在新栈复测；CI 不等于 GPU 验收。
 
 ![动作与深度安全门实录](aima-open-session-experiment/assets/media/v3/stage0-keyboard-and-guard.gif)
 
@@ -125,9 +125,9 @@ PY
 | StreamVLN real-world checkpoint | `7b0269ad28e7039a32627b950766c09b5a646f8e` |
 | SigLIP | `9fdffc58afc957d1a03a25b10dba0329ab15c2a3` |
 
-要重新运行 GPU 实验，仍须自行准备有权使用的 GenieSim/Isaac 环境、`market_00_g2` 对应场景与 G2 资产、StreamVLN 源码和权重、训练数据及 held-out sidecar。模型环境还需要 PyTorch、Transformers、PEFT、NumPy、Pillow 等依赖；仓库目前没有安全迁移并通过 GPU 验证的完整模型环境锁或一键安装器。新增的 [CPU/媒体锁](requirements/cpu.txt) 只供独立 Python 3.12 工具环境使用，不能安装到旧模型或 Isaac 环境中。
+要重新运行 GPU 实验，仍须自行准备有权使用的 GenieSim/Isaac 环境、`market_00_g2` 对应场景与 G2 资产、StreamVLN 源码和权重、训练数据及 held-out sidecar。新的 [模型迁移说明](security/model-stack-migration-2026-10-25.md) 提供独立 Python 3.12 的完整 CPU 模型依赖锁和小模型验收命令；CUDA wheel、驱动和真实模型仍需单独验证。不要把 [CPU/媒体锁](requirements/cpu.txt) 或模型锁安装到 Isaac 或旧 Python 3.9 环境中。
 
-模型入口现在要求本地 safetensors，检查全部分片及路径边界，拒绝 bin-only adapter；请先阅读 [安全使用说明](SECURITY.md)。旧环境漏洞仍需要依赖/API 迁移和真实 GPU 验证，本次加载加固不代表漏洞全部修复。
+模型入口要求本地 safetensors，检查全部分片及路径边界，拒绝 bin-only adapter，并验证固定上游源码及兼容补丁哈希；请先阅读 [安全使用说明](SECURITY.md)。历史环境不会被自动升级，不能把本地小模型验证当作真实 GPU 模型复测。
 
 先读 [适配器说明](aima-open-session-experiment/adapter/README.md) 和 [实验目录入口](aima-open-session-experiment/README.md)。历史脚本中仍有 GPUFree 路径假设，需按自己的环境检查并调整，不应原样复制后就认定环境可复现。训练检查器会修改传入的 StreamVLN checkout，请使用独立副本。
 
@@ -137,7 +137,7 @@ PY
 - **完整视觉场景仍有稳定性问题。** 独立 Cube 代理层的 5cm 栅格投影探针已运行，但历史预装市场 mesh 会使完整 HTTP/Kit 进程提前退出；这两种验证不能混为一谈。
 - **数据校验有边界。** 当前数据验证器的图像字节检查只检查文件非空，不等于完整 JPEG 解码。重新采集时应另做解码与抽帧检查。
 - **原始资产并不完整包含在 Git 中。** 长视频、原始数据及模型相关文件不能假定随 clone 获得；历史 Release 是工作区归档，不是经许可与依赖审计的安装包。
-- 本次 README 整理只复核了保存的证据和 CPU 测试，未重新租用 GPU、采集数据、训练或重跑模型评测。
+- 新模型迁移只执行本地随机小模型与 CPU 测试；未重新租用 GPU、采集数据、训练真实 checkpoint 或重跑导航评测。上方指标仍是历史结果。
 
 ## 文档与目录
 

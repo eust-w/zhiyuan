@@ -34,6 +34,14 @@ Licensed under the Apache License, Version 2.0.
 
 随仓库保留 [Apache-2.0 全文](LICENSES/Apache-2.0.txt) 和 [CC-BY-NC-SA-4.0 全文](LICENSES/CC-BY-NC-SA-4.0.txt)。对应标准文本来源为 [SPDX License List](https://github.com/spdx/license-list-data/tree/main/text)；权利义务以适用的许可原文为准。
 
+### Transformers 5 限定兼容补丁
+
+新增的 [`adapter/compat_assets/streamvln-v5.patch`](aima-open-session-experiment/adapter/compat_assets/streamvln-v5.patch) 包含固定 StreamVLN revision 的上下文和改编内容，不按本项目 MIT 统一授权。涉及的文件、前后 SHA-256 与补丁哈希列于同目录 [manifest.json](aima-open-session-experiment/adapter/compat_assets/manifest.json)。原创应用/校验包装 `adapter/streamvln_compat.py` 仍适用 MIT；生成的上游文件继续保留原有版权、归属和适用条款。
+
+补丁涉及 `llava/__init__.py`、`llava/model/__init__.py`、`llava/model/language_model/llava_qwen.py`、视觉塔/重采样器 builder、`siglip_encoder.py`、`llava/train/llava_trainer.py`，以及 StreamVLN 的训练、数据预处理、`stream_video_vln.py`。来源均为上表固定 StreamVLN 版本；其中 Qwen 文件的 Hao Zhang / Apache-2.0 头、训练入口的 FastChat / Stanford Alpaca / Apache-2.0 头及仓库 CC BY-NC-SA 4.0 声明分别保留，不互相替换。
+
+本轮改编包含：隔离未使用的模型和 DPO 分支、按顶层 Qwen 字段规范化旧配置、迁移 SigLIP 配置读取、恢复基座嵌入的视觉参数、显式 chat-template 输出、修复 generation cache 准备与状态独立性、将单设备监督训练连接到维护版 Trainer、支持 loss 归一化及 safetensors 保存。受 CC BY-NC-SA 4.0 保护部分的改编贡献同样按该许可提供。调用 Transformers/PEFT 的公共 API 不意味着模型权重或其他资产获得这些库的代码许可。
+
 ## 外部运行依赖与模型
 
 这些组件需要单独获取。本项目的许可证不替代其源码、权重、数据、平台使用条款或文件级许可。

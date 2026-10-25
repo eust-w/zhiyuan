@@ -1,0 +1,16 @@
+# Scoped Qwen + SigLIP + single-device BF16/LoRA profile, Python 3.12.
+# Do not install this into Isaac's bundled Python or use the historical upstream
+# requirements snapshot as an installation profile. CUDA is a separate gate.
+pip==26.2.2
+torch==2.14.1
+torchvision==0.29.1
+transformers==5.20.2
+tokenizers==0.23.3
+peft==0.21.2
+accelerate==1.15.0
+safetensors==0.8.0
+numpy==2.5.4
+Pillow==13.0.0
+PyYAML==6.0.3
+packaging>=26.0
+requests>=2.32.5

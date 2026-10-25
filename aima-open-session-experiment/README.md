@@ -4,6 +4,8 @@
 
 这里保存仿真适配器、数据与训练工具、配对评测结果，以及阶段文档和媒体归档。首次访问请先看项目首页；它集中说明了用途、快速检查、真实结果和复现限制。
 
+当前维护的模型 CPU 依赖、Transformers 5 兼容补丁及复查命令见[模型迁移说明](../security/model-stack-migration-2026-10-25.md)。以下结果仍是历史 GPU 实验，不是新版依赖的复测结果。
+
 ## 结果与证据
 
 主评测：[exp02-equivalent-v3/eval_result.json](experiments/exp02-equivalent-v3/eval_result.json)。Base 与 LoRA 在同一批 `eval-2001…eval-2010` 上的 success@0.5m 均为 **0/10**；同文件中的控制器轨迹验证为 10/10，不能当作模型成绩。

@@ -1,11 +1,50 @@
+import contextlib
+import io
+import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
+from adapter import stage2_preflight
 from adapter.stage2_preflight import _patch_qwen_tokenizer, build_command
 
 
 class Stage2PreflightTests(unittest.TestCase):
+    def test_preflight_records_overlay_failure_without_training_or_legacy_patch(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            base, vision = root / "base", root / "vision"
+            base.mkdir()
+            vision.mkdir()
+            (base / "config.json").write_text(json.dumps({"mm_vision_tower": str(vision)}))
+            (vision / "config.json").write_text("{}")
+            for directory in (base, vision):
+                (directory / "model.safetensors").write_bytes(b"format guard fixture")
+            result = root / "result.json"
+            argv = ["stage2", "--python", sys.executable, "--repo", str(root / "source"),
+                    "--checkpoint", str(base), "--vision", str(vision),
+                    "--dataset", str(root / "data"), "--output", str(root / "output"),
+                    "--result", str(result), "--execute"]
+            with patch.object(sys, "argv", argv), \
+                    patch.object(stage2_preflight, "prepare_checkout", create=True,
+                                 side_effect=ValueError("unreviewed checkout rejected")), \
+                    patch.object(stage2_preflight, "_patch_qwen_tokenizer",
+                                 side_effect=AssertionError("legacy patch must not execute")), \
+                    patch.object(stage2_preflight.subprocess, "Popen",
+                                 side_effect=AssertionError("blocked training must not execute")), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                try:
+                    stage2_preflight.main()
+                except Exception as exc:
+                    self.fail(f"preflight did not report a blocked overlay: {exc}")
+            gates = json.loads(result.read_text())["gates"]
+            self.assertEqual(gates["streamvln_compat"]["status"], "blocked")
+            self.assertIn("unreviewed checkout", gates["streamvln_compat"]["error"])
+            self.assertEqual(gates["full_training"]["status"], "blocked")
+            self.assertFalse((root / "base-qwen-compat").exists())
+
     def test_qwen_tokenizer_patch_is_idempotent(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)

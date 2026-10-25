@@ -22,6 +22,7 @@ from typing import Any
 
 from .dataset import validate_dataset
 from .model_security import validate_model_directory, validate_training_vision_reference
+from .streamvln_compat import prepare_checkout
 
 
 def _sha256(path: Path) -> str:
@@ -118,7 +119,7 @@ def _patch_qwen_tokenizer(repo: Path) -> dict[str, str]:
     # Sources: StreamVLN e48f6ff7e9201d93aae003e8f64b04c00cec13bc,
     # streamvln/streamvln_train.py and streamvln/dataset/vln_action_dataset.py.
     # See the repository-root THIRD_PARTY_NOTICES.md for attribution and changes.
-    """Apply the smallest runtime compatibility patch required by Transformers.
+    """Deprecated historical Transformers 4 patch; never used by the v5 gate.
 
     The pinned StreamVLN source calls the Qwen tokenizer with the fast-tokenizer
     default.  With the verified Transformers 4.45.1 environment that returns a
@@ -149,9 +150,8 @@ def _patch_qwen_tokenizer(repo: Path) -> dict[str, str]:
     vocab_original = "    return model\n\n\ndef train(attn_implementation=None):"
     vocab_patched = (
         "    # Keep the loss reshape aligned with the checkpoint's loaded lm_head.\n"
-        "    # The pinned real-world checkpoint loads 151648 output rows while its\n"
-        "    # legacy config advertises 152064; Transformers otherwise raises a\n"
-        "    # non-divisible view error on the first training batch.\n"
+        "    # Read the loaded head size; do not infer it from a later tokenizer\n"
+        "    # resize or slice the original checkpoint vocabulary.\n"
         "    if hasattr(model, \"lm_head\") and hasattr(model.lm_head, \"out_features\"):\n"
         "        model.config.vocab_size = int(model.lm_head.out_features)\n"
         "        model.vocab_size = int(model.lm_head.out_features)\n"
@@ -270,7 +270,10 @@ def main() -> None:
     gates: dict[str, Any] = {}
     gates["checkpoint_files"] = checkpoint_safety_gate(checkpoint, vision)
     if gates["checkpoint_files"]["status"] == "ready":
-        gates["streamvln_compat"] = _patch_qwen_tokenizer(repo)
+        try:
+            gates["streamvln_compat"] = prepare_checkout(repo)
+        except (ValueError, OSError) as exc:
+            gates["streamvln_compat"] = {"status": "blocked", "error": str(exc)}
     else:
         gates["streamvln_compat"] = {"status": "blocked", "reason": "local safetensors preflight failed"}
     try:
@@ -283,7 +286,8 @@ def main() -> None:
     except Exception as exc:
         gates["dataset_only"] = {"status": "failed", "error": f"{type(exc).__name__}: {exc}"}
 
-    checkpoint_for_command = _qwen_compat_checkpoint(checkpoint) if gates["checkpoint_files"]["status"] == "ready" else checkpoint
+    source_ready = gates["streamvln_compat"]["status"] == "ready"
+    checkpoint_for_command = _qwen_compat_checkpoint(checkpoint) if source_ready else checkpoint
     command = build_command(
         python=args.python,
         repo=repo,
@@ -304,7 +308,7 @@ def main() -> None:
     gates["single_batch_forward_backward"] = {"status": "not_run"}
     gates["full_training"] = {"status": "not_run"}
     gates["adapter_reload"] = {"status": "not_run"}
-    if args.execute and gates["dataset_only"].get("invalid", 1) == 0 and gates["checkpoint_files"]["status"] == "ready" and gates["streamvln_compat"]["status"] in {"applied", "already_applied"}:
+    if args.execute and gates["dataset_only"].get("invalid", 1) == 0 and gates["checkpoint_files"]["status"] == "ready" and source_ready:
         output.mkdir(parents=True, exist_ok=True)
         environment = dict(__import__("os").environ)
         environment["PYTHONPATH"] = f"{repo}:{repo / 'streamvln'}"

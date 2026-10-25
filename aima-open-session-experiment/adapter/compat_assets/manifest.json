@@ -1,0 +1,57 @@
+{
+  "revision": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc",
+  "profile": "qwen-siglip-bf16-lora-v5",
+  "patch_sha256": "d33e3b9dc074c423d31e6a2d99b6047e13ef984ac251b302872ebe0a69f0b896",
+  "files": [
+    {
+      "path": "llava/__init__.py",
+      "before_sha256": "52508db720555fae39081e92e8b7f26244df4153b5f3f6bc7bd4a647b7071310",
+      "after_sha256": "7bedacab2a47e9de80a9b141a683216ef86350eda961d6bab24b9809b9d8d570"
+    },
+    {
+      "path": "llava/model/__init__.py",
+      "before_sha256": "16714be8b5e852887466b048d2bde886ff37f9cbbc701cd0565822a5e9507d5c",
+      "after_sha256": "5a43f1a253623cff0682cde02047e800f0d99917a3954a3a80c5fbab2c21ad9e"
+    },
+    {
+      "path": "llava/model/language_model/llava_qwen.py",
+      "before_sha256": "f55015d1b7f618462bea4f902004a8a3f9ac1e41c2e8d4dfa9b73fb1fb0c1cba",
+      "after_sha256": "a075e69bf0abdad588fa86f504ff1e292b2f58825f0e9aaa80125d2c18212486"
+    },
+    {
+      "path": "llava/model/multimodal_encoder/builder.py",
+      "before_sha256": "7c436d20f34b0c05b09150234896f6cb193eb453a4850552eb4569b93990d127",
+      "after_sha256": "955b8123cf48e457e345a7b4889e303c17cc038e07270176c690d82c20be68aa"
+    },
+    {
+      "path": "llava/model/multimodal_encoder/siglip_encoder.py",
+      "before_sha256": "09b0e16ed6f0281d86f39fb2ad1c938cb684d8df5272f8b952c3f9e41156cfc3",
+      "after_sha256": "e24fd2ec334409345b5ddbdb7acb9be78eb8d84858e164d6cc28212b1fd6ba2e"
+    },
+    {
+      "path": "llava/model/multimodal_resampler/builder.py",
+      "before_sha256": "2e82104348574effc7d2b65c502f439653e4b78bd62815c34a5e77dc7c7a3a5f",
+      "after_sha256": "7c37db26f18329f882694dd22fc89e67ce286fe1d7f4902c8c24dc037966699c"
+    },
+    {
+      "path": "llava/train/llava_trainer.py",
+      "before_sha256": "7e9dfc3212ba25c438d6404a55672f529b00d8411df90312af5d6c5938f55510",
+      "after_sha256": "e0b9fd4a59bc2de3f5829bb45334f5d3f209a7e25922e05708b98085ebbf2772"
+    },
+    {
+      "path": "streamvln/dataset/vln_action_dataset.py",
+      "before_sha256": "79309bc2ff4bde40ee523609b956d9a4a8ff8f393b599d4c612b0279c6eadb5b",
+      "after_sha256": "7f568f95248e3c4ce68981ee95a9a4fc30c28e47681553cc89d046fd579247fa"
+    },
+    {
+      "path": "streamvln/model/stream_video_vln.py",
+      "before_sha256": "e106e16a7de4a8086ed526e55d877506e480d05980ddf1c6909286439acca8dc",
+      "after_sha256": "6df6601d78e5a1d2fb780310be4ae2341678e6b5251c37dec24b24cab295fc11"
+    },
+    {
+      "path": "streamvln/streamvln_train.py",
+      "before_sha256": "1c44c65bdddbfe2bb6c1e7ad8cf48ffaffcf6039f0e4c128e2dac2d8dc439bcf",
+      "after_sha256": "52f44b778d360dd697c9ec172b4b4909596c170091bc591eba083b1a5b22c463"
+    }
+  ]
+}
