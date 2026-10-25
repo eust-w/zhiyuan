@@ -1,0 +1,91 @@
+{
+  "schema_version": "composite-privacy-verification/v1",
+  "status": "sampled_ocr_no_flags",
+  "source": "documentary/out/visual-sample-silent.mp4",
+  "sha256": "8c0454a77954fb5adbf6a7ba5f99a3de77fe33a3550f5e9c1f6f39cf88434e47",
+  "media": {
+    "duration_s": 78.0,
+    "width": 1920,
+    "height": 1080,
+    "frame_rate": "30/1",
+    "codec": "h264",
+    "total_video_frames": 2340,
+    "audio_streams": 0
+  },
+  "sampling": {
+    "frame_files": 78,
+    "cadence": "approximately 1 image per second",
+    "frame_dimensions": [
+      960,
+      540
+    ],
+    "frame_sequence": "frame-001.png through frame-078.png",
+    "independent_fps_scale_rgb_pixels_match": true,
+    "independent_frame_count": 78,
+    "native_resolution_supplement": {
+      "images": 3,
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "corresponding_sample_numbers": [
+        1,
+        40,
+        78
+      ],
+      "purpose": "re-read small overlays, chart text, and end-card text without the 960-wide reduction"
+    }
+  },
+  "ocr": {
+    "tool": "Apple Vision VNRecognizeTextRequest",
+    "revision": [
+      3
+    ],
+    "recognition_level": "accurate",
+    "languages": [
+      "zh-Hans",
+      "en-US"
+    ],
+    "language_correction": false,
+    "minimum_text_height_fraction": 0.002,
+    "images_processed": 81,
+    "text_blocks": 1303,
+    "recognition_failures": 0
+  },
+  "categories": {
+    "email": 0,
+    "ipv4": 0,
+    "private_absolute_path": 0,
+    "connection_details": 0,
+    "credential_pattern": 0,
+    "account_label": 0,
+    "course_or_reward_claim": 0
+  },
+  "findings_redacted": [],
+  "allowed_technical_labels": [
+    "GenieSim",
+    "StreamVLN",
+    "Base",
+    "LoRA",
+    "SPL",
+    "eval episode identifiers"
+  ],
+  "manual_visual_review": {
+    "sample_numbers": [
+      1,
+      40,
+      78
+    ],
+    "finding": "No account UI, private connection overlay, or course/certification/reward claim observed in these sampled composites."
+  },
+  "limitations": [
+    "Only 78 of 2340 video frames were sampled; transient content between sample points is not excluded.",
+    "960-wide OCR can miss fine text; only three representative samples received native-resolution supplemental OCR.",
+    "OCR remains probabilistic even at native resolution, especially for stylized, small, fading, or low-contrast text.",
+    "This verifies only the named silent composite at the recorded SHA256, not a later voiced render or altered export.",
+    "No external certification or reward entitlement was verified; only prohibited wording was searched."
+  ],
+  "source_modified": false,
+  "repository_modified": false,
+  "downloads_started": false
+}

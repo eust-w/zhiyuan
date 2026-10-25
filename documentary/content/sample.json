@@ -1,0 +1,99 @@
+{
+  "schema_version": "documentary-storyboard/v1",
+  "title": "机器人走起来之后",
+  "status": "visual_preview_pending_voice",
+  "durationSec": 78,
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "voice": {"status": "pending", "audioPath": null, "cloned": false},
+  "finalApproval": false,
+  "segments": [
+    {
+      "id": "opening", "startSec": 0, "endSec": 8,
+      "title": "机器人走起来之后", "loop": false,
+      "narration": "机器人已经开始移动了。可它真的知道，红色目标在哪里吗？先看这段头部相机回放。",
+      "source": {"type": "data_replay", "label": "真实数据回放", "evidence": "evaluation", "episodeId": "eval-2004", "sourcePending": false, "mediaPath": "media/base-2004.mp4", "timing": {"startSec": 0, "endSec": 8, "sourceDurationSec": 10}, "sha256": "1950dea7e8eb88e6cd8789ebb537f0ed97416aabf03d81d69af7f3863e021169"},
+      "metricRefs": ["historical.base.episodes.3.id"],
+      "subtitles": [
+        {"startSec": 0, "endSec": 2.4, "lines": ["机器人已经开始移动了"]},
+        {"startSec": 2.4, "endSec": 5.4, "lines": ["可它真的知道", "红色目标在哪里吗"]},
+        {"startSec": 5.4, "endSec": 8, "lines": ["先看这段头部相机回放"]}
+      ]
+    },
+    {
+      "id": "closed-loop", "startSec": 8, "endSec": 18,
+      "title": "看图，行动，再看图", "loop": false,
+      "narration": "模型看过画面，会给出一串动作。每次执行后，仿真都会回传新画面。历史记录再参与下一轮判断。",
+      "source": {"type": "diagram", "label": "示意动画", "evidence": "evaluation", "sourcePending": false, "mediaPath": null, "timing": null},
+      "metricRefs": [],
+      "subtitles": [
+        {"startSec": 0, "endSec": 3.8, "lines": ["模型看过画面", "会给出一串动作"]},
+        {"startSec": 3.8, "endSec": 7.2, "lines": ["每次执行后", "仿真都会回传新画面"]},
+        {"startSec": 7.2, "endSec": 10, "lines": ["历史记录再参与下一轮判断"]}
+      ]
+    },
+    {
+      "id": "data-structure", "startSec": 18, "endSec": 30,
+      "title": "每一步，都留下证据", "loop": false,
+      "narration": "一条轨迹里，不只有图片。动作、深度、位姿和距离，都要对齐保存。训练与评测分开，避免记住答案。",
+      "source": {"type": "schema_visualization", "label": "数据结构示意", "evidence": "evaluation", "sourcePending": false, "mediaPath": null, "timing": null},
+      "replaySource": {"type": "data_replay", "label": "真实数据回放", "evidence": "training", "sourcePending": false, "mediaPath": "media/train-1001.mp4", "episodeId": "train-1001", "timing": {"startSec": 0, "endSec": 9, "sourceDurationSec": 9.97}},
+      "metricRefs": ["training.episodes", "historical.episodes"],
+      "subtitles": [
+        {"startSec": 0, "endSec": 3.1, "lines": ["一条轨迹里，不只有图片"]},
+        {"startSec": 3.1, "endSec": 7.8, "lines": ["动作、深度、位姿和距离", "都要对齐保存"]},
+        {"startSec": 7.8, "endSec": 12, "lines": ["训练与评测分开", "避免记住答案"]}
+      ]
+    },
+    {
+      "id": "training", "startSec": 30, "endSec": 42,
+      "title": "损失下降，意味着什么", "loop": false,
+      "narration": "五十条训练轨迹，完成五十九次更新。首末损失确实下降了，但这只能说明拟合变化，还不能证明导航有效。",
+      "source": {"type": "result_plot", "label": "真实结果图", "evidence": "training", "sourcePending": false, "mediaPath": "media/loss-curve.png", "timing": null, "derivation": "historical_training_curve_screenshot", "note": "原训练曲线截图；首末数值由训练结果文件核对，不用两点插值生成曲线", "sha256": "4cada4a3f90d82542273fa56361da89d53856cfdf7750c68c68756e6c6223b13"},
+      "metricRefs": ["training.episodes", "training.updates", "training.lossFirst", "training.lossLast", "training.peakGpuMemoryMiB"],
+      "subtitles": [
+        {"startSec": 0, "endSec": 3.8, "lines": ["五十条训练轨迹", "完成五十九次更新"]},
+        {"startSec": 3.8, "endSec": 8, "lines": ["首末损失确实下降了", "但这只能说明拟合变化"]},
+        {"startSec": 8, "endSec": 12, "lines": ["还不能证明导航有效"]}
+      ]
+    },
+    {
+      "id": "paired-replay", "startSec": 42, "endSec": 58,
+      "title": "同一起点，两种选择", "loop": false,
+      "narration": "现在把同一个起点的两条轨迹放在一起。左边是基础模型，右边是微调模型。转了多少次、停在哪里，都能回到原始记录核对。",
+      "source": {"type": "metrics_visualization", "label": "真实结果图", "evidence": "evaluation", "sourcePending": false, "mediaPath": null, "timing": null, "derivation": "canonical_pose_distance_actions", "synchronization": "action_step", "note": "真实轨迹记录重绘；按动作步同步，不代表墙钟时间"},
+      "pairEpisodeId": "eval-2001",
+      "metricRefs": ["historical.base.episodes.0", "historical.lora.episodes.0"],
+      "subtitles": [
+        {"startSec": 0, "endSec": 5, "lines": ["把同一个起点的两条轨迹", "放在一起"]},
+        {"startSec": 5, "endSec": 9.6, "lines": ["左边是基础模型", "右边是微调模型"]},
+        {"startSec": 9.6, "endSec": 16, "lines": ["转了多少次、停在哪里", "都能回到原始记录核对"]}
+      ]
+    },
+    {
+      "id": "results", "startSec": 58, "endSec": 68,
+      "title": "十条评测，零次到达", "loop": false,
+      "narration": "十条评测中，两者在半米内都没有成功。拦截次数变少，也不等于找对了目标；停得早，同样会少走路。",
+      "source": {"type": "metrics_visualization", "label": "真实结果图", "evidence": "evaluation", "sourcePending": false, "mediaPath": null, "timing": null},
+      "metricRefs": ["historical.base.successCount", "historical.lora.successCount", "historical.episodes", "historical.successRadiusM", "historical.base.blockedForwardCount", "historical.lora.blockedForwardCount", "metricSemantics.collisions", "metricSemantics.spl"],
+      "subtitles": [
+        {"startSec": 0, "endSec": 3.5, "lines": ["十条评测中", "两者在半米内都没有成功"]},
+        {"startSec": 3.5, "endSec": 7, "lines": ["拦截次数变少", "也不等于找对了目标"]},
+        {"startSec": 7, "endSec": 10, "lines": ["停得早，同样会少走路"]}
+      ]
+    },
+    {
+      "id": "challenge", "startSec": 68, "endSec": 78,
+      "title": "下一步，把问题拆小", "loop": false,
+      "narration": "下一步，值得改的是目标识别和停止时机。新模型栈目前只完成本地验证，还需要重新跑真实闭环，才能比较。",
+      "source": {"type": "diagram", "label": "示意动画", "evidence": "verification", "sourcePending": false, "mediaPath": null, "timing": null},
+      "metricRefs": ["migration.testsPassed", "migration.gpuRetested", "migration.navigationCompared"],
+      "subtitles": [
+        {"startSec": 0, "endSec": 4, "lines": ["下一步，值得改的是", "目标识别和停止时机"]},
+        {"startSec": 4, "endSec": 7, "lines": ["新模型栈目前只完成本地验证"]},
+        {"startSec": 7, "endSec": 10, "lines": ["还需要重新跑真实闭环", "才能比较"]}
+      ]
+    }
+  ]
+}

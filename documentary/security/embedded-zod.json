@@ -1,0 +1,49 @@
+{
+  "scannedAt": "2026-10-25T18:43:53.856Z",
+  "scope": "@remotion installed JavaScript files",
+  "completeSecurityRemediation": false,
+  "findings": [
+    {
+      "file": "node_modules/@remotion/codemods/dist/esm/index.mjs",
+      "sha256": "30292c4a9dd56d25a23ac59b93e52e4f91348115534fdd3c02a2b45ceccdb019",
+      "embeddedVersion": "4.5.4",
+      "status": "unpatched_bundled_dependency",
+      "note": "npm overrides do not rewrite pre-bundled code; upstream size-gate fix absent"
+    },
+    {
+      "file": "node_modules/@remotion/codemods/dist/index.cjs",
+      "sha256": "3229c6441aeadc70d34292fb23f6119d89cc57c37ea29250f5476a13c0a4200d",
+      "embeddedVersion": "4.5.4",
+      "status": "unpatched_bundled_dependency",
+      "note": "npm overrides do not rewrite pre-bundled code; upstream size-gate fix absent"
+    },
+    {
+      "file": "node_modules/@remotion/studio-protocol/dist/esm/index.mjs",
+      "sha256": "4bf9f9e0f26a20ec9b2dd78fa44ef3c888351681dd99ce7e1b40f881125c5f99",
+      "embeddedVersion": "4.5.4",
+      "status": "unpatched_bundled_dependency",
+      "note": "npm overrides do not rewrite pre-bundled code; upstream size-gate fix absent"
+    },
+    {
+      "file": "node_modules/@remotion/studio-protocol/dist/index.cjs",
+      "sha256": "44c52d2ba33a4d83f11d0b440c6e912c21f78c91c0be480bfa0819e6e8a78a84",
+      "embeddedVersion": "4.5.4",
+      "status": "unpatched_bundled_dependency",
+      "note": "npm overrides do not rewrite pre-bundled code; upstream size-gate fix absent"
+    },
+    {
+      "file": "node_modules/@remotion/studio/dist/esm/index-394460kk.mjs",
+      "sha256": "68b4896fe64afaf03bef522b94bf058509eb81349ee70d8f588f6996eeb6b5d2",
+      "embeddedVersion": "4.5.4",
+      "status": "unpatched_bundled_dependency",
+      "note": "npm overrides do not rewrite pre-bundled code; upstream size-gate fix absent"
+    },
+    {
+      "file": "node_modules/@remotion/studio/dist/esm/index-hfvxjqa8.mjs",
+      "sha256": "f1fbc2e4e7f1e4d05adc38ceb1b134d6b86f3cbb229552753e634b299e1e3939",
+      "embeddedVersion": "4.5.4",
+      "status": "unpatched_bundled_dependency",
+      "note": "npm overrides do not rewrite pre-bundled code; upstream size-gate fix absent"
+    }
+  ]
+}

@@ -1,0 +1,258 @@
+{
+  "capturedAt": "2026-10-25T18:41:52.501Z",
+  "command": "npm audit --json",
+  "exitCode": 1,
+  "nodeVersion": "v22.22.0",
+  "lockfileSha256": "6cfe32f19751c068ac5bd2385cbbc6d5470df2ae8b56461fbab309360e35c6b2",
+  "report": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {
+      "@remotion/bundler": {
+        "name": "@remotion/bundler",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "@remotion/studio"
+        ],
+        "effects": [
+          "@remotion/studio-server"
+        ],
+        "range": "4.0.278 - 4.0.538",
+        "nodes": [
+          "node_modules/@remotion/bundler"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "@remotion/cli": {
+        "name": "@remotion/cli",
+        "severity": "high",
+        "isDirect": true,
+        "via": [
+          "@remotion/bundler",
+          "@remotion/codemods",
+          "@remotion/studio",
+          "@remotion/studio-server"
+        ],
+        "effects": [],
+        "range": "4.0.278 - 4.0.538",
+        "nodes": [
+          "node_modules/@remotion/cli"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "@remotion/codemods": {
+        "name": "@remotion/codemods",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "@remotion/studio-protocol"
+        ],
+        "effects": [
+          "@remotion/cli",
+          "@remotion/studio",
+          "@remotion/studio-server"
+        ],
+        "range": ">=4.0.528",
+        "nodes": [
+          "node_modules/@remotion/codemods"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "@remotion/elevenlabs": {
+        "name": "@remotion/elevenlabs",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "zod"
+        ],
+        "effects": [],
+        "range": ">=4.0.530",
+        "nodes": [
+          "node_modules/@remotion/elevenlabs"
+        ],
+        "fixAvailable": true
+      },
+      "@remotion/media": {
+        "name": "@remotion/media",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "zod"
+        ],
+        "effects": [
+          "@remotion/studio"
+        ],
+        "range": ">=4.0.429",
+        "nodes": [
+          "node_modules/@remotion/media"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "@remotion/openai-whisper": {
+        "name": "@remotion/openai-whisper",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "zod"
+        ],
+        "effects": [
+          "@remotion/studio"
+        ],
+        "range": ">=4.0.530",
+        "nodes": [
+          "node_modules/@remotion/openai-whisper"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "@remotion/studio": {
+        "name": "@remotion/studio",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "@remotion/codemods",
+          "@remotion/elevenlabs",
+          "@remotion/media",
+          "@remotion/openai-whisper",
+          "@remotion/studio-protocol",
+          "zod"
+        ],
+        "effects": [
+          "@remotion/bundler",
+          "@remotion/cli"
+        ],
+        "range": ">=4.0.278",
+        "nodes": [
+          "node_modules/@remotion/studio"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "@remotion/studio-protocol": {
+        "name": "@remotion/studio-protocol",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "zod"
+        ],
+        "effects": [
+          "@remotion/codemods",
+          "@remotion/studio",
+          "@remotion/studio-server"
+        ],
+        "range": ">=4.0.520",
+        "nodes": [
+          "node_modules/@remotion/studio-protocol"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "@remotion/studio-server": {
+        "name": "@remotion/studio-server",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "@remotion/bundler",
+          "@remotion/codemods",
+          "@remotion/studio-protocol",
+          "zod"
+        ],
+        "effects": [
+          "@remotion/cli"
+        ],
+        "range": ">=4.0.278",
+        "nodes": [
+          "node_modules/@remotion/studio-server"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      },
+      "zod": {
+        "name": "zod",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "source": 1243066,
+            "name": "zod",
+            "dependency": "zod",
+            "title": "Zod can exhaust memory while validating oversized constrained collections",
+            "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+            "severity": "high",
+            "cwe": [
+              "CWE-770"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": "<4.6.6"
+          }
+        ],
+        "effects": [
+          "@remotion/elevenlabs",
+          "@remotion/media",
+          "@remotion/openai-whisper",
+          "@remotion/studio",
+          "@remotion/studio-protocol",
+          "@remotion/studio-server"
+        ],
+        "range": "<4.6.6",
+        "nodes": [
+          "node_modules/zod"
+        ],
+        "fixAvailable": {
+          "name": "@remotion/cli",
+          "version": "4.0.501",
+          "isSemVerMajor": true
+        }
+      }
+    },
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 10,
+        "critical": 0,
+        "total": 10
+      },
+      "dependencies": {
+        "prod": 252,
+        "dev": 91,
+        "optional": 48,
+        "peer": 3,
+        "peerOptional": 0,
+        "total": 393
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema_version": "documentary-visual-verification/v1",
+  "run_id": "documentary-20261026-visual-01",
+  "date": "2026-10-26",
+  "timezone": "Asia/Shanghai",
+  "status": "visual_sample_ready_for_review_not_publication",
+  "composition": {"id": "DocumentarySample", "width": 1920, "height": 1080, "fps": 30, "frames": 2340, "durationSec": 78},
+  "export": {"path": "out/visual-sample-silent.mp4", "sha256": "8c0454a77954fb5adbf6a7ba5f99a3de77fe33a3550f5e9c1f6f39cf88434e47", "bytes": 3111352, "codec": "h264", "audioStreams": 0, "fullDecodeExitCode": 0},
+  "visualSourceHashes": {
+    "src/Composition.tsx": "6003f59cea8cf26345d9022f6cdc3bf4e7afa7167be41d7f347cfb80e325da30",
+    "src/Root.tsx": "16de34b2ad68fa91a5fc8e8d358ad312496f956e2c2c7bdc0a7e7d816a53ba2e",
+    "src/visual-model.ts": "726d5731bd290f3860be7d96fabd29d84ccd7c05b0f317948e268765a1ed6785",
+    "src/generated/facts.json": "00af3c7697c4426cd8f51a7664af8c4ae9a3c93804d903b6f76406b70b34c3dd"
+  },
+  "checks": {
+    "documentaryTestsPassed": 51,
+    "documentaryTestsFailed": 0,
+    "readmeMinimalPythonTestsPassed": 19,
+    "typecheckAndLintExitCode": 0,
+    "canonicalFactsCheckExitCode": 0,
+    "sourceMediaHashesAndFullDecodePassed": 3,
+    "gitleaksFindings": 0,
+    "resolvedNpmAdvisories": 0,
+    "knownUnpatchedEmbeddedZodFiles": 6,
+    "studioLoadedInBrowser": true,
+    "studioSocket": "IPv4 loopback only",
+    "manualSceneReview": "All seven scenes reviewed; two layout overlaps fixed before final export"
+  },
+  "coverage": {
+    "scope": "Node fact/media helpers and local CLI launchers, excluding test files; not React visual coverage",
+    "linePercent": 85.14,
+    "branchPercent": 91.61,
+    "functionPercent": 90.57,
+    "measurementMode": "serial tests",
+    "note": "An initial parallel coverage run timed out in the CLI subprocess; isolated and serial coverage runs passed without relaxing assertions or modifying production behavior."
+  },
+  "imageInspection": {
+    "blackdetect": {"minimumDurationSec": 0.2, "pixelThreshold": 0.1, "detectedSegments": 0},
+    "freezedetect": {"noiseThreshold": 0.0005, "minimumDurationSec": 6, "detectedSegments": [{"startSec": 36, "endSec": 42, "durationSec": 6}], "longerThanSixSeconds": false},
+    "sourcePrivacyReport": "source-privacy-verification.json",
+    "compositePrivacyReport": "export-privacy-verification.json",
+    "ocrIsSampledNotEveryFrame": true
+  },
+  "publicationGate": {"ready": false, "blockers": ["voice_pending", "final_approval_pending"]},
+  "platforms": {"bilibili": "not_uploaded", "zhihu": "not_uploaded", "xiaohongshu": "not_uploaded", "douyin": "not_uploaded"},
+  "boundaries": {"gpuStarted": false, "newModelEvaluationPerformed": false, "voiceGenerated": false, "voiceCloned": false, "musicAdded": false, "fullHistoricalReleaseAuditComplete": false, "finalVoicedMediaValidated": false}
+}

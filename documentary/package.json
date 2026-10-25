@@ -1,0 +1,45 @@
+{
+  "name": "geniesim-streamvln-documentary",
+  "version": "1.0.0",
+  "description": "Evidence-driven Chinese technical documentary preview",
+  "repository": {"type": "git", "url": "https://github.com/eust-w/zhiyuan.git", "directory": "documentary"},
+  "license": "MIT",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.538",
+    "@remotion/media": "4.0.538",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.538"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.538",
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "eslint": "10.12.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "node security/loopback-studio.cjs",
+    "build": "remotion bundle",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc",
+    "facts": "node scripts/facts.mjs",
+    "check:facts": "node scripts/facts.mjs --check",
+    "test": "node --test tests/*.test.mjs security/*.test.mjs",
+    "test:coverage": "node --experimental-test-coverage --test-concurrency=1 --test-coverage-include='scripts/*.mjs' --test-coverage-include='security/*.cjs' --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 --test tests/*.test.mjs security/*.test.mjs",
+    "prepare:media": "node scripts/media.mjs --prepare --decode",
+    "check:media": "node scripts/media.mjs --decode",
+    "render:preview": "node security/loopback-render.cjs render src/index.ts DocumentarySample out/visual-sample-silent.mp4 --codec=h264 --crf=20 --muted --concurrency=2"
+  },
+  "overrides": {
+    "zod": "4.6.6"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}

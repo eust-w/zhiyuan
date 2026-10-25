@@ -1,0 +1,132 @@
+{
+  "schema_version": "source-privacy-verification/v1",
+  "status": "sampled_ocr_no_flags",
+  "manual_visual_review": {
+    "images": ["base-10.png", "train-01.png", "loss-curve.png"],
+    "finding": "No visible account UI, connection overlay, private path, or course/reward claim in the inspected images; video samples show simulated shelves, chart sample shows training metrics."
+  },
+  "assets": [
+    {
+      "source": "documentary/public/media/base-2004.mp4",
+      "sha256": "1950dea7e8eb88e6cd8789ebb537f0ed97416aabf03d81d69af7f3863e021169",
+      "duration_s": 10.0,
+      "video_frames": 300,
+      "sampled_frames": 10,
+      "sampling": "FFmpeg fps=1,format=rgb24",
+      "supplied_png_pixels_match_resampling": true,
+      "sample_sequence_output_pts_seconds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "ocr_images": [
+        "base-01.png",
+        "base-02.png",
+        "base-03.png",
+        "base-04.png",
+        "base-05.png",
+        "base-06.png",
+        "base-07.png",
+        "base-08.png",
+        "base-09.png",
+        "base-10.png"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "audio_streams": 0
+    },
+    {
+      "source": "documentary/public/media/train-1001.mp4",
+      "sha256": "02178a2a91e05de976b82cf81d897a119bdd56b9913e0dec9889c91d51fd4931",
+      "duration_s": 9.966667,
+      "video_frames": 299,
+      "sampled_frames": 10,
+      "sampling": "FFmpeg fps=1,format=rgb24",
+      "supplied_png_pixels_match_resampling": true,
+      "sample_sequence_output_pts_seconds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "ocr_images": [
+        "train-01.png",
+        "train-02.png",
+        "train-03.png",
+        "train-04.png",
+        "train-05.png",
+        "train-06.png",
+        "train-07.png",
+        "train-08.png",
+        "train-09.png",
+        "train-10.png"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "audio_streams": 0
+    },
+    {
+      "source": "documentary/public/media/loss-curve.png",
+      "sha256": "4cada4a3f90d82542273fa56361da89d53856cfdf7750c68c68756e6c6223b13",
+      "width": 1600,
+      "height": 900,
+      "sampled_images": 1,
+      "ocr_images": [
+        "loss-curve.png"
+      ]
+    }
+  ],
+  "ocr": {
+    "tool": "Apple Vision VNRecognizeTextRequest",
+    "revision": [
+      3
+    ],
+    "recognition_level": "accurate",
+    "languages": [
+      "zh-Hans",
+      "en-US"
+    ],
+    "language_correction": false,
+    "minimum_text_height_fraction": 0.002,
+    "images_processed": 21,
+    "text_blocks": 14,
+    "recognition_failures": 0
+  },
+  "categories": {
+    "email": 0,
+    "ipv4": 0,
+    "private_absolute_path": 0,
+    "connection_details": 0,
+    "credential_pattern": 0,
+    "account_label": 0,
+    "course_or_reward_claim": 0
+  },
+  "findings_redacted": [],
+  "scope": {
+    "video_sampling": "approximately one frame per second; supplied PNG sequence matches independent FFmpeg resampling",
+    "image_sampling": "entire loss-curve PNG at original resolution",
+    "values_redacted": true,
+    "repo_or_source_modified": false,
+    "downloads_started": false
+  },
+  "limitations": [
+    "OCR is probabilistic and can miss small, stylized, occluded, or low-contrast text.",
+    "One-Hz sampling does not cover every source video frame; transient text between samples is not excluded.",
+    "No face, badge, voice identity, steganography, or hidden-metadata forensic classification was performed.",
+    "This covers only the three named sources, not the full archive or any final composited/voiced video.",
+    "Course/reward wording detection checks specified Chinese and English keywords; it does not verify the current validity of any external offer."
+  ]
+}

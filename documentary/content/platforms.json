@@ -1,0 +1,17 @@
+{
+  "schema_version": "documentary-publication/v1",
+  "phase": "visual_sample_review",
+  "sampleIsPublishable": false,
+  "finalUserApproval": false,
+  "voiceStatus": "pending_provider_or_recording",
+  "scheduleCreated": false,
+  "platforms": [
+    {"platform": "bilibili", "status": "local_outline_not_uploaded", "target": "10–12 分钟横屏主片", "title": "机器人会动之后：一次视觉语言导航的真实闭环", "angle": "从实际观测与动作记录展开，解释数据、训练和配对评测的证据边界。", "publicUrl": null},
+    {"platform": "zhihu", "status": "local_outline_not_uploaded", "target": "主片与长文相互索引", "title": "训练损失下降，为什么机器人还是找不到目标？", "angle": "用同一批十条评测解释：闭环跑通、参数可训练和导航成功是三个不同问题。", "publicUrl": null},
+    {"platform": "xiaohongshu", "status": "local_outline_not_uploaded", "target": "2–3 分钟独立竖屏剪辑", "title": "给机器人接上大模型之后", "angle": "先看真实相机画面，再依次看动作对齐、训练记录和同起点轨迹。用三条证据讲清楚一个实验。", "publicUrl": null},
+    {"platform": "douyin", "status": "local_outline_not_uploaded", "target": "2–3 分钟独立竖屏剪辑", "title": "机器人动起来了，但还没找到目标", "angle": "以真实回放开场，呈现基础模型与微调模型的不同选择，再解释为什么少走路不代表更聪明。", "publicUrl": null}
+  ],
+  "requiredBeforeUpload": ["voice_sample_approved", "picture_and_pacing_approved", "final_media_quality_passed", "rights_and_privacy_reviewed", "platform_login_confirmed"],
+  "requiredBeforeFinalSubmit": ["user_final_publication_confirmation"],
+  "requiredAfterSubmit": ["review_status_recorded", "public_url_verified_signed_out"]
+}

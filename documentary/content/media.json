@@ -1,0 +1,10 @@
+{
+  "schema_version": "documentary-media/v1",
+  "sourceCommit": "2b1532b034b84cb00fe8e9c718caf768a4589d6a",
+  "licenseNote": "Historical simulation media are not covered by the project's MIT code license; see THIRD_PARTY_NOTICES.md.",
+  "assets": [
+    {"path": "media/base-2004.mp4", "sourcePath": "aima-open-session-experiment/assets/media/v3/stage3-base-2004.mp4", "sha256": "1950dea7e8eb88e6cd8789ebb537f0ed97416aabf03d81d69af7f3863e021169", "kind": "video", "classification": "data_replay", "episodeId": "eval-2004", "requiredDurationSec": 8},
+    {"path": "media/train-1001.mp4", "sourcePath": "aima-open-session-experiment/assets/media/v3/stage1-train-1001.mp4", "sha256": "02178a2a91e05de976b82cf81d897a119bdd56b9913e0dec9889c91d51fd4931", "kind": "video", "classification": "data_replay", "episodeId": "train-1001", "requiredDurationSec": 9},
+    {"path": "media/loss-curve.png", "sourcePath": "aima-open-session-experiment/assets/screenshots/v3/stage2-loss-curve.png", "sha256": "4cada4a3f90d82542273fa56361da89d53856cfdf7750c68c68756e6c6223b13", "kind": "image", "classification": "result_plot"}
+  ]
+}

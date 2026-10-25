@@ -1,0 +1,39 @@
+name: Documentary facts and local tooling (not publishing)
+
+on:
+  pull_request:
+    paths: ['documentary/**', 'aima-open-session-experiment/experiments/exp02-equivalent-v3/*.json', 'security/evidence/model-migration-verification.json', '.github/workflows/documentary.yml']
+  push:
+    paths: ['documentary/**', 'aima-open-session-experiment/experiments/exp02-equivalent-v3/*.json', 'security/evidence/model-migration-verification.json', '.github/workflows/documentary.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  facts-and-tooling:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22.22.0'
+          cache: npm
+          cache-dependency-path: documentary/package-lock.json
+      - name: Install locked tooling without lifecycle scripts
+        working-directory: documentary
+        run: npm ci --ignore-scripts
+      - name: Check canonical facts, tests and type-safe composition
+        working-directory: documentary
+        run: |
+          npm run check:facts
+          npm test
+          npm run lint
+          npm audit --audit-level=low
+      - name: State scope
+        run: |
+          echo 'This checks documentary facts, TypeScript, tests and the npm-resolved dependency graph; it does not publish or certify a final video.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Remotion 4.0.538 embeds older Zod code in six files; npm audit 0 does not resolve that documented residual risk. See documentary/security/README.md.' >> "$GITHUB_STEP_SUMMARY"

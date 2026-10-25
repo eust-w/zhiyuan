@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-26",
+  "timezone": "Asia/Shanghai",
+  "scope": "documentary Node dependency override and local Studio launcher",
+  "runtime": {"node": "22.22.0", "npm": "10.9.4", "os": "macOS"},
+  "red": {
+    "auditExitCode": 1,
+    "highAdvisoryDependencyNodes": 10,
+    "dependencyTestsPassed": 2,
+    "dependencyTestsFailed": 2,
+    "boundedArrayElementVisits": 3
+  },
+  "green": {
+    "auditExitCode": 0,
+    "knownAdvisoryDependencyNodes": 0,
+    "resolvedZod": "4.6.6",
+    "remotionPackages": "4.0.538",
+    "securityTestsPassed": 7,
+    "boundedArrayElementVisits": 0,
+    "typescriptExitCode": 0,
+    "lintExitCode": 0,
+    "studioCompiled": true,
+    "studioHttpGetSucceeded": true,
+    "studioListener": "IPv4 loopback only",
+    "testStudioStopped": true
+  },
+  "limitations": {
+    "completeSecurityRemediation": false,
+    "unpatchedBundledZodFiles": 6,
+    "remotionZodVersionWarningExpected": true,
+    "fullProjectTestsAtThisCheckpoint": "visual implementation was in progress; not an acceptance claim",
+    "allRemotionOptionalFeaturesValidated": false,
+    "gpuOrModelValidation": false
+  }
+}
