@@ -1,7 +1,7 @@
 {
   "revision": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc",
   "profile": "qwen-siglip-bf16-lora-v5",
-  "patch_sha256": "d33e3b9dc074c423d31e6a2d99b6047e13ef984ac251b302872ebe0a69f0b896",
+  "patch_sha256": "3ee3afe69f93c498f3ef0b766f9a94dce4c294bfce0f118d948d111dcdcc9def",
   "files": [
     {
       "path": "llava/__init__.py",
@@ -26,7 +26,7 @@
     {
       "path": "llava/model/multimodal_encoder/siglip_encoder.py",
       "before_sha256": "09b0e16ed6f0281d86f39fb2ad1c938cb684d8df5272f8b952c3f9e41156cfc3",
-      "after_sha256": "e24fd2ec334409345b5ddbdb7acb9be78eb8d84858e164d6cc28212b1fd6ba2e"
+      "after_sha256": "f2c782f860726d87c7a414af951056f3afbaaeaad5dce16f0ca73f65192da35e"
     },
     {
       "path": "llava/model/multimodal_resampler/builder.py",

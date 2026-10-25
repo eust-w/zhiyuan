@@ -57,6 +57,14 @@ OSV 模式的 `--require-hashes` 只检查哈希是否存在，不能验证哈�
 
 恢复器仅提取视觉 tensor；索引与分片路径、完整参数集合、重复条目和形状均需通过检查，缺失或部分视觉权重不会静默回退。日志中的初次延迟加载仍可能显示视觉 `UNEXPECTED` 项，随后必须出现明确的 `restored` 记录；不能只凭首次加载结束判断整模型恢复成功。小模型测试另对修改后的视觉参数逐项比对，并确认语言 LoRA 没有扩展到视觉层。
 
+### Linux CI 暴露的非持久位置索引问题
+
+第二次 [Linux CI 运行](https://github.com/eust-w/zhiyuan/actions/runs/40190094395) 已完成哈希锁安装及漏洞审计，但模型测试暴露了 SigLIP 的位置索引越界。Transformers 5 在 meta 加载后使用 `empty_like` 重建非持久 buffer；固定上游的 `_init_weights` 为空，未将 `position_ids` 恢复为准确的网格序列。本地先前偶然通过不能证明初始化正确。
+
+修复遵循 Transformers 的初始化钩子，仅重建 `0…N-1` 的位置索引，不截断索引、不改变网格，也不修改已加载参数。新增测试使用 PyTorch 的确定性未初始化内存填充，稳定复现旧实现错误，并验证修复后的索引值、类型、设备、非持久属性及所有已加载视觉参数逐 tensor 不变。视觉塔加载、完整基座恢复和新进程 LoRA 重载均执行精确索引断言。
+
+同次 CI 还发现测试夹具的本地 clone 无法处理浅克隆＋partial checkout，会尝试抓取被排除的媒体对象。夹具改为独立 detached worktree，只物化 Python 源码；回归用例禁用缺失对象下载，验证父 checkout 的 HEAD、文件、sparse 选择不变，且清理仅删除本项测试创建的 worktree。没有跳过源码安全守卫或下载媒体来绕过失败。
+
 ## 本地复查
 
 所有命令从仓库根目录执行。模型、媒体、审计器分别使用独立环境；不要安装到 Isaac 的 Python 中。
@@ -115,7 +123,7 @@ Linux 锁不输出索引指令；安装命令显式提供 PyPI 和 PyTorch CPU �
 机器可读证据及输入哈希见 [model-migration-verification.json](evidence/model-migration-verification.json)。
 
 - macOS ARM64 / Python 3.12.14：模型锁实际按哈希安装成功，模型、媒体和审计器三个独立环境的 `pip check` 均通过。
-- **106 项**相关 CPU 回归、**9 项**固定源码保护测试、**15 项**真实小模型集成测试通过，无失败或跳过。CI 使用相同模块清单。
+- **106 项**相关 CPU 回归、**10 项**固定源码保护与浅克隆夹具测试、**16 项**真实小模型集成测试通过，无失败或跳过。CI 使用相同模块清单。
 - 完成多模态 FP32/CPU BF16 前后向、8 帧历史与独立 reset、多 token 生成、梯度累积归一化、原训练 CLI 单步 LoRA、checkpoint 与最终 adapter 导出，以及新进程重载比对。
 - 真实 checkpoint 的配置 JSON 和少量 safetensors 头信息只用于结构复核；meta 构建保持 `152064×3584` 的词表/head 尺寸，不是完整权重加载验证。
 - 视觉保值回归覆盖修改后的嵌入参数与 logits、分片恢复、语言 LoRA 隔离，以及 7 类错误布局/索引/路径/形状拒绝。

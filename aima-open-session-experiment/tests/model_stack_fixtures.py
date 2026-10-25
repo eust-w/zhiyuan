@@ -115,7 +115,19 @@ def create_model(vision: Path):
     config._attn_implementation = "eager"
     model = StreamVLNForCausalLM(config)
     model.get_vision_tower().load_model()
+    assert_position_ids(model.get_vision_tower().vision_tower)
     return model.to(device="cpu", dtype=__import__("torch").float32)
+
+
+def assert_position_ids(vision_model) -> None:
+    import torch
+
+    embeddings = vision_model.vision_model.embeddings
+    expected = torch.arange(
+        embeddings.num_positions, dtype=torch.long, device=embeddings.position_embedding.weight.device,
+    ).unsqueeze(0)
+    torch.testing.assert_close(embeddings.position_ids, expected, rtol=0, atol=0)
+    assert "position_ids" not in embeddings.state_dict()
 
 
 def load_model(location: Path, *, load_vision: bool = True):
@@ -134,6 +146,7 @@ def load_model(location: Path, *, load_vision: bool = True):
     )
     if load_vision:
         restore_streamvln_vision_weights(model, location)
+        assert_position_ids(model.get_vision_tower().vision_tower)
     return model.cpu()
 
 
@@ -260,10 +273,13 @@ def reload_in_fresh_process(root: Path) -> None:
     from safetensors.torch import load_file
     from llava.model.language_model.llava_qwen import restore_streamvln_vision_weights
 
+    torch.use_deterministic_algorithms(True)
+    torch.utils.deterministic.fill_uninitialized_memory = True
     model = PeftModel.from_pretrained(
         load_model(root / "base", load_vision=False), root / "adapter", local_files_only=True,
     )
     restore_streamvln_vision_weights(model, root / "base")
+    assert_position_ids(model.get_vision_tower().vision_tower)
     assert not any("lora_" in name for name, _ in model.get_vision_tower().named_parameters())
     model.eval()
     with torch.no_grad():

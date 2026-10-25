@@ -57,6 +57,37 @@ class ModelStackIntegrationTests(unittest.TestCase):
                         self.assertGreater(gradient.abs().sum().item(), 0, name)
                     self.assertTrue(all(parameter.grad is None for parameter in self.model.get_vision_tower().parameters()))
 
+    def test_safetensors_reload_initializes_position_ids_without_allocator_assumptions(self):
+        import torch
+        from safetensors.torch import load_file
+        from llava.model.multimodal_encoder.siglip_encoder import SigLipVisionModel
+
+        deterministic = torch.are_deterministic_algorithms_enabled()
+        warn_only = torch.is_deterministic_algorithms_warn_only_enabled()
+        fill_uninitialized = torch.utils.deterministic.fill_uninitialized_memory
+        try:
+            # HF materializes nonpersistent meta buffers with empty_like. The
+            # official deterministic mode poisons unused integer allocations,
+            # exposing missing initialization on every OS without a fake model.
+            torch.use_deterministic_algorithms(True)
+            torch.utils.deterministic.fill_uninitialized_memory = True
+            loaded = SigLipVisionModel.from_pretrained(
+                self.vision, local_files_only=True, use_safetensors=True,
+                trust_remote_code=False, dtype=torch.float32,
+            )
+            fixtures.assert_position_ids(loaded)
+            saved = load_file(self.vision / "model.safetensors")
+            for name, actual in loaded.state_dict().items():
+                torch.testing.assert_close(actual, saved[name], rtol=0, atol=0)
+            pixels = torch.rand((2, 3, 16, 16), generator=torch.Generator().manual_seed(41))
+            with torch.no_grad():
+                output = loaded(pixel_values=pixels).last_hidden_state
+            self.assertEqual(output.shape, (2, 16, 16))
+            self.assertTrue(torch.isfinite(output).all().item())
+        finally:
+            torch.utils.deterministic.fill_uninitialized_memory = fill_uninitialized
+            torch.use_deterministic_algorithms(deterministic, warn_only=warn_only)
+
     def test_loss_uses_num_items_in_batch_for_accumulation_normalization(self):
         import torch
         import torch.nn.functional as functional
@@ -347,6 +378,7 @@ class ModelStackIntegrationTests(unittest.TestCase):
             )
         self.assertFalse(any("missing adapter keys" in str(item.message) for item in captured))
         restore_streamvln_vision_weights(reloaded, base)
+        fixtures.assert_position_ids(reloaded.get_vision_tower().vision_tower)
         self.assertFalse(any("lora_" in name for name, _ in reloaded.get_vision_tower().named_parameters()))
         embedded = load_file(base / "model.safetensors")
         for name, actual in reloaded.get_vision_tower().state_dict().items():

@@ -39,8 +39,8 @@
   ],
   "tests": [
     {"suite": "applicable CPU protocol, model-loading, data, metrics and media unit regressions", "passed": 106, "failed": 0, "skipped": 0, "exit_code": 0},
-    {"suite": "pinned source overlay guard", "passed": 9, "failed": 0, "skipped": 0, "exit_code": 0},
-    {"suite": "real tiny Qwen/SigLIP training, generation, legacy configuration and vision restoration", "passed": 15, "failed": 0, "skipped": 0, "exit_code": 0}
+    {"suite": "pinned source overlay guard and shallow/partial checkout isolation", "passed": 10, "failed": 0, "skipped": 0, "exit_code": 0},
+    {"suite": "real tiny Qwen/SigLIP training, generation, legacy configuration and vision restoration", "passed": 16, "failed": 0, "skipped": 0, "exit_code": 0}
   ],
   "tiny_model_acceptance": [
     "FP32 and CPU BF16 multimodal forward/backward with finite nonzero gradients",
@@ -51,7 +51,9 @@
     "Fresh-process safetensors adapter reload with matching parameters, logits and tokens",
     "Legacy llava metadata normalized to the top-level Qwen dimensions without vocabulary cropping",
     "Modified embedded base vision tensors restored exactly after language-only PEFT wrapping",
-    "Complete sharded vision restoration and seven malformed layout/path/shape rejection cases"
+    "Complete sharded vision restoration and seven malformed layout/path/shape rejection cases",
+    "Deterministically poisoned nonpersistent position buffers reconstructed as exact arange indices, with all loaded vision weights unchanged",
+    "Exact position indices, dtype, device and nonpersistent status checked after tower, base and fresh-process adapter loading"
   ],
   "metadata_only_review": {
     "real_checkpoint_revision": "7b0269ad28e7039a32627b950766c09b5a646f8e",
@@ -73,7 +75,7 @@
     "requirements/model.in": "db9a1da1ee0c71fec9c9417ddb8c78b0937fd6612d5336112bb2fb54f1912eda",
     "requirements/model-macos-arm64.txt": "97eed689e6969d3ee68a8bbc590fa3b2a406d0ef5abcd00362b7ddd975e5c651",
     "requirements/model-linux-cpu.txt": "a7fb1c04bd200b96a91ba37635e9b98126c0c40b0ae4ac8ca82aa83ae84eca63",
-    "aima-open-session-experiment/adapter/compat_assets/streamvln-v5.patch": "d33e3b9dc074c423d31e6a2d99b6047e13ef984ac251b302872ebe0a69f0b896",
+    "aima-open-session-experiment/adapter/compat_assets/streamvln-v5.patch": "3ee3afe69f93c498f3ef0b766f9a94dce4c294bfce0f118d948d111dcdcc9def",
     "security/evidence/model-macos-arm64-audit.json": "62613eef7d85c40140baaff1a735130857837d8cc055fbca809ef3da6185f4c3",
     "security/evidence/model-linux-cpu-osv-audit.json": "165ae3cb388729764960e883fe1bf3e123c4c40245ad0b514c1d9cbf7f5afaab"
   },
@@ -90,6 +92,16 @@
     "initial_run": "https://github.com/eust-w/zhiyuan/actions/runs/40189596695",
     "initial_failure": "requirements index-url reset the CLI extra CPU index; no compatible +cpu wheel was found",
     "fix": "Regenerate lock without index directives; installation explicitly supplies both indexes. Package versions and artifact hashes are unchanged.",
+    "second_run": "https://github.com/eust-w/zhiyuan/actions/runs/40190094395",
+    "second_run_hash_locked_install_and_audits_passed": true,
+    "second_run_test_failures": [
+      "Local clone fixture traversed missing media blobs in a shallow/promisor source checkout",
+      "SigLIP nonpersistent position_ids materialized by Transformers 5 were not reinitialized by the upstream empty hook"
+    ],
+    "second_run_fixes": [
+      "Use a detached test worktree with an independent index and Python-only sparse checkout; verify parent state and excluded blobs remain unchanged",
+      "Rebuild position indices in the initialization hook without clamping or changing trained weights; exercise deterministic uninitialized-memory fill in regressions"
+    ],
     "note": "This file records local evidence. Verify the associated commit's GitHub Actions result separately."
   }
 }

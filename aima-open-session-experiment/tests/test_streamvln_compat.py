@@ -8,6 +8,92 @@ import tempfile
 import unittest
 
 
+def _isolated_checkout(source: Path, target: Path, revision: str, cleanup) -> None:
+    # Local clone transport traverses excluded blobs in shallow/promisor
+    # sources. A detached worktree shares the genuine pinned Git objects but
+    # has an independent HEAD/index and never invokes upload-pack.
+    environment = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
+    subprocess.run(["git", "-C", str(source), "worktree", "add", "--quiet", "--detach",
+                    "--no-checkout", str(target), revision], check=True, env=environment)
+
+    def remove_worktree():
+        subprocess.run(["git", "-C", str(source), "worktree", "remove", "--force", str(target)],
+                       check=True, text=True, capture_output=True, env=environment)
+
+    # Register before any further setup can fail; only this test's directory
+    # is removed, including its deliberately modified/untracked guard inputs.
+    cleanup(remove_worktree)
+    # `sparse-checkout set` enables worktree-specific sparse configuration.
+    # Guard fixtures need Python source only, never excluded media payloads.
+    subprocess.run(["git", "sparse-checkout", "set", "--no-cone", "/llava/**/*.py", "/streamvln/**/*.py"],
+                   cwd=target, check=True, env=environment)
+    subprocess.run(["git", "checkout", "--quiet", revision], cwd=target, check=True, env=environment)
+
+
+class PartialCheckoutFixtureTests(unittest.TestCase):
+    def test_shallow_partial_source_needs_no_excluded_blob_or_clone_transport(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source"
+            source.mkdir()
+
+            def git(*arguments, cwd=source):
+                return subprocess.run(["git", *arguments], cwd=cwd, check=True,
+                                      text=True, capture_output=True).stdout.strip()
+
+            git("init", "--quiet")
+            git("config", "uploadpack.allowFilter", "true")
+            for folder in ("llava", "streamvln", "assets"):
+                (source / folder).mkdir()
+            (source / "llava/__init__.py").write_text("# isolated source fixture\n")
+            (source / "streamvln/__init__.py").write_text("# isolated source fixture\n")
+            (source / "assets/excluded.bin").write_bytes(b"excluded media fixture\n")
+            git("add", ".")
+            git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.invalid",
+                "commit", "--quiet", "-m", "partial checkout fixture")
+            revision = git("rev-parse", "HEAD")
+            excluded = git("rev-parse", "HEAD:assets/excluded.bin")
+            partial = root / "partial"
+            git("clone", "--quiet", "--filter=blob:none", "--depth=1", "--no-checkout",
+                source.as_uri(), str(partial), cwd=root)
+            git("sparse-checkout", "set", "llava", "streamvln", cwd=partial)
+            git("checkout", "--quiet", revision, cwd=partial)
+            self.assertEqual(git("rev-parse", "--is-shallow-repository", cwd=partial), "true")
+            # Retain a real promisor checkout but make its fetch transport
+            # unavailable. The selected source blobs are already local.
+            git("remote", "set-url", "origin", (root / "unavailable").as_uri(), cwd=partial)
+
+            def excluded_is_absent():
+                result = subprocess.run(["git", "-C", str(partial), "cat-file", "-e", excluded],
+                                        env={**os.environ, "GIT_NO_LAZY_FETCH": "1"},
+                                        text=True, capture_output=True)
+                self.assertNotEqual(result.returncode, 0)
+
+            excluded_is_absent()
+            original_sparse = git("sparse-checkout", "list", cwd=partial)
+            original_status = git("status", "--porcelain", cwd=partial)
+            target = root / "isolated"
+            cleanups = []
+            try:
+                try:
+                    _isolated_checkout(partial, target, revision, lambda *args: cleanups.append(args))
+                except subprocess.CalledProcessError as exc:
+                    self.fail(f"fixture creation fetched missing non-code objects: {exc}")
+                self.assertEqual(git("rev-parse", "HEAD", cwd=target), revision)
+                self.assertEqual((target / "llava/__init__.py").read_text(), "# isolated source fixture\n")
+                (target / "llava/__init__.py").write_text("# isolated edit\n")
+                self.assertEqual((partial / "llava/__init__.py").read_text(), "# isolated source fixture\n")
+                self.assertFalse((target / "assets/excluded.bin").exists())
+                excluded_is_absent()
+                self.assertEqual(git("rev-parse", "HEAD", cwd=partial), revision)
+                self.assertEqual(git("sparse-checkout", "list", cwd=partial), original_sparse)
+                self.assertEqual(git("status", "--porcelain", cwd=partial), original_status)
+            finally:
+                for callback, *arguments in reversed(cleanups):
+                    callback(*arguments)
+            self.assertNotIn(str(target), git("worktree", "list", "--porcelain", cwd=partial))
+
+
 class CompatibilityApiTests(unittest.TestCase):
     def test_overlay_api_exists(self):
         self.assertIsNotNone(importlib.util.find_spec("adapter.streamvln_compat"))
@@ -28,9 +114,8 @@ class PinnedOverlayTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.repo = Path(self.temporary.name) / "upstream"
-        subprocess.run(["git", "clone", "--quiet", "--shared", "--no-hardlinks", "--no-checkout", os.environ["STREAMVLN_REPO"], str(self.repo)], check=True)
-        subprocess.run(["git", "sparse-checkout", "set", "llava", "streamvln"], cwd=self.repo, check=True)
-        subprocess.run(["git", "checkout", "--quiet", self.compat.UPSTREAM_REVISION], cwd=self.repo, check=True)
+        _isolated_checkout(Path(os.environ["STREAMVLN_REPO"]).resolve(), self.repo,
+                           self.compat.UPSTREAM_REVISION, self.addCleanup)
 
     def test_known_source_is_patched_and_second_call_is_idempotent(self):
         first = self.compat.prepare_checkout(self.repo)

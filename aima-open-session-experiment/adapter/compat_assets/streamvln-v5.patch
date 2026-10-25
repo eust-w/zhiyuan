@@ -245,10 +245,18 @@ index 5e3a27f..10881d7 100755
 +    from .siglip_encoder import SigLipVisionTower
 +    return SigLipVisionTower(name, vision_tower_cfg=vision_tower_cfg, **kwargs)
 diff --git a/llava/model/multimodal_encoder/siglip_encoder.py b/llava/model/multimodal_encoder/siglip_encoder.py
-index f1e101a..e50676d 100755
+index f1e101a..fb7cb91 100755
 --- a/llava/model/multimodal_encoder/siglip_encoder.py
 +++ b/llava/model/multimodal_encoder/siglip_encoder.py
-@@ -101,7 +101,6 @@ class SigLipVisionConfig(PretrainedConfig):
+@@ -27,6 +27,7 @@ from transformers.activations import ACT2FN
+ from transformers.modeling_outputs import BaseModelOutput, BaseModelOutputWithPooling
+ from transformers.modeling_utils import PreTrainedModel
+ from transformers import PretrainedConfig
++from transformers import initialization as init
+ from transformers.utils import ModelOutput
+ from llava.utils import rank0_print
+ 
+@@ -101,7 +102,6 @@ class SigLipVisionConfig(PretrainedConfig):
  
      @classmethod
      def from_pretrained(cls, pretrained_model_name_or_path: Union[str, os.PathLike], **kwargs) -> "PretrainedConfig":
@@ -256,7 +264,25 @@ index f1e101a..e50676d 100755
  
          config_dict, kwargs = cls.get_config_dict(pretrained_model_name_or_path, **kwargs)
  
-@@ -541,7 +540,7 @@ class SigLipVisionTower(nn.Module):
+@@ -316,8 +316,15 @@ class SigLipPreTrainedModel(PreTrainedModel):
+     supports_gradient_checkpointing = True
+ 
+     def _init_weights(self, module):
+-        """Initialize the weights"""
+-        pass
++        # Transformers materializes non-persistent buffers with empty_like
++        # after meta loading. Reconstruct deterministic grid indices here;
++        # these are not checkpoint weights and allocator contents are invalid.
++        # Leave learned parameters untouched, including already loaded weights.
++        if isinstance(module, SigLipVisionEmbeddings):
++            init.copy_(module.position_ids, torch.arange(
++                module.num_positions, dtype=torch.long,
++                device=module.position_ids.device,
++            ).expand((1, -1)))
+ 
+ 
+ # Copied from transformers.models.clip.modeling_clip.CLIPEncoder with CLIP->SigLip
+@@ -541,7 +548,7 @@ class SigLipVisionTower(nn.Module):
  
          self.is_loaded = False
  
@@ -265,7 +291,7 @@ index f1e101a..e50676d 100755
  
          self.vision_tower_name = vision_tower
  
-@@ -565,7 +564,7 @@ class SigLipVisionTower(nn.Module):
+@@ -565,7 +572,7 @@ class SigLipVisionTower(nn.Module):
              rank0_print("{} is already loaded, `load_model` called again, skipping.".format(self.vision_tower_name))
              return
  
@@ -274,7 +300,7 @@ index f1e101a..e50676d 100755
  
          del self.vision_tower.vision_model.encoder.layers[-1:]
          self.vision_tower.vision_model.head = nn.Identity()
-@@ -579,12 +578,12 @@ class SigLipVisionTower(nn.Module):
+@@ -579,12 +586,12 @@ class SigLipVisionTower(nn.Module):
              for image in images:
                  image_forward_out = self.vision_tower(image.to(device=self.device, dtype=self.dtype).unsqueeze(0), output_hidden_states=True)
                  image_feature = image_forward_out.hidden_states[-1].to(image.dtype)
