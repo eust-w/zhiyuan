@@ -71,7 +71,7 @@ python3.12 -m venv .venv-audit
 
 python3.12 -m venv .venv-model
 # Linux x86_64：只装 CPU wheel，不下载 CUDA runtime。
-.venv-model/bin/python -m pip install --require-hashes --only-binary=:all: --extra-index-url https://download.pytorch.org/whl/cpu -r requirements/model-linux-cpu.txt
+.venv-model/bin/python -m pip install --require-hashes --only-binary=:all: --index-url https://pypi.org/simple --extra-index-url https://download.pytorch.org/whl/cpu -r requirements/model-linux-cpu.txt
 .venv-model/bin/python -m pip check
 ```
 
@@ -105,8 +105,10 @@ cd aima-open-session-experiment
 
 ```bash
 MACOSX_DEPLOYMENT_TARGET=14.0 uv pip compile requirements/model.in --python-version 3.12 --python-platform aarch64-apple-darwin --generate-hashes --only-binary :all: --output-file requirements/model-macos-arm64.txt
-uv pip compile requirements/model.in --python-version 3.12 --python-platform x86_64-unknown-linux-gnu --torch-backend cpu --generate-hashes --emit-index-url --only-binary :all: --output-file requirements/model-linux-cpu.txt
+uv pip compile requirements/model.in --python-version 3.12 --python-platform x86_64-unknown-linux-gnu --torch-backend cpu --generate-hashes --only-binary :all: --output-file requirements/model-linux-cpu.txt
 ```
+
+Linux 锁不输出索引指令；安装命令显式提供 PyPI 和 PyTorch CPU 两个索引。首次 [CI 运行](https://github.com/eust-w/zhiyuan/actions/runs/40189596695) 在安装时发现：锁内的单独 `--index-url` 会重置 pip 索引列表，清掉命令行的 CPU extra index，因而找不到 `torch==2.14.1+cpu`。已按 [pip 的全局选项规则](https://pip.pypa.io/en/stable/reference/requirements-file-format/#global-options)及实际解析行为复核，并重新生成不含该覆盖项的锁；44 个包、版本和所有分发哈希均不变。没有通过删除 `+cpu`、放松哈希或忽略安装失败来规避问题。
 
 ## 本次本地验收
 

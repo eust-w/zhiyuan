@@ -72,7 +72,7 @@
   "sha256": {
     "requirements/model.in": "db9a1da1ee0c71fec9c9417ddb8c78b0937fd6612d5336112bb2fb54f1912eda",
     "requirements/model-macos-arm64.txt": "97eed689e6969d3ee68a8bbc590fa3b2a406d0ef5abcd00362b7ddd975e5c651",
-    "requirements/model-linux-cpu.txt": "73e418980bbd66e5c454dfafaf165e5f1f38521d114a84b4913ddd4093c744fa",
+    "requirements/model-linux-cpu.txt": "a7fb1c04bd200b96a91ba37635e9b98126c0c40b0ae4ac8ca82aa83ae84eca63",
     "aima-open-session-experiment/adapter/compat_assets/streamvln-v5.patch": "d33e3b9dc074c423d31e6a2d99b6047e13ef984ac251b302872ebe0a69f0b896",
     "security/evidence/model-macos-arm64-audit.json": "62613eef7d85c40140baaff1a735130857837d8cc055fbca809ef3da6185f4c3",
     "security/evidence/model-linux-cpu-osv-audit.json": "165ae3cb388729764960e883fe1bf3e123c4c40245ad0b514c1d9cbf7f5afaab"
@@ -87,6 +87,9 @@
   "ci": {
     "workflow": ".github/workflows/dependency-audit.yml",
     "profile": "Linux x86_64 CPU",
+    "initial_run": "https://github.com/eust-w/zhiyuan/actions/runs/40189596695",
+    "initial_failure": "requirements index-url reset the CLI extra CPU index; no compatible +cpu wheel was found",
+    "fix": "Regenerate lock without index directives; installation explicitly supplies both indexes. Package versions and artifact hashes are unchanged.",
     "note": "This file records local evidence. Verify the associated commit's GitHub Actions result separately."
   }
 }

@@ -99,7 +99,7 @@ jobs:
       - name: Install CPU-only model wheels with exact hashes
         run: |
           python -m venv .venv-model
-          .venv-model/bin/python -m pip install --require-hashes --only-binary=:all: --extra-index-url https://download.pytorch.org/whl/cpu -r requirements/model-linux-cpu.txt
+          .venv-model/bin/python -m pip install --require-hashes --only-binary=:all: --index-url https://pypi.org/simple --extra-index-url https://download.pytorch.org/whl/cpu -r requirements/model-linux-cpu.txt
           .venv-model/bin/python -m pip check
       - name: Verify pinned overlay and real tiny model training and generation
         working-directory: aima-open-session-experiment
