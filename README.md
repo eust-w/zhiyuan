@@ -1,18 +1,22 @@
 # GenieSim × StreamVLN Navigation Lab
 
-把视觉语言模型接入机器人仿真，记录从数据、微调到闭环评测的全过程。
+连接视觉语言模型与机器人仿真，让观测、动作、训练和评测都有据可查。
 
-本项目提供 GenieSim 控制适配器、StreamVLN 数据转换与 LoRA 检查工具、同批 episode 的 Base/LoRA 评测，以及可追溯的日志、截图和失败分析。适合研究视觉语言导航系统集成、检查模型与控制器之间的接口，以及复核小规模实验结果。
+![历史动作验证中的真实 RGB 数据回放](aima-open-session-experiment/assets/media/v3/stage0-keyboard-and-guard.gif)
 
-**当前结果：在同一批 10 条 held-out episode 上，Base 与 LoRA 的 success@0.5m 均为 0/10。闭环运行完成，不代表导航任务成功，也没有证据表明本次微调改善了导航效果。**
+*真实 RGB 数据回放 · 历史动作与深度安全门验证。由保存的观测帧制作，不是连续桌面录屏，也不是模型导航成功示例。*
 
-[快速检查](#快速检查无需-gpu) · [实验结果](#实验结果) · [运行与复现边界](#运行与复现边界) · [安全与依赖](SECURITY.md) · [文档](#文档与目录) · [许可证](#许可证与上游项目)
+**历史导航：Base / LoRA 均为 0/10** · **当前软件：132 项 CPU 测试通过** · **新栈 GPU：尚未复测**
 
-> 安全状态：CPU/媒体工具与限定的 Qwen＋SigLIP＋LoRA 模型 CPU profile 已有 Python 3.12 哈希锁和依赖审计，并提供 Transformers 5 兼容补丁。详见 [模型栈迁移与验证边界](security/model-stack-migration-2026-10-25.md)。历史 GPU 环境仍有漏洞，真实 checkpoint、CUDA 和 GenieSim 闭环尚未在新栈复测；CI 不等于 GPU 验收。
+这是一个面向视觉语言导航系统集成的研究工程：从模型看到的图像，到发出的动作，再到仿真的反馈与完整失败记录。闭环运行完成，不代表导航任务成功；本次实验没有证据表明 LoRA 改善了导航效果。
 
-![动作与深度安全门实录](aima-open-session-experiment/assets/media/v3/stage0-keyboard-and-guard.gif)
+| 从哪里开始 | 你会看到什么 |
+| --- | --- |
+| [看演示与证据](#真实证据) | 真实数据回放、训练日志图、模型轨迹片段，以及各自的证明边界 |
+| [在本地验证](#快速检查无需-gpu) | 无需 GPU 的最小检查；另附完整 CPU 模型迁移与测试入口 |
+| [研究与复现](#运行与复现边界) | 历史版本、环境准备、已知限制、可验收的贡献挑战 |
 
-*历史动作与安全门演示，不是模型导航成功示例。截图、录屏和其他媒体不包含在代码的 MIT 许可内。*
+[实验结果](#实验结果) · [当前软件验收](#当前软件验收) · [文档](#文档与目录) · [安全](SECURITY.md) · [许可范围](#许可证与上游项目)
 
 ## 项目包含什么
 
@@ -22,7 +26,16 @@
 - **配对评测**：同批起点与目标、模型生成动作、距离/路径/步数/动作计数，以及完整成功和失败结果。
 - **实验材料**：真实观测、训练结果图、轨迹片段、过程文档和媒体制作脚本。
 
-这不是即装即用的导航产品。机器人以刚体位姿变化导航，不包含真实人形步态控制；完整 GPU 环境、模型权重和原始数据也不随一次 `git clone` 自动就绪。
+机器人采用刚体位姿变化导航，不包含真实人形步态控制。完整 GPU 环境、模型权重和原始数据不随一次 `git clone` 自动就绪；本项目尚不是即装即用的导航产品。
+
+## 真实证据
+
+| 数据采集 | 训练过程 | 模型决策 |
+| --- | --- | --- |
+| ![训练轨迹 1001 的真实 RGB 数据回放](aima-open-session-experiment/assets/media/v3/stage1-train-1001.gif) | ![根据历史训练日志绘制的 loss 与梯度曲线](aima-open-session-experiment/assets/screenshots/v3/stage2-loss-curve.png) | ![Base eval-2004 的真实 RGB 数据回放](aima-open-session-experiment/assets/media/v3/stage3-base-2004.gif) |
+| **真实数据回放**：查看训练轨迹的观测片段。数据结构与动作对齐见 [Stage 1](aima-open-session-experiment/docs/02-stage1-数据采集.md)。 | **真实结果图**：loss 与梯度来自保存的日志；完整数值见 [训练记录](#训练记录)。 | **真实数据回放**：Base 在 `eval-2004` 中的观测片段；全部 episode 结果见[配对评测](#实验结果)。 |
+
+动图由历史观测序列制作，曲线由真实日志绘制；它们都不冒充连续操作录屏。单条片段不能代表总体导航效果，loss 曲线也不能证明模型学会了导航。截图、动图与其他媒体不包含在代码的 MIT 许可内，使用前请阅读[第三方声明](THIRD_PARTY_NOTICES.md)。
 
 ## 系统结构
 
@@ -40,9 +53,23 @@ flowchart LR
 
 动作空间固定为 `0=STOP`、`1=前进 0.25m`、`2=左转 15°`、`3=右转 15°`。Isaac 操作由主线程执行；HTTP 线程提交队列请求。服务仅监听 `127.0.0.1:5802`，不应直接暴露到公网。
 
+## 当前软件验收
+
+2026-10-25 的模型栈迁移限定为 **Qwen＋SigLIP＋单设备监督 LoRA**，使用独立 Python 3.12 环境与 Transformers 5 兼容补丁。下表是软件验收，不是下面的历史导航成绩。
+
+| 验证项 | 已有证据 | 不能据此推断 |
+| --- | --- | --- |
+| CPU 回归与模型集成 | 106 项通用回归＋10 项源码保护＋16 项真实小模型测试，共 **132 项通过**；[对应提交的 CI](https://github.com/eust-w/zhiyuan/actions/runs/40191419818) 两个 job 成功 | 真实大模型或 CUDA 已通过验证 |
+| 模型依赖审计 | macOS ARM64 与 Linux CPU 锁各 **44 个包**；严格审计在该时点均未报告已知漏洞 | 不存在未知漏洞，或旧 GPU 环境已自动修复 |
+| 模型加载与训练 | 随机初始化的小 Qwen/SigLIP 完成前后向、生成、单步 LoRA、新进程重载；覆盖旧配置、视觉权重恢复和位置索引回归 | 原始 checkpoint 的数值、显存或导航行为保持一致 |
+
+命令、哈希、审计源和未验证项见[模型栈迁移报告](security/model-stack-migration-2026-10-25.md)与[机器可读验收记录](security/evidence/model-migration-verification.json)。本轮没有启动 GPU，也没有重采数据或重跑真实模型闭环。
+
+> 历史 GPU 环境仍有已记录的依赖漏洞。新的 CPU 依赖锁不替代 CUDA 安装与验收，也不能安装进 Isaac Python。模型栈迁移还修复了历史视觉参数加载问题，因此历史 0/10 不能作为新版模型输出等价的证据。
+
 ## 实验结果
 
-唯一评测指标源：[exp02-equivalent-v3/eval_result.json](aima-open-session-experiment/experiments/exp02-equivalent-v3/eval_result.json)。两组均为 `eval-2001` 至 `eval-2010`，每条最多 200 步；训练种子为 `1001–1050`。
+以下是**历史 GPU 实验**，不是新模型栈的复测。唯一评测指标源：[exp02-equivalent-v3/eval_result.json](aima-open-session-experiment/experiments/exp02-equivalent-v3/eval_result.json)。Base 与 LoRA 使用同一批 `eval-2001` 至 `eval-2010`，每条最多 200 步；训练种子为 `1001–1050`。
 
 | 指标 | Base | LoRA |
 | --- | ---: | ---: |
@@ -71,13 +98,9 @@ flowchart LR
 
 LoRA 设置：`r=8`、`alpha=16`、dropout `0.05`、1 epoch、batch 1、学习率 `2e-5`、BF16、gradient checkpointing，`mm_tunable_parts=mm_lora_layer`。训练 loss 下降不能替代闭环评测。
 
-![根据真实训练日志绘制的 loss 与梯度曲线](aima-open-session-experiment/assets/screenshots/v3/stage2-loss-curve.png)
-
-*真实日志绘图，不是终端原始录屏。*
-
 ## 快速检查（无需 GPU）
 
-以下仅验证协议、数据结构、指标、运行记录、栅格、HTTP 服务与结果组装，不启动 Isaac Sim、不下载模型。依赖 Python 标准库；本次文档核验使用 Python 3.9.6，19 个测试通过。HTTP 测试使用 `FakeBackend` 和本机临时端口。
+先运行 **19 项标准库最小检查**，验证协议、数据结构、指标、运行记录、栅格、HTTP 服务与结果组装。它不启动 Isaac Sim、不下载模型；HTTP 测试使用 `FakeBackend` 和本机临时端口。下面的命令已在 Python 3.12 下复核，不等于执行全部 132 项测试。
 
 ```bash
 git clone --depth 1 https://github.com/eust-w/zhiyuan.git
@@ -92,6 +115,8 @@ python3 -m unittest \
   tests.test_service \
   tests.test_assemble_eval_result -v
 ```
+
+需要检查真实模型类的前后向、生成与 LoRA 重载时，继续运行[独立 CPU 模型验收](security/model-stack-migration-2026-10-25.md#固定源码与真实小模型测试)。它使用小型随机权重，仍不需要下载真实 checkpoint；完整依赖锁与安装命令在同一报告中。
 
 在同一目录查看保存的真实结果，并检查两组评测列表：
 
@@ -165,9 +190,17 @@ aima-open-session-experiment/
 
 阶段文档与媒体保留了历史描述；解释指标和许可时，以本 README、原始 JSON 及 [第三方声明](THIRD_PARTY_NOTICES.md) 中的更正为准。
 
-## 欢迎贡献
+## 可参与的挑战
 
-优先欢迎：完整视觉场景稳定性修复、标准 geodesic SPL、真实图像解码校验、跨机器依赖锁定，以及更大规模且不污染 held-out 的配对实验。
+贡献应缩小一个可验证的缺口。下面列出当前优先方向及建议验收条件；它们是待完成工作，不是已有能力。
+
+| 方向 | 建议验收条件 |
+| --- | --- |
+| 完整视觉场景稳定性 | 在完整市场 mesh 下完成场景加载、连续 HTTP 动作与观测保存；提交日志、退出码和 RGB/depth 证据，明确实际碰撞检测路径 |
+| 标准 geodesic SPL | 以障碍感知的最短可行路径替代直线距离代理；覆盖不可达与零长度边界，保留旧结果的解释与兼容方式 |
+| 图像完整性验证 | 解码 RGB/depth，检查尺寸与数据类型；让截断、损坏和不匹配样本在测试中被拒绝，不只检查文件非空 |
+| 新模型栈 GPU 验证 | 锁定 CUDA wheel、驱动与权重 revision；通过加载、训练与重载检查后，报告同批 10＋10 条完整配对结果和显存记录 |
+| 更可靠的模型比较 | 扩大独立 held-out，固定拆分与种子；保留全部失败、动作和距离统计，避免依据测试集反复调参 |
 
 请在 Issue 或 PR 中写明环境、版本、可复现步骤和证据；模型改进应报告同批评测的全部结果，不只展示单条轨迹。不要上传凭据、连接信息、未经授权的模型权重或第三方资产。
 
@@ -175,6 +208,6 @@ aima-open-session-experiment/
 
 本项目自有源代码、测试、配置和原创文字文档采用 **[MIT License](LICENSE)**，方便学习、修改和复用。**不是仓库内所有文件都按 MIT 授权。**
 
-训练补丁中的上游源码片段保留其适用的 Apache-2.0 / CC BY-NC-SA 4.0 条款；StreamVLN 源码的非商业条件、模型 checkpoint 的独立授权、GenieSim/Isaac 和场景条款均不会被本项目 MIT 覆盖。媒体、场景衍生物及完整 Release 归档不统一授予 MIT。详细范围与来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+训练补丁中的上游源码片段保留其适用的 Apache-2.0 / CC BY-NC-SA 4.0 条款；StreamVLN 源码的非商业条件、GenieSim/Isaac 和场景条款不会被本项目 MIT 覆盖。StreamVLN checkpoint 的独立授权尚未确认，不能套用源码许可。媒体、场景衍生物及完整 Release 归档不统一授予 MIT。详细范围与来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 感谢 [GenieSim](https://github.com/AgibotTech/genie_sim)、[StreamVLN](https://github.com/InternRobotics/StreamVLN) 及其上游贡献者。本项目与这些项目或机构没有隶属或背书关系；使用相关研究成果时，也请遵循上游的引用与署名要求。
