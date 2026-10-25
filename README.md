@@ -6,7 +6,9 @@
 
 **当前结果：在同一批 10 条 held-out episode 上，Base 与 LoRA 的 success@0.5m 均为 0/10。闭环运行完成，不代表导航任务成功，也没有证据表明本次微调改善了导航效果。**
 
-[快速检查](#快速检查无需-gpu) · [实验结果](#实验结果) · [运行与复现边界](#运行与复现边界) · [文档](#文档与目录) · [许可证](#许可证与上游项目)
+[快速检查](#快速检查无需-gpu) · [实验结果](#实验结果) · [运行与复现边界](#运行与复现边界) · [安全与依赖](SECURITY.md) · [文档](#文档与目录) · [许可证](#许可证与上游项目)
+
+> 安全状态：CPU/媒体工具已有 Python 3.12 哈希锁与依赖审计；历史 GPU 模型栈仍有已知漏洞，不能按旧版本直接部署。详见 [审计报告与剩余问题](security/audit-2026-10-25.md)。CI 通过不等于整个 GPU 栈已安全迁移。
 
 ![动作与深度安全门实录](aima-open-session-experiment/assets/media/v3/stage0-keyboard-and-guard.gif)
 
@@ -123,7 +125,9 @@ PY
 | StreamVLN real-world checkpoint | `7b0269ad28e7039a32627b950766c09b5a646f8e` |
 | SigLIP | `9fdffc58afc957d1a03a25b10dba0329ab15c2a3` |
 
-要重新运行 GPU 实验，仍须自行准备有权使用的 GenieSim/Isaac 环境、`market_00_g2` 对应场景与 G2 资产、StreamVLN 源码和权重、训练数据及 held-out sidecar。模型环境还需要 PyTorch、Transformers、PEFT、NumPy、Pillow 等依赖；仓库目前没有跨机器验证的完整依赖锁文件或一键安装器。
+要重新运行 GPU 实验，仍须自行准备有权使用的 GenieSim/Isaac 环境、`market_00_g2` 对应场景与 G2 资产、StreamVLN 源码和权重、训练数据及 held-out sidecar。模型环境还需要 PyTorch、Transformers、PEFT、NumPy、Pillow 等依赖；仓库目前没有安全迁移并通过 GPU 验证的完整模型环境锁或一键安装器。新增的 [CPU/媒体锁](requirements/cpu.txt) 只供独立 Python 3.12 工具环境使用，不能安装到旧模型或 Isaac 环境中。
+
+模型入口现在要求本地 safetensors，检查全部分片及路径边界，拒绝 bin-only adapter；请先阅读 [安全使用说明](SECURITY.md)。旧环境漏洞仍需要依赖/API 迁移和真实 GPU 验证，本次加载加固不代表漏洞全部修复。
 
 先读 [适配器说明](aima-open-session-experiment/adapter/README.md) 和 [实验目录入口](aima-open-session-experiment/README.md)。历史脚本中仍有 GPUFree 路径假设，需按自己的环境检查并调整，不应原样复制后就认定环境可复现。训练检查器会修改传入的 StreamVLN checkout，请使用独立副本。
 

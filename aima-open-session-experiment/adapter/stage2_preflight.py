@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Any
 
 from .dataset import validate_dataset
+from .model_security import validate_model_directory, validate_training_vision_reference
 
 
 def _sha256(path: Path) -> str:
@@ -76,6 +77,22 @@ def build_command(*, python: str, repo: Path, checkpoint: Path, vision: Path, da
     return command
 
 
+def checkpoint_safety_gate(checkpoint: Path, vision: Path) -> dict[str, Any]:
+    """Validate weights without importing or executing the external checkout."""
+    try:
+        base_files = validate_model_directory(checkpoint)
+        vision_files = validate_model_directory(vision)
+        validate_training_vision_reference(checkpoint, vision)
+    except (ValueError, OSError) as exc:
+        return {"status": "blocked", "error": str(exc), "policy": "local_safetensors_only"}
+    return {
+        "status": "ready",
+        "policy": "local_safetensors_only",
+        "files": {str(path): True for path in base_files + vision_files},
+        "external_loader_review_required": True,
+    }
+
+
 def _qwen_compat_checkpoint(checkpoint: Path) -> Path:
     """Return a stable path whose name selects StreamVLN's Qwen tokenizer branch.
 
@@ -87,9 +104,10 @@ def _qwen_compat_checkpoint(checkpoint: Path) -> Path:
     if "qwen" in str(checkpoint).lower():
         return checkpoint
     compat = checkpoint.parent / f"{checkpoint.name}-qwen-compat"
-    if compat.exists() and not compat.is_symlink():
-        raise RuntimeError(f"checkpoint compatibility path is not a symlink: {compat}")
-    if not compat.exists():
+    if compat.exists() or compat.is_symlink():
+        if not compat.is_symlink() or compat.resolve() != checkpoint.resolve():
+            raise RuntimeError(f"checkpoint compatibility alias points elsewhere: {compat}")
+    else:
         compat.symlink_to(checkpoint, target_is_directory=True)
     return compat
 
@@ -250,7 +268,11 @@ def main() -> None:
     result_path = args.result.expanduser().resolve()
 
     gates: dict[str, Any] = {}
-    gates["streamvln_compat"] = _patch_qwen_tokenizer(repo)
+    gates["checkpoint_files"] = checkpoint_safety_gate(checkpoint, vision)
+    if gates["checkpoint_files"]["status"] == "ready":
+        gates["streamvln_compat"] = _patch_qwen_tokenizer(repo)
+    else:
+        gates["streamvln_compat"] = {"status": "blocked", "reason": "local safetensors preflight failed"}
     try:
         gates["dataset_only"] = validate_dataset(
             dataset,
@@ -261,12 +283,7 @@ def main() -> None:
     except Exception as exc:
         gates["dataset_only"] = {"status": "failed", "error": f"{type(exc).__name__}: {exc}"}
 
-    required_model_files = [checkpoint / "config.json", checkpoint / "model.safetensors.index.json", vision / "config.json"]
-    gates["checkpoint_files"] = {
-        "status": "ready" if all(path.is_file() for path in required_model_files) else "blocked",
-        "files": {str(path): path.is_file() for path in required_model_files},
-    }
-    checkpoint_for_command = _qwen_compat_checkpoint(checkpoint)
+    checkpoint_for_command = _qwen_compat_checkpoint(checkpoint) if gates["checkpoint_files"]["status"] == "ready" else checkpoint
     command = build_command(
         python=args.python,
         repo=repo,
@@ -279,7 +296,7 @@ def main() -> None:
     command_path = result_path.with_name("train-command.txt")
     command_path.parent.mkdir(parents=True, exist_ok=True)
     command_path.write_text(
-        f"PYTHONPATH={repo}:{repo / 'streamvln'} HF_ENDPOINT=https://hf-mirror.com "
+        f"PYTHONPATH={repo}:{repo / 'streamvln'} HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 "
         + " ".join(command)
         + "\n",
         encoding="utf-8",
@@ -291,7 +308,8 @@ def main() -> None:
         output.mkdir(parents=True, exist_ok=True)
         environment = dict(__import__("os").environ)
         environment["PYTHONPATH"] = f"{repo}:{repo / 'streamvln'}"
-        environment.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
+        environment["HF_HUB_OFFLINE"] = "1"
+        environment["TRANSFORMERS_OFFLINE"] = "1"
         stdout_path = result_path.with_name("train.stdout.log")
         stderr_path = result_path.with_name("train.stderr.log")
         peak_gpu_memory_mib = 0
@@ -349,6 +367,7 @@ def main() -> None:
                 str(Path(__file__).with_name("reload_adapter.py")),
                 "--repo", str(repo),
                 "--adapter", str(output),
+                "--vision", str(vision),
             ]
             reload_env = dict(environment)
             reload_process = subprocess.run(

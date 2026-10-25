@@ -1,0 +1,5 @@
+# Isolated local verification environments and transient audit output.
+.venv*/
+__pycache__/
+*.py[cod]
+security/evidence/current-*.json

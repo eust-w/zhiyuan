@@ -1,0 +1,78 @@
+{
+  "schema_version": "zhiyuan-dependency-audit/v1",
+  "recorded_at_utc": "2026-10-25T07:38:56Z",
+  "baseline_commit": "d52ff2b9cc90104f79225f5483322b6bc3b6cfe3",
+  "status": "partial_remediation_gpu_migration_unresolved",
+  "pip_audit_version": "2.10.1",
+  "vulnerability_service": "pypi",
+  "python_version": "3.12.14",
+  "uv_version": "0.12.6",
+  "test_platform": "macOS-arm64",
+  "audits": {
+    "cpu": {
+      "packages": 18,
+      "affected_packages": 0,
+      "raw_advisory_records": 0,
+      "unique_package_advisory_ids": 0,
+      "exit_code": 0,
+      "report": "security/evidence/cpu-audit.json",
+      "sha256": "c03f84030ad0f2c35485973b27b6d54e0d895ae24ac0b3c339de12ab3842540b"
+    },
+    "auditor": {
+      "packages": 29,
+      "affected_packages": 0,
+      "raw_advisory_records": 0,
+      "unique_package_advisory_ids": 0,
+      "exit_code": 0,
+      "report": "security/evidence/auditor-audit.json",
+      "sha256": "4ca20d17f18ebcb8b790f3091f552897f1127435400f50dd912bd9f36e2b0d3e"
+    },
+    "historical": {
+      "packages": 2,
+      "affected_packages": 1,
+      "raw_advisory_records": 43,
+      "unique_package_advisory_ids": 26,
+      "exit_code": 1,
+      "report": "security/evidence/historical-audit.json",
+      "sha256": "c4f7e0de0a0b708ca06d7d2554cccf1e1b5f663264b1b2a905ddcd091f0adf53"
+    },
+    "upstream": {
+      "packages": 154,
+      "affected_packages": 28,
+      "raw_advisory_records": 323,
+      "unique_package_advisory_ids": 211,
+      "exit_code": 1,
+      "report": "security/evidence/upstream-audit.json",
+      "sha256": "ecce07d786f8f65e7685cf0bb56fd4af919659a862a95dcc48ad4f5028001756"
+    }
+  },
+  "input_sha256": {
+    "requirements/cpu.in": "1be20cc52abe8940b9d8dd5351aa707e511db35a3c558de8102eebe4bb64aa54",
+    "requirements/cpu.txt": "42f31e6ba58bc9dba2744047f92cd186011cadedc8f175f1d557b5fcf980edd6",
+    "requirements/audit.in": "4a6cd45243a47b97c78e101b430ba8308a5e2e3102e21a68b3aac77fe89175b5",
+    "requirements/audit.txt": "6327bc4c5a934468f2d7186e2deed991fbb632f64ad10a5e301fd8789dd6efc5",
+    "security/evidence/historical-known-pins.txt": "ca52a35712a5b41f1df1f197b505f3bc50836a942cc28fc11b522f26cddeba2c",
+    "security/evidence/streamvln-upstream-pins.txt": "8c1428a295e475959bb7d14be48d5d5311945b75367daa501c262928bf85bfa6"
+  },
+  "validation": {
+    "cpu_install_hashes": true,
+    "auditor_install_hashes": true,
+    "dependency_consistency": true,
+    "unit_modules": 21,
+    "unit_tests_passed": 96,
+    "model_security_tests": 22,
+    "cli_help_checks": 3,
+    "python_ast_files": 79,
+    "cpu_linux_resolution_identical": true,
+    "gitleaks_worktree": true,
+    "gpu_runtime_tested": false,
+    "full_media_acceptance_rerun": false
+  },
+  "ignored_advisories": [],
+  "historical_installation_freeze_available": false,
+  "external_upstream_revision": "e48f6ff7e9201d93aae003e8f64b04c00cec13bc",
+  "external_vcs_not_audited": [
+    "openai/CLIP@dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1",
+    "naokiyokoyama/depth_camera_filtering@39d6e2f391c8b2198a67ad96f94bf6da0acd48a0"
+  ]
+}

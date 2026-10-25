@@ -1,0 +1,9 @@
+# CPU tools and media utilities only. NOT the Isaac or StreamVLN GPU environment.
+# Python 3.12; review security/audit-2026-10-25.md before changing this profile.
+# Include the venv installer used by the documented/CI setup, not just imports.
+pip>=26.2.2,<27
+numpy>=2.5.4,<3
+Pillow>=13.0.0,<14
+opencv-python-headless>=5.0.0.93,<6
+PyYAML>=6.0.3,<7
+edge-tts>=7.3.1,<8

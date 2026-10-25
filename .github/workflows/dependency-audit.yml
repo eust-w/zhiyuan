@@ -1,0 +1,56 @@
+name: CPU dependency audit (not GPU certification)
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cpu-audit-and-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Install hash-locked auditor separately
+        run: |
+          python -m venv .venv-audit
+          .venv-audit/bin/python -m pip install --require-hashes -r requirements/audit.txt
+      - name: Audit every locked CPU and auditor dependency
+        run: |
+          .venv-audit/bin/pip-audit --strict --disable-pip --require-hashes -r requirements/cpu.txt
+          .venv-audit/bin/pip-audit --strict --disable-pip --require-hashes -r requirements/audit.txt
+      - name: Install hash-locked CPU profile
+        run: |
+          python -m venv .venv-cpu
+          .venv-cpu/bin/python -m pip install --require-hashes -r requirements/cpu.txt
+          .venv-cpu/bin/python -m pip check
+      - name: Protocol, model-loading policy and media unit regressions
+        # Archived long-video acceptance needs private source recordings and ffprobe;
+        # it is deliberately not represented as part of this dependency CI gate.
+        working-directory: aima-open-session-experiment
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          ../.venv-cpu/bin/python -m unittest \
+            tests.test_protocol tests.test_dataset tests.test_metrics \
+            tests.test_manifest tests.test_occupancy tests.test_service \
+            tests.test_assemble_eval_result tests.test_stage2_preflight \
+            tests.test_model_security tests.test_model_closed_loop_eval \
+            tests.test_isaac_backend tests.test_equivalent_assets \
+            tests.test_canonical_replays tests.test_closed_loop_replay \
+            tests.test_series_manifest tests.test_series_media \
+            tests.test_series_verification tests.test_series_voice \
+            tests.test_challenge_video_renderer \
+            tests.test_challenge_voice tests.test_original_bgm -v
+      - name: State remaining scope explicitly
+        run: |
+          echo 'This job does not clear the vulnerable historical StreamVLN stack, CUDA, Isaac, FFmpeg or archived media acceptance.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'See SECURITY.md and security/audit-2026-10-25.md. No CVE ignore list is used.' >> "$GITHUB_STEP_SUMMARY"

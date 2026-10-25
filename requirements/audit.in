@@ -1,0 +1,2 @@
+# Isolated vulnerability auditor, not a runtime dependency.
+pip-audit==2.10.1

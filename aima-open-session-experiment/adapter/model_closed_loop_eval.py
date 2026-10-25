@@ -28,8 +28,10 @@ from PIL import Image
 
 try:
     from .metrics import summarize_episode, summarize_runs
+    from .model_security import resolve_vision_directory, validate_adapter_directory, validate_model_directory, vision_model_name
 except ImportError:  # pragma: no cover - direct script execution on GPUFree
     from adapter.metrics import summarize_episode, summarize_runs
+    from adapter.model_security import resolve_vision_directory, validate_adapter_directory, validate_model_directory, vision_model_name
 
 
 def request_json(base_url: str, path: str, payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -67,6 +69,13 @@ class StreamVLNRunner:
     """Load one model variant and expose deterministic RGB-D generation."""
 
     def __init__(self, *, repo: Path, root: Path, base: Path, vision: Path, adapter: Path | None, max_length: int, decoder: str = "generate"):
+        validate_model_directory(base)
+        vision = resolve_vision_directory(base, vision)
+        if adapter is not None:
+            validate_adapter_directory(adapter)
+        vision_name = vision_model_name(vision)
+        os.environ["HF_HUB_OFFLINE"] = "1"
+        os.environ["TRANSFORMERS_OFFLINE"] = "1"
         sys.path.insert(0, str(repo))
         sys.path.insert(0, str(repo / "streamvln"))
         import torch
@@ -86,18 +95,8 @@ class StreamVLNRunner:
         if self.device.type != "cuda":
             raise RuntimeError("StreamVLN model evaluation requires CUDA; refusing CPU fallback")
 
-        # build_vision_tower selects SigLIP by a lowercase substring.  The
-        # checkpoint directory is named ``SigLIP`` on GPUFree, so create a
-        # lowercase symlink without copying or modifying model bytes.
-        vision_name = str(vision)
-        if "siglip" not in vision_name:
-            alias = vision.parent / "siglip-local"
-            if not alias.exists():
-                alias.symlink_to(vision, target_is_directory=True)
-            vision_name = str(alias)
-
         print(json.dumps({"event": "model_load_start", "base": str(base), "vision": vision_name, "adapter": str(adapter) if adapter else None}), flush=True)
-        config = AutoConfig.from_pretrained(str(base))
+        config = AutoConfig.from_pretrained(str(base), local_files_only=True, trust_remote_code=False)
         config.num_future_steps = 4
         config.num_history = 8
         config.mm_tunable_parts = "mm_lora_layer"
@@ -112,6 +111,9 @@ class StreamVLNRunner:
             attn_implementation="sdpa",
             torch_dtype=torch.bfloat16,
             low_cpu_mem_usage=False,
+            use_safetensors=True,
+            local_files_only=True,
+            trust_remote_code=False,
         )
         # Keep a compact first-call trace while adapting the public checkpoint
         # to the live runner.  This catches duplicate ``utils`` imports and
@@ -136,10 +138,11 @@ class StreamVLNRunner:
             return original_prepare(*prepare_args, **prepare_kwargs)
         model.prepare_inputs_labels_for_multimodal = traced_prepare
         if adapter is not None:
-            model = PeftModel.from_pretrained(model, str(adapter), is_trainable=False)
+            model = PeftModel.from_pretrained(model, str(adapter), is_trainable=False, local_files_only=True)
 
         tokenizer = AutoTokenizer.from_pretrained(
-            str(base), model_max_length=max_length, padding_side="right", use_fast=False
+            str(base), model_max_length=max_length, padding_side="right", use_fast=False,
+            local_files_only=True, trust_remote_code=False,
         )
         model_args = SimpleNamespace(
             mm_use_im_patch_token=True,
@@ -241,7 +244,7 @@ class StreamVLNRunner:
         image = Image.open(image_path).convert("RGB")
         image_tensor = self.image_processor.preprocess(image, return_tensors="pt")["pixel_values"][0]
 
-        depth = np.load(depth_path).astype(np.float32)
+        depth = np.load(depth_path, allow_pickle=False).astype(np.float32)
         depth = np.nan_to_num(depth, nan=10.0, posinf=10.0, neginf=0.0)
         depth_mm = np.clip(depth * 1000.0, 0.0, 65535.0).astype(np.uint16)
         depth_image = Image.fromarray(depth_mm, mode="I;16").resize((384, 384), Image.Resampling.NEAREST)
